@@ -1,0 +1,31 @@
+body {
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.main-cont {
+  min-height: calc(100vh - 19.5rem);
+}
+
+#logo-login {
+  filter: invert(100%);
+}
+
+.list-group[data-page="agregar-comanda"] {
+  max-height: 300px;
+  overflow-y: scroll;
+}
+
+#tabla-productos-wrapper[data-page="agregar-comanda"] {
+  max-height: 300px;
+  overflow-y: scroll;
+  padding: 0;
+}
+
+#tabla-productos-wrapper[data-page="agregar-comanda"] table tbody tr {
+  cursor: pointer;
+}
+
+#nombre-producto[data-page="estado-cuenta-cliente"] {
+  width: 30% !important;
+}
