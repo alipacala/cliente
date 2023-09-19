@@ -3,13 +3,10 @@ require "../../inc/header.php";
 
 session_start();
 $tiempoTranscurrido = isset($_SESSION['ultima_actividad']) ? time() - $_SESSION['ultima_actividad'] : null;
-if ($tiempoTranscurrido && ($tiempoTranscurrido > TIEMPO_INACTIVIDAD)) {
-  session_unset();
-  session_destroy();
-}
-$logueado = isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
-mostrarHeader("pagina-funcion", $logueado);
-?>
+if ($tiempoTranscurrido && ($tiempoTranscurrido >
+TIEMPO_INACTIVIDAD)) { session_unset(); session_destroy(); } $logueado =
+isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
+mostrarHeader("pagina-funcion", $logueado); ?>
 
 <div class="container my-5 main-cont">
   <div class="card">
@@ -55,7 +52,10 @@ mostrarHeader("pagina-funcion", $logueado);
         </div>
 
         <div class="table-responsive">
-          <table class="table table-bordered table-hover" id="tabla-clientes-spa">
+          <table
+            class="table table-bordered table-hover"
+            id="tabla-clientes-spa"
+          >
             <thead>
               <tr>
                 <th>DNI Titular</th>
@@ -69,13 +69,20 @@ mostrarHeader("pagina-funcion", $logueado);
             <tbody>
               <tr>
                 <td>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="dni_titular"
-                    name="dni_titular"
-                    required
-                  />
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control dni_titular"
+                      id="dni_titular"
+                    />
+                    <div class="input-group-text">
+                      <span
+                        class="spinner-border spinner-border-sm invisible"
+                        id="spinner"
+                        role="status"
+                      ></span>
+                    </div>
+                  </div>
                 </td>
                 <td>
                   <input
@@ -168,6 +175,7 @@ mostrarHeader("pagina-funcion", $logueado);
           titular: {
             es_nuevo: false,
             nro_documento: document.getElementById("dni_titular").value,
+            edad: document.getElementById("seg_edad_titular").value,
           },
           acompanantes: [],
         }
@@ -242,6 +250,10 @@ mostrarHeader("pagina-funcion", $logueado);
       const dni = dniInput.value;
       const url = `${apiPersonasUrl}?dni=${dni}`;
 
+      const spinner = document.getElementById("spinner");
+      spinner.classList.add("visible");
+      spinner.classList.remove("invisible");
+
       try {
         const response = await fetch(url);
         const data = await response.json();
@@ -255,6 +267,9 @@ mostrarHeader("pagina-funcion", $logueado);
 
         const personaEncontrada = data[0];
         personaExiste = true;
+
+        spinner.classList.remove("visible");
+        spinner.classList.add("invisible");
 
         document.getElementById("apellidos_nombres_titular").value =
           personaEncontrada.apellidos + ", " + personaEncontrada.nombres;
@@ -290,7 +305,7 @@ mostrarHeader("pagina-funcion", $logueado);
       "Yerno/Nuera",
       "Nieto/a",
       "Abuelo/a",
-      "Otro"
+      "Otro",
     ];
 
     // Agregar opciones al select

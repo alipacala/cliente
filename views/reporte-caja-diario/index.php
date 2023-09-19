@@ -17,15 +17,25 @@ $_GET["id"] : false; ?>
     <div class="card-body">
       <form id="form-reporte">
         <div class="row mb-3">
-          <div class="form-group col-md-4">
+          <div class="form-group col-md-4 mx-auto">
             <label for="fecha">Fecha</label>
-            <input type="text" class="form-control" id="fecha" name="fecha"
+            <input type="date" class="form-control" id="fecha" name="fecha"
             value="<?php echo date("Y-m-d") ?>" required />
           </div>
         </div>
-        <input type="submit" class="btn btn-primary"
-        id="generar-reporte" value="Ok" />
-        <a class="btn btn-warning" href="./../">Salir</a>
+        <div class="row">
+          <div class="col-md-3 mx-auto">
+            <div class="row">
+              <input
+                type="submit"
+                class="col-6 btn btn-primary"
+                id="mostrar-cerrar-turno"
+                value="Ok"
+              />
+              <a class="col-6 btn btn-warning" href="./../">Salir</a>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
   </div>
@@ -41,8 +51,49 @@ $_GET["id"] : false; ?>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="noti-label">
-          Cerrar el turno
+        <h1 class="modal-title fs-5" id="noti-label">Cerrar el turno</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">¿Quiere cerrar el turno?</div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary"
+          id="no-cerrar-turno-1"
+          data-bs-dismiss="modal"
+        >
+          Todavía NO
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-danger"
+          id="cerrar-turno-1"
+          data-bs-dismiss="modal"
+        >
+          Sí
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal modal-sm fade"
+  id="noti2"
+  tabindex="-1"
+  aria-labelledby="noti2-label"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="noti2-label">
+          Confirmar cerrar el turno
         </h1>
         <button
           type="button"
@@ -51,247 +102,119 @@ $_GET["id"] : false; ?>
           aria-label="Close"
         ></button>
       </div>
-      <div class="modal-body">
-        ¿Quiere cerrar el turno?
-      </div>
+      <div class="modal-body">¿Realmente quiere cerrar el turno?</div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
-          Aceptar
+        <button
+          type="button"
+          class="btn btn-danger"
+          id="cerrar-turno-2"
+          data-bs-dismiss="modal"
+        >
+          Sí
         </button>
-        <button type="button" class="btn btn-outline-secondary">
-          Cancelar
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          id="no-cerrar-turno-2"
+          data-bs-dismiss="modal"
+        >
+          No
+        </button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  const apiReportesUrl = "<?php echo URL_API_NUEVA ?>/caja-diario";
+  const apiReportesUrl = "<?php echo URL_API_NUEVA ?>/reportes";
+  const apiRecibosUrl = "<?php echo URL_API_NUEVA ?>/recibos-pago";
 
   function wrapper() {
-    prepararFormulario();
+    prepararBotonGenerar();
+    prepararBotonCerrarTurno1();
+    prepararBotonesNoCerrarTurno();
+    prepararBotonAceptar();
   }
 
-  async function generarReporte() {
-    try {
-      const response = await fetch(`${apiProductosUrl}/${id}`);
+  function prepararBotonGenerar() {
+    const botonCerrarTurno = document.getElementById("mostrar-cerrar-turno");
+    botonCerrarTurno.addEventListener("click", function (event) {
+      event.preventDefault();
+      const noti = new bootstrap.Modal(document.getElementById("noti"));
+      noti.show();
+    });
+  }
 
+  function prepararBotonCerrarTurno1() {
+    const botonCerrarTurno = document.getElementById("cerrar-turno-1");
+    botonCerrarTurno.addEventListener("click", async function (event) {
+      event.preventDefault();
+      const noti = new bootstrap.Modal(document.getElementById("noti"));
+      noti.hide();
+
+      const noti2 = new bootstrap.Modal(document.getElementById("noti2"));
+      noti2.show();
+    });
+  }
+
+  function prepararBotonAceptar() {
+    const botonAceptar = document.getElementById("cerrar-turno-2");
+    botonAceptar.addEventListener("click", async function (event) {
+      event.preventDefault();
+
+      const url = `${apiRecibosUrl}/0/cerrar-turno`;
+      const options = {
+        method: "PATCH",
+      };
+      try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+
+        generarReporte();
+      } catch (error) {
+        console.error("Error al cerrar el turno: ", error);
+      }
+    });
+  }
+
+  function prepararBotonesNoCerrarTurno() {
+    const botonNoCerrarTurno1 = document.getElementById("no-cerrar-turno-1");
+    const botonNoCerrarTurno2 = document.getElementById("no-cerrar-turno-2");
+
+    const alNoCerrarTurno = (e) => {
+      event.preventDefault();
+      generarReporte();
+    };
+
+    botonNoCerrarTurno1.addEventListener("click", alNoCerrarTurno);
+    botonNoCerrarTurno2.addEventListener("click", alNoCerrarTurno);
+  }
+
+  function generarReporte() {
+    const fecha = document.getElementById("fecha").value;
+    const url = `${apiReportesUrl}?tipo=caja&fecha=${fecha}`;
+    open(url, "_blank");
+
+    /* try {
+      const response = await fetch(url);
+      const blob = new Blob([response], { type: 'application/pdf' });
+      const pdfUrl = window.URL.createObjectURL(blob);
+
+      console.log("response: ", response);
+      console.log("blob: ", blob);
+      console.log("pdfUrl: ", pdfUrl);
+
+      // Abre una nueva pestaña o ventana del navegador con la URL del PDF
+      // window.open(pdfUrl, '_blank');
 
     } catch (error) {
       mostrarNotificacion("error", "Error al cargar el producto", "consultar");
       console.error("Error al cargar el producto: ", error);
-    }
+    } */
   }
 
-  async function cargarCodigoProducto() {
-    try {
-      const url = apiConfigUrl + "/6/codigo"; // 6 es el id de los productos
-      const response = await fetch(url);
-      const data = await response.json();
-
-      const codigo = document.getElementById("codigo");
-      codigo.value = data.codigo;
-    } catch (error) {
-      mostrarNotificacion(
-        "error",
-        "Error al cargar el código del producto",
-        "consultar"
-      );
-      console.error("Error al cargar el código del producto: ", error);
-    }
-  }
-
-  async function cargarClasificacionVentas() {
-    try {
-      const response = await fetch(apiGruposDeLaCartaUrl);
-      const data = await response.json();
-
-      const clasificacionVentasSelect = document.getElementById(
-        "clasificacion_ventas"
-      );
-      clasificacionVentasSelect.innerHTML = "";
-
-      const defaultOption = document.createElement("option");
-      defaultOption.value = "";
-      defaultOption.text = "Seleccione una clasificación";
-      clasificacionVentasSelect.appendChild(defaultOption);
-
-      let grupos = data;
-      grupos = ordenarGrupos(grupos);
-
-      grupos.forEach((clasificacionVentas) => {
-        const option = crearOpcionClasificacionVentas(clasificacionVentas);
-        clasificacionVentasSelect.appendChild(option);
-      });
-    } catch (error) {
-      mostrarNotificacion(
-        "error",
-        "Error al cargar las clasificaciones de ventas",
-        "consultar"
-      );
-      console.error("Error al cargar las clasificaciones de ventas: ", error);
-    }
-  }
-
-  function ordenarGrupos(grupos) {
-    // ordenar los grupos por nro_orden
-    grupos.sort((a, b) => {
-      if (+a.nro_orden > +b.nro_orden) {
-        return 1;
-      } else if (+a.nro_orden < +b.nro_orden) {
-        return -1;
-      } else {
-        return 0;
-      }
-    });
-
-    // mapear a un array de grupos con un campo array de subgrupos
-    grupos = grupos
-      .filter((grupo) => grupo.codigo_grupo == grupo.codigo_subgrupo)
-      .map((grupo) => {
-        grupo.subgrupos = grupos.filter(
-          (subgrupo) =>
-            subgrupo.codigo_grupo == grupo.codigo_grupo &&
-            subgrupo.codigo_subgrupo != subgrupo.codigo_grupo
-        );
-        return grupo;
-      });
-
-    // flat array de grupos y subgrupos
-    return grupos.flatMap((grupo) => {
-      return [grupo, ...grupo.subgrupos];
-    });
-  }
-
-  function crearOpcionClasificacionVentas(clasificacionVentas) {
-    const option = document.createElement("option");
-    option.value = clasificacionVentas.id_grupo;
-
-    if (
-      clasificacionVentas.codigo_grupo == clasificacionVentas.codigo_subgrupo
-    ) {
-      option.textContent = clasificacionVentas.nombre_grupo;
-      option.classList.add("fw-bold");
-    } else {
-      option.style.color = "#6c757d";
-      option.innerHTML =
-        "&nbsp;&nbsp;&nbsp;&nbsp;" + clasificacionVentas.nombre_grupo;
-    }
-
-    return option;
-  }
-
-  async function cargarCentralCostos() {
-    try {
-      const response = await fetch(apiCentralDeCostosUrl);
-      const data = await response.json();
-
-      const centralCostosSelect = document.getElementById("central_costos");
-
-      centralCostosSelect.innerHTML = "";
-
-      const defaultOption = document.createElement("option");
-      defaultOption.value = "";
-      defaultOption.text = "Seleccione una central de costos";
-      centralCostosSelect.appendChild(defaultOption);
-
-      data.forEach((centralCostos) => {
-        const option = document.createElement("option");
-        option.value = centralCostos.id_central_de_costos;
-        option.textContent = centralCostos.nombre_del_costo;
-        centralCostosSelect.appendChild(option);
-      });
-    } catch (error) {
-      mostrarNotificacion(
-        "error",
-        "Error al cargar las centrales de costos",
-        "consultar"
-      );
-      console.error("Error al cargar las centrales de costos: ", error);
-    }
-  }
-
-  async function cargarTiposDeProducto() {
-    try {
-      const response = await fetch(apiTipoDeProductoUrl);
-      const data = await response.json();
-      const tipoDeProductoSelect = document.getElementById("tipo_producto");
-
-      tipoDeProductoSelect.innerHTML = "";
-
-      const defaultOption = document.createElement("option");
-      defaultOption.value = "";
-      defaultOption.text = "Seleccione un tipo de producto";
-      tipoDeProductoSelect.appendChild(defaultOption);
-
-      data.forEach((tipoDeProducto) => {
-        const option = document.createElement("option");
-        option.value = tipoDeProducto.id_tipo_producto;
-        option.textContent = tipoDeProducto.nombre_tipo_de_producto;
-        tipoDeProductoSelect.appendChild(option);
-      });
-    } catch (error) {
-      mostrarNotificacion(
-        "error",
-        "Error al cargar las centrales de costos",
-        "consultar"
-      );
-      console.error("Error al cargar las centrales de costos: ", error);
-    }
-  }
-
-  async function crearProducto(editar) {
-    const producto = {
-      nombre_producto: document.getElementById("nombre_producto").value,
-      codigo: document.getElementById("codigo").value,
-      tipo_de_unidad: document.getElementById("tipo_unidad").value,
-      id_grupo: document.getElementById("clasificacion_ventas").value,
-      id_central_de_costos: document.getElementById("central_costos").value,
-      id_tipo_de_producto: document.getElementById("tipo_producto").value,
-      fecha_de_vigencia: document.getElementById("fecha_vigencia").value,
-      stock_min_temporada_baja: document.getElementById(
-        "stock_min_temporada_baja"
-      ).value,
-      stock_max_temporada_baja: document.getElementById(
-        "stock_max_temporada_baja"
-      ).value,
-      stock_min_temporada_altas: document.getElementById(
-        "stock_min_temporada_alta"
-      ).value,
-      stock_max_temporada_alta: document.getElementById(
-        "stock_max_temporada_alta"
-      ).value,
-      cantidad_de_fracciones:
-        document.getElementById("cantidad_unidades").value,
-    };
-
-    const url = apiProductosUrl + (editar ? "/" + id : "/insumo-terminado");
-
-    const options = {
-      method: editar ? "PUT" : "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(producto),
-    };
-
-    try {
-      const response = await fetch(url, options);
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error("Error al crear el producto: ", error);
-    }
-  }
-
-  function prepararFormulario() {
-    const form = document.getElementById("form-reporte");
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
-      generarReporte();
-    });
-  }
-  
   window.addEventListener("load", wrapper);
 </script>
 

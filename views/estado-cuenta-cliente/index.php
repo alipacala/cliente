@@ -379,8 +379,6 @@ $_SESSION["usuario"]["id_usuario"]; ?>
   </div>
 </div>
 
-<!--MODAL  de confirmación de Cerrar Cuenta -->
-
 <div
   class="modal fade"
   id="modal-cerrar-cuenta"
@@ -1352,8 +1350,6 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       event.preventDefault();
 
       modalConfirmar.show();
-
-      cerrarCuenta();
     });
   }
 

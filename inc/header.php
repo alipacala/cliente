@@ -118,6 +118,8 @@ function mostrarHeader($pagina, $logueado)
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/reporte-caja-diario">Reporte diario de caja</a>
                   </li>
+                  <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/reporte-productos-diario">Reporte diario de ventas al detalle</a>
+                  </li>
                 </ul>
               </li>
               <li class="nav-item">
