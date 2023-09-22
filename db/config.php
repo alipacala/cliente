@@ -1,6 +1,5 @@
 <?php
-//include '..\inc\config.php';
-require_once __DIR__ . '\..\inc\config.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'config.php';
 
 // Configuración de la base de datos
 switch (ENV) {
