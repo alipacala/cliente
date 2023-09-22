@@ -106,10 +106,22 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       </div>
 
       <div class="row mb-4">
-        <div class="col-md-12 text-end">
+        <div class="col">
           <input
             type="button"
-            class="btn btn-primary btn-lg"
+            class="btn btn-outline-secondary"
+            id="ver-acompanantes"
+            value="Ver Acompañantes"
+          />
+          <input
+            type="button"
+            class="btn btn-outline-secondary"
+            id="ver-reporte"
+            value="Ver reporte"
+          />
+          <input
+            type="button"
+            class="btn btn-primary btn-lg float-end"
             id="totalizar"
             value="Totalizar"
           />
@@ -398,20 +410,213 @@ $_SESSION["usuario"]["id_usuario"]; ?>
         <div class="row w-100">
           <button
             type="button"
-            class="btn btn-outline-secondary col-md-6"
+            class="btn btn-primary col-md-6"
+            onclick="cerrarCuenta()"
             data-bs-dismiss="modal"
           >
-            Salir
+            Sí
           </button>
           <button
             type="button"
-            class="btn btn-primary col-md-6"
-            onclick="cerrarCuenta()"
+            class="btn btn-outline-secondary col-md-6"
             id="confirmar-cerrar-cuenta"
+            data-bs-dismiss="modal"
           >
-            Aceptar
+            No
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="modal-ver-reporte"
+  tabindex="-1"
+  aria-labelledby="modal-ver-reporte-label"
+  style="display: none"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-ver-reporte-label">
+          Reporte Estado de cuenta del cliente
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          id="cerrar-modal-ver-reporte"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>Seleccione una opción</p>
+        <div class="row w-100">
+          <button
+            type="button"
+            class="btn btn-primary col-md-6"
+            id="ver-reporte-todos"
+            data-bs-dismiss="modal"
+          >
+            Ver todos los consumos
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-secondary col-md-6"
+            id="ver-reporte-por-cobrar"
+            data-bs-dismiss="modal"
+          >
+            Ver sólo consumos por cobrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="modal-acompanantes"
+  tabindex="-1"
+  aria-labelledby="modal-acompanantes-label"
+  style="display: none"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-acompanantes-label">
+          Relación de acompañantes
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          id="cerrar-modal-acompanantes"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table
+            class="table table-bordered table-hover"
+            id="tabla-acompanantes"
+          >
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Sexo</th>
+                <th>Edad</th>
+                <th>Parentesco</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          data-bs-dismiss="modal"
+        >
+          Salir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade modal-lg"
+  id="modal-ver-comprobante"
+  tabindex="-1"
+  aria-labelledby="modal-ver-comprobante-label"
+  style="display: none"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-ver-comprobante-label">
+          Comprobante
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          id="cerrar-modal-ver-comprobante"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <label for="ver-fecha-comprobante">Fecha:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ver-fecha-comprobante"
+              disabled
+            />
+          </div>
+          <div class="col-md-3">
+            <label for="ver-nro-comprobante">Nro comprobante:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ver-nro-comprobante"
+              disabled
+            />
+          </div>
+          <div class="col-md-3">
+            <label for="ver-doc-cliente">DNI/RUC:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ver-doc-cliente"
+              disabled
+            />
+          </div>
+          <div class="col-md-3">
+            <label for="ver-nombre-razon-social">Nombre/Razón Social:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ver-nombre-razon-social"
+              disabled
+            />
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table
+            class="table table-bordered table-hover"
+            id="tabla-ver-comprobante"
+          >
+            <thead>
+              <tr>
+                <th>Cantidad</th>
+                <th>Producto</th>
+                <th>Precio Unitario</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          data-bs-dismiss="modal"
+        >
+          Salir
+        </button>
       </div>
     </div>
   </div>
@@ -431,6 +636,9 @@ $_SESSION["usuario"]["id_usuario"]; ?>
   const apiRecibosUrl = "<?php echo URL_API_NUEVA ?>/recibos-pago";
   const apiSunatUrl = "<?php echo URL_API_NUEVA ?>/sunat";
   const apiPersonasUrl = "<?php echo URL_API_NUEVA ?>/personas";
+  const apiComprobantesDetallesUrl =
+    "<?php echo URL_API_NUEVA ?>/comprobantes-detalles";
+    const apiReportesUrl = "<?php echo URL_API_NUEVA ?>/reportes";
 
   let checking = null;
   let productos = [];
@@ -456,6 +664,8 @@ $_SESSION["usuario"]["id_usuario"]; ?>
   let modalComprobante;
   let modalRecibo;
   let modalConfirmar;
+  let modalAcompanantes;
+  let modalVerComprobante;
 
   async function wrapper() {
     await cargarDatosChecking();
@@ -487,6 +697,30 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       }
     );
 
+    modalAcompanantes = new bootstrap.Modal(
+      document.getElementById("modal-acompanantes"),
+      {
+        backdrop: "static",
+        keyboard: false,
+      }
+    );
+
+    modalVerComprobante = new bootstrap.Modal(
+      document.getElementById("modal-ver-comprobante"),
+      {
+        backdrop: "static",
+        keyboard: false,
+      }
+    );
+
+    modalVerReporte = new bootstrap.Modal(
+      document.getElementById("modal-ver-reporte"),
+      {
+        backdrop: "static",
+        keyboard: false,
+      }
+    );
+
     prepararSeleccionar();
     prepararCrearComprobante();
     prepararTotalizar();
@@ -498,6 +732,11 @@ $_SESSION["usuario"]["id_usuario"]; ?>
     alCerrarCuenta();
     actualizarBotonCerrarCuenta();
 
+    prepararVerAcompanantes();
+    prepararVerReporte();
+
+    cargarAcompanantesEnTabla();
+
     const tooltipTriggerList = document.querySelectorAll(
       '[data-bs-toggle="tooltip"]'
     );
@@ -507,6 +746,40 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
     actualizarFechaHora();
     setInterval(actualizarFechaHora, 1000);
+  }
+
+  function prepararVerReporte() {
+    const verReporte = document.getElementById("ver-reporte");
+    verReporte.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      modalVerReporte.show();
+    });
+
+    const verReporteTodos = document.getElementById("ver-reporte-todos");
+    verReporteTodos.addEventListener("click", (event) => {
+      event.preventDefault();
+      const url = `${apiReportesUrl}?tipo=estado-cuenta-cliente&consumos=todos&nro_registro_maestro=${checking.nro_registro_maestro}`;
+      open(url, "_blank");
+    });
+
+    const verReportePorCobrar = document.getElementById(
+      "ver-reporte-por-cobrar"
+    );
+    verReportePorCobrar.addEventListener("click", (event) => {
+      event.preventDefault();
+      const url = `${apiReportesUrl}?tipo=estado-cuenta-cliente&consumos=por-cobrar&nro_registro_maestro=${checking.nro_registro_maestro}`;
+      open(url, "_blank");
+    });
+  }
+
+  function prepararVerAcompanantes() {
+    const verAcompanantes = document.getElementById("ver-acompanantes");
+    verAcompanantes.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      modalAcompanantes.show();
+    });
   }
 
   function prepararSelectMedioPago() {
@@ -529,20 +802,20 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
       if (event.target.value == "01") {
         tipoDocumento.innerHTML = `
-          <option value="6" selected>RUC</option>
-        `;
+           <option value="6" selected>RUC</option>
+         `;
       } else if (event.target.value == "03") {
         tipoDocumento.innerHTML = `
-          <option value="1" selected>DNI</option>
-          <option value="6">RUC</option>
-        `;
+           <option value="1" selected>DNI</option>
+           <option value="6">RUC</option>
+         `;
       } else {
         tipoDocumento.innerHTML = `
-          <option value="0" selected>Sin Documento</option>
-          <option value="1">DNI</option>
-          <option value="6">RUC</option>
-          <option value="7">Pasaporte</option>
-        `;
+           <option value="0" selected>Sin Documento</option>
+           <option value="1">DNI</option>
+           <option value="6">RUC</option>
+           <option value="7">Pasaporte</option>
+         `;
       }
 
       alCambiarTipoDoc(tipoDocumento);
@@ -629,6 +902,13 @@ $_SESSION["usuario"]["id_usuario"]; ?>
     });
   }
 
+  function actualizarFilasSeleccionables() {
+    filasSeleccionables = [...document.querySelectorAll("tbody tr")];
+    filasSeleccionables = filasSeleccionables.filter(
+      (row) => row.querySelector("input") != null
+    );
+  }
+
   async function prepararTotalizar() {
     const totalizar = document.getElementById("totalizar");
     totalizar.addEventListener("click", async (event) => {
@@ -656,10 +936,13 @@ $_SESSION["usuario"]["id_usuario"]; ?>
     try {
       const response = await fetch(url);
       const data = await response.json();
-      const comprobantes = data;
+      let comprobantes = data;
 
       const tbody = document.getElementById("tabla-comprobantes").tBodies[0];
       tbody.innerHTML = "";
+
+      // filtrar por estado = 1
+      comprobantes = comprobantes.filter((comprobante) => comprobante.estado);
 
       // agrupar los comprobantes por nro de comprobante y hacer un array con tipo de pago y total de recibo en cada componente
       const comprobantesAgrupados = [];
@@ -689,36 +972,46 @@ $_SESSION["usuario"]["id_usuario"]; ?>
         }
       });
       /*
-      console.log("comprobantesAgrupados: ", comprobantesAgrupados);
-      return; */
+       console.log("comprobantesAgrupados: ", comprobantesAgrupados);
+       return; */
 
       comprobantesAgrupados.forEach((comprobante) => {
         const row = tbody.insertRow();
+
+        row.role = "button";
+
         row.dataset.id = comprobante.id_comprobante_ventas;
+        row.dataset.fechaComprobante = comprobante.fecha_comprobante;
         row.dataset.tipoComprobante = comprobante.tipo_comprobante;
         row.dataset.nroComprobante = comprobante.nro_comprobante;
+        row.dataset.docCliente = comprobante.nro_doc_cliente;
         row.dataset.cliente = comprobante.nombre_razon_social;
-        row.dataset.montoTotal = comprobante.por_pagar;
+        row.dataset.porPagar = comprobante.por_pagar;
+        row.dataset.total = comprobante.total_comprobante;
 
         row.innerHTML = `
-          <td>${comprobante.fecha_comprobante}</td>
-          <td>${comprobante.nro_comprobante}</td>
-          <td>${comprobante.nro_doc_cliente}</td>
-          <td>${comprobante.nombre_razon_social}</td>
-          <td class="text-end">${comprobante.total_comprobante}</td>
-          <td>${tiposComprobante[comprobante.tipo_comprobante]}</td>
-          <td></td>
-          <td></td>
-          <td>
-            ${
-              comprobante.por_pagar > 0
-                ? `<button class="btn btn-outline-success" onclick="mostrarModalRecibo(this)">Generar Recibo</button>`
-                : ""
-            }
-          </td>
-        `;
+           <td>${comprobante.fecha_comprobante}</td>
+           <td>${comprobante.nro_comprobante}</td>
+           <td>${comprobante.nro_doc_cliente}</td>
+           <td>${comprobante.nombre_razon_social}</td>
+           <td class="text-end">${comprobante.total_comprobante}</td>
+           <td>${tiposComprobante[comprobante.tipo_comprobante]}</td>
+           <td></td>
+           <td></td>
+           <td>
+             ${
+               comprobante.por_pagar > 0
+                 ? `<button class="btn btn-outline-success" onclick="mostrarModalRecibo(event)">Generar Recibo</button>`
+                 : ""
+             }
+           </td>
+         `;
 
-        console.log("comprobante: ", comprobante);
+        // al hacer click en la fila se muestra el modal comprobante
+        row.addEventListener("click", (event) => {
+          event.preventDefault();
+          mostrarModalVerComprobante(row.dataset);
+        });
 
         // insertar los valores en las celdas de tipo de pago y total de recibo
         comprobante.recibos.forEach((recibo, index) => {
@@ -732,16 +1025,16 @@ $_SESSION["usuario"]["id_usuario"]; ?>
           } else {
             const nuevaFila = tbody.insertRow();
             nuevaFila.innerHTML = `
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td>${formasPago[recibo.tipo_pago] ?? ""}</td>
-              <td class="text-end">${recibo.total_recibo}</td>
-              <td></td>
-            `;
+               <td></td>
+               <td></td>
+               <td></td>
+               <td></td>
+               <td></td>
+               <td></td>
+               <td>${formasPago[recibo.tipo_pago] ?? ""}</td>
+               <td class="text-end">${recibo.total_recibo}</td>
+               <td></td>
+             `;
           }
         });
       });
@@ -752,8 +1045,63 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
   let idComprobanteVentas;
 
-  function mostrarModalRecibo(e) {
-    const row = e.closest("tr");
+  async function mostrarModalVerComprobante(data) {
+    const idComprobante = data.id;
+    const total = data.total;
+
+    const verFechaComprobante = document.getElementById(
+      "ver-fecha-comprobante"
+    );
+    const verNroComprobante = document.getElementById("ver-nro-comprobante");
+    const verDocCliente = document.getElementById("ver-doc-cliente");
+    const verNombreRazonSocial = document.getElementById(
+      "ver-nombre-razon-social"
+    );
+
+    verFechaComprobante.value = data.fechaComprobante;
+    verNroComprobante.value = data.nroComprobante;
+    verDocCliente.value = data.docCliente;
+    verNombreRazonSocial.value = data.cliente;
+
+    const url = `${apiComprobantesDetallesUrl}?comprobante=${idComprobante}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      const detalles = data;
+
+      const tbody = document.getElementById("tabla-ver-comprobante").tBodies[0];
+      tbody.innerHTML = "";
+
+      detalles.forEach((documentoDetalle) => {
+        const row = tbody.insertRow();
+
+        const producto = productos.find(
+          (producto) => producto.id_producto == documentoDetalle.id_producto
+        );
+
+        row.innerHTML = `
+           <td>${documentoDetalle.cantidad}</td>
+           <td>${producto.nombre_producto} ${producto.tipo == 'SRV' ? `(${documentoDetalle.fecha_servicio})` : ""}</td>
+           <td>${documentoDetalle.precio_unitario}</td>
+           <td>${documentoDetalle.precio_total}</td>
+         `;
+      });
+
+      tbody.insertRow().innerHTML = `
+         <td colspan="3" class="fw-bold text-end">TOTAL</td>
+         <td class="fw-bold">${total}</td>
+       `;
+
+      modalVerComprobante.show();
+    } catch (error) {
+      console.error("Error al cargar los datos del comprobante: ", error);
+    }
+  }
+
+  function mostrarModalRecibo(event) {
+    event.stopPropagation();
+    const row = event.target.closest("tr");
 
     const tipoComprobante = document.getElementById("tipo-doc");
     const nroComprobante = document.getElementById("nro-comprobante");
@@ -764,9 +1112,9 @@ $_SESSION["usuario"]["id_usuario"]; ?>
     tipoComprobante.value = row.dataset.tipoComprobante;
     nroComprobante.value = row.dataset.nroComprobante;
     cliente.value = row.dataset.cliente;
-    total.value = row.dataset.montoTotal;
+    total.value = row.dataset.porPagar;
     idComprobanteVentas = row.dataset.id;
-    monto.value = row.dataset.montoTotal;
+    monto.value = row.dataset.porPagar;
 
     modalRecibo.show();
   }
@@ -789,9 +1137,13 @@ $_SESSION["usuario"]["id_usuario"]; ?>
   }
 
   function calcularTotal() {
+    actualizarFilasSeleccionables();
+
     const filasSeleccionadas = filasSeleccionables.filter(
       (row) => row.querySelector("input").checked
     );
+
+    console.log("filasSeleccionadas: ", filasSeleccionadas);
 
     let total = 0;
     filasSeleccionadas.forEach((row) => {
@@ -843,6 +1195,26 @@ $_SESSION["usuario"]["id_usuario"]; ?>
     } catch (error) {
       console.error("Error al cargar los datos de los acompanantes: ", error);
     }
+  }
+
+  function cargarAcompanantesEnTabla() {
+    const tbody = document.getElementById("tabla-acompanantes").tBodies[0];
+    tbody.innerHTML = "";
+
+    acompanantes.forEach((acompanante) => {
+      const row = tbody.insertRow();
+
+      row.innerHTML = `
+         <td>${acompanante.apellidos_y_nombres}</td>
+         <td>${acompanante.sexo}</td>
+         <td>${acompanante.edad}</td>
+         <td>${
+           acompanante.parentesco
+             ? acompanante.parentesco
+             : "<span class='fw-bold'>TITULAR</span>"
+         }</td>
+       `;
+    });
   }
 
   async function cargarDatosProductos() {
@@ -919,29 +1291,25 @@ $_SESSION["usuario"]["id_usuario"]; ?>
         }
       });
 
-      // flatMap para obtener los documentos detalles de nivel 1 y 3
-      documentosDetallesMostrar = documentosDetalles.flatMap(
-        (documentoDetalle) => {
-          if (documentoDetalle.nivel_descargo == 1) {
-            return [
-              documentoDetalle,
-              ...documentoDetalle.documentos_detalles_d3,
-            ];
-          } else {
-            return [documentoDetalle];
-          }
+      const flatMapper = (documentoDetalle) => {
+        if (documentoDetalle.nivel_descargo == 1) {
+          return [documentoDetalle, ...documentoDetalle.documentos_detalles_d3];
+        } else {
+          return [documentoDetalle];
         }
-      );
-      /*
-      console.log("documentosDetallesMostrar: ", documentosDetallesMostrar);
-      return; */
+      };
+
+      documentosDetallesMostrar = [
+        ...documentosDetallesAgrupados.no_pagados.flatMap(flatMapper),
+        ...documentosDetallesAgrupados.pagados.flatMap(flatMapper),
+      ];
 
       const tbody = document.getElementById("tabla-comandas").tBodies[0];
       tbody.innerHTML = "";
 
       let total = 0;
 
-      documentosDetalles.forEach((documentoDetalle) => {
+      await documentosDetallesMostrar.forEach((documentoDetalle) => {
         const row = tbody.insertRow();
 
         row.dataset.id = documentoDetalle.id_documentos_detalle;
@@ -951,9 +1319,9 @@ $_SESSION["usuario"]["id_usuario"]; ?>
             ? true
             : false;
 
-        row.classList.add(
-          documentoDetalle.nro_comprobante ? "table-success" : "table-warning"
-        );
+        if (documentoDetalle.nro_comprobante) {
+          row.classList.add("table-warning");
+        }
         if (documentoDetalle.nivel_descargo == 3) {
           row.classList.add("fst-italic");
         }
@@ -991,54 +1359,54 @@ $_SESSION["usuario"]["id_usuario"]; ?>
             : "";
 
         row.innerHTML = `
-          <td>${
-            documentoDetalle.nro_habitacion
-              ? `H-${documentoDetalle.nro_habitacion}`
-              : "SPA"
-          }</td>
-          <td>${fechaHoraFormateada}</td>
-          <td>${
-            documentoDetalle.nivel_descargo == 3
-              ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-              : ""
-          } ${
+           <td>${
+             documentoDetalle.nro_habitacion
+               ? `H-${documentoDetalle.nro_habitacion}`
+               : "SPA"
+           }</td>
+           <td>${fechaHoraFormateada}</td>
+           <td>${
+             documentoDetalle.nivel_descargo == 3
+               ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+               : ""
+           } ${
           productos.find(
             (producto) => producto.id_producto == documentoDetalle.id_producto
           ).nombre_producto
         }</td>
-          <td class="text-center">${documentoDetalle.cantidad}</td>
-          <td class="text-end">${formatearCantidad(
-            documentoDetalle.precio_unitario
-          )}</td>
-          <td class="text-end">${formatearCantidad(
-            documentoDetalle.precio_total
-          )}</td>
-          <td>
-            ${
-              documentoDetalle.nivel_descargo == 1 &&
-              !documentoDetalle.nro_comprobante
-                ? `<div class="form-check">
-              <input type="checkbox" class="form-check-input" onclick="alSeleccionarPago()" checked/>
-            </div>`
-                : ""
-            }
-          </td>
-          <td class="text-truncate" style="max-width: 100px;">${
-            nombreAcompanante
-              ? `<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="${nombreAcompanante}">`
-              : ""
-          }${nombreAcompanante}</span></td>
-          <td class="text-truncate" style="max-width: 100px;">${
-            nombreTerapista
-              ? `<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="${nombreTerapista}">${nombreTerapista}</span>`
-              : nombreTerapista
-          }</td>
-          <td>${fechaHoraServicioFormateada}</td>
-          <td>${documentoDetalle.hora_final ?? ""}</td>
-          <td>${documentoDetalle.observaciones ?? ""}</td>
-          <td>${documentoDetalle.nro_comprobante ?? ""}</td>
-          <td>${documentoDetalle.fecha_pago ?? ""}</td>
-        `;
+           <td class="text-center">${documentoDetalle.cantidad}</td>
+           <td class="text-end">${formatearCantidad(
+             documentoDetalle.precio_unitario
+           )}</td>
+           <td class="text-end">${formatearCantidad(
+             documentoDetalle.precio_total
+           )}</td>
+           <td>
+             ${
+               documentoDetalle.nivel_descargo == 1 &&
+               !documentoDetalle.nro_comprobante
+                 ? `<div class="form-check">
+               <input type="checkbox" class="form-check-input" onclick="alSeleccionarPago()" checked/>
+             </div>`
+                 : ""
+             }
+           </td>
+           <td class="text-truncate" style="max-width: 100px;">${
+             nombreAcompanante
+               ? `<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="${nombreAcompanante}">`
+               : ""
+           }${nombreAcompanante}</span></td>
+           <td class="text-truncate" style="max-width: 100px;">${
+             nombreTerapista
+               ? `<span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="${nombreTerapista}">${nombreTerapista}</span>`
+               : nombreTerapista
+           }</td>
+           <td>${fechaHoraServicioFormateada}</td>
+           <td>${documentoDetalle.hora_final ?? ""}</td>
+           <td>${documentoDetalle.observaciones ?? ""}</td>
+           <td>${documentoDetalle.nro_comprobante ?? ""}</td>
+           <td>${documentoDetalle.fecha_pago ?? ""}</td>
+         `;
 
         if (
           documentoDetalle.nivel_descargo == 1 &&
@@ -1226,8 +1594,8 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       };
 
       /*
-      console.log("comprobante: ", comprobante);
-      return; */
+       console.log("comprobante: ", comprobante);
+       return; */
 
       crearComprobante(comprobante);
     });
@@ -1267,9 +1635,11 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
       modalComprobante.hide();
 
-      cargarDatosComprobantes();
       cargarDatosDocumentosDetalles();
+      cargarDatosComprobantes();
       actualizarBotonCerrarCuenta();
+
+      actualizarFilasSeleccionables();
     } catch (error) {
       console.error("Error al crear el comprobante: ", error);
     }

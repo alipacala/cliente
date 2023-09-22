@@ -196,23 +196,6 @@ $_GET["id"] : false; ?>
     const fecha = document.getElementById("fecha").value;
     const url = `${apiReportesUrl}?tipo=caja&fecha=${fecha}`;
     open(url, "_blank");
-
-    /* try {
-      const response = await fetch(url);
-      const blob = new Blob([response], { type: 'application/pdf' });
-      const pdfUrl = window.URL.createObjectURL(blob);
-
-      console.log("response: ", response);
-      console.log("blob: ", blob);
-      console.log("pdfUrl: ", pdfUrl);
-
-      // Abre una nueva pestaña o ventana del navegador con la URL del PDF
-      // window.open(pdfUrl, '_blank');
-
-    } catch (error) {
-      mostrarNotificacion("error", "Error al cargar el producto", "consultar");
-      console.error("Error al cargar el producto: ", error);
-    } */
   }
 
   window.addEventListener("load", wrapper);

@@ -6,9 +6,10 @@ session_start();
 $logueado = isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
 mostrarHeader("pagina-funcion", $logueado);
 ?>
+
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Reserva</h1>
@@ -23,6 +24,43 @@ mostrarHeader("pagina-funcion", $logueado);
         <div class="col-md-8">
             <label for="validationCustom01" class="form-label">Nom. Cliente</label>
             <input type="text" class="form-control" id="nombre" readonly required>
+        </div>
+        <div class="col-md-2">
+            <label for="validationCustom01" class="form-label">Cantidad Dias</label>
+            <input type="text" class="form-control" id="nro_dias" readonly required>
+        </div>
+        <div class="col-md-2">
+            <label for="validationCustom01" class="form-label">Cant. Personas</label>
+            <input type="text" class="form-control" id="nro_personas" readonly required>
+        </div>
+        <div class="col-md-8">
+            <label for="validationCustom01" class="form-label">Lugar de Procedencia</label>
+            <input type="text" class="form-control" id="lugar_procedencia" readonly required>
+        </div>
+        <div class="col-md-12">
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>Nro Habitacion</th>
+                    <th>Nro Personas</th>
+                    <th>Nro Noches</th>
+                    <th>Fecha Llegada</th>
+                    <th>Fecha Salida</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tabla_reservas">
+                <!-- Aquí se mostrarán las habitaciones reservadas -->
+            </tbody>
+        </table>
+        </div>
+        <div class="mb-3">
+          <label for="exampleFormControlTextarea1" class="form-label">Observaciones Hospedaje</label>
+          <textarea class="form-control" id="o_hospedaje" rows="2"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="exampleFormControlTextarea1" class="form-label">Observaciones Pago</label>
+          <textarea class="form-control" id="o_pago" rows="2"></textarea>
         </div>
         <div class="col-md-6">
             <label for="validationCustom02" class="form-label">Fecha Llegada</label>
@@ -65,7 +103,7 @@ mostrarHeader("pagina-funcion", $logueado);
                     <th>Nro Dias</th>
                     <th>Cliente</th>
                     <th>Nro Personas</th>
-                    <th>Nro Habitaciones</th>
+                    <th>Cant. Habitaciones</th>
                     <th>Lugar de Procedencia</th>
                     <th>Estado</th>
                     <th>Nro Maestro</th>
@@ -80,32 +118,108 @@ mostrarHeader("pagina-funcion", $logueado);
     </div>
 </div>
 <!-- Modal -->
-  <div class="modal fade" id="ModalChekin" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">¿Desea hacer CHECKIN?</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-        <form class="row g-3 needs-validation" id="formulario-Chekin">
-          <div class="col-md-4">
-              <label for="validationCustom01" class="form-label">Nro Reserva</label>
-              <input type="text" class="form-control" id="nro_reserva2" readonly required>
-          </div>
-          <div class="col-md-8">
-              <label for="validationCustom01" class="form-label">Nom. Cliente</label>
-              <input type="text" class="form-control" id="nombre2" readonly required>
-          </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-          <button type="submit" class="btn btn-primary" onclick="RealizarCheckin()">Si</button>
-        </div>
-        </form>
+<div class="modal fade" id="ModalChekin" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">¿Desea hacer CHECKIN?</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      <div class="modal-body">
+      <form class="row g-3 needs-validation" id="formulario-Chekin">
+        <div class="col-md-4">
+            <label for="validationCustom01" class="form-label">Nro Reserva</label>
+            <input type="text" class="form-control" id="nro_reserva2" readonly required>
+        </div>
+        <div class="col-md-8">
+            <label for="validationCustom01" class="form-label">Nom. Cliente</label>
+            <input type="text" class="form-control" id="nombre2" readonly required>
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <button type="submit" class="btn btn-primary" onclick="RealizarCheckin()">Si</button>
+      </div>
+      </form>
     </div>
   </div>
 </div>
+<script>
+      function setFechaActual() {
+          var inputDate = document.getElementById("fecha_busqueda");
+          var fechaActual = new Date().toISOString().slice(0, 10);
+          inputDate.value = fechaActual;
+      }
+    </script>
+   <script>
+        let habitaciones = []; // Array para almacenar los datos de las habitaciones
+        let habitacionesEliminadas = [];
+        let id;
+        window.onload = function() {
+            buscarReservas();
+            setFechaActual();
+        };
+
+        function buscarReservas() {
+            const nro_reserva = document.getElementById('nro_reserva').value;
+            fetch(`<?php echo URL_API_CARLITOS ?>/api-reservas.php?nro_reserva=${nro_reserva}`)
+                .then(response => response.json())
+                .then(data => {
+                    habitaciones = data; // Almacena los datos de la API en el array habitaciones
+                    mostrarTabla(); // Llama a la función para mostrar la tabla
+                });
+        }
+
+        function mostrarTabla() {
+          const tabla = document.getElementById('tabla_reservas');
+          tabla.innerHTML = ''; // Limpiar la tabla
+
+          habitaciones.forEach(reserva => {
+              const fila = document.createElement('tr');
+              fila.innerHTML = `
+                  <td>${reserva.nro_habitacion}</td>
+                  <td>${reserva.nro_personas}</td>
+                  <td>${reserva.nro_noches}</td>
+                  <td>${reserva.fecha_ingreso}</td>
+                  <td>${reserva.fecha_salida}</td>
+                  <td><button type="button" class="btn btn-danger" onclick="eliminarFila(this, ${reserva.id_reserva_habitaciones})">Eliminar</button></td>
+              `;
+              tabla.appendChild(fila);
+          });
+      }
+
+      function eliminarFila(button, idReserva) {
+          // Obtener la fila que contiene el botón
+          const row = button.parentNode.parentNode;
+
+          // Obtener el índice de la fila en la tabla
+          const rowIndex = row.rowIndex;
+
+          // Eliminar el registro correspondiente del array habitaciones
+          habitaciones.splice(rowIndex - 1, 1);
+
+          // Agregar la idReserva al array habitacionesEliminadas si no existe
+          if (!habitacionesEliminadas.includes(idReserva)) {
+               // Agregar el objeto con el campo "id" al array habitacionesEliminadas
+              habitacionesEliminadas.push({ "id": idReserva });
+          }
+         
+          mostrarTabla();
+      }
+      function eliminarReserva() {
+            fetch('<?php echo URL_API_CARLITOS ?>/api-reservas.php', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify(habitacionesEliminadas),
+            })
+                .then(response => response.text())
+                .then(message => {
+                    console.log(message);
+                
+                });
+        }
+    </script>
 <script>
         // Manejar el envío del formulario para agregar un nuevo usuario
         const formularioChekin = document.getElementById('formulario-Chekin');
@@ -150,6 +264,7 @@ mostrarHeader("pagina-funcion", $logueado);
                 fecha_salida: document.getElementById('fecha_salida').value
             };
             agregarReserva(nuevoReservaE);
+            eliminarReserva();
         });
 
         function agregarReserva(Reserva) {

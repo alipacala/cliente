@@ -258,6 +258,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         const response = await fetch(url);
         const data = await response.json();
 
+        spinner.classList.remove("visible");
+        spinner.classList.add("invisible");
+
         if (data.length < 1) {
           personaExiste = false;
           desbloquearInputs();
@@ -267,9 +270,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
         const personaEncontrada = data[0];
         personaExiste = true;
-
-        spinner.classList.remove("visible");
-        spinner.classList.add("invisible");
 
         document.getElementById("apellidos_nombres_titular").value =
           personaEncontrada.apellidos + ", " + personaEncontrada.nombres;

@@ -12,7 +12,7 @@ $_GET["id"] : false; ?>
 <div class="container my-5 main-cont">
   <div class="card">
     <div class="card-header py-3">
-      <h2 class="text-center">Reporte diario de caja</h2>
+      <h2 class="text-center">Reporte diario de ventas al detalle</h2>
     </div>
     <div class="card-body">
       <form id="form-reporte">

@@ -42,6 +42,14 @@ mostrarHeader("pagina-funcion", $logueado);
 </div>
 <script>
     // Función para obtener y listar los datos en la tabla
+    <script>
+        setFechaActual();
+        function setFechaActual() {
+          var inputDate = document.getElementById("fecha_busqueda");
+          var fechaActual = new Date().toISOString().slice(0, 10);
+          inputDate.value = fechaActual;
+      }
+    </script>
         function listarDatosEnTabla() {
         const url = '<?php echo URL_API_CARLITOS ?>/api-rooming.php'; // Reemplaza 'tu_url_de_la_api' con la URL de tu API
 

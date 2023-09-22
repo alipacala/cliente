@@ -55,6 +55,7 @@ function mostrarHeader($pagina, $logueado)
                       Spa</a></li>
                   <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/relacion-clientes-hotel-spa">Relación
                       de clientes de Hotel Spa</a></li>
+                  <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/registro-ventas">Registro de ventas</a></li>
                 </ul>
               </li>
               <li class="nav-item dropdown">
