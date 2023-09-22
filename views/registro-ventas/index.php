@@ -15,8 +15,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     </div>
     <div class="card-body">
       <div class="row mb-3">
-        <div class="col-md-4">
+        <div class="col-md-3">
           FECHA: <input type="date" class="form-control" id="fecha" value="<?php echo date("Y-m-d"); ?>"/>
+        </div>
+        <div class="col-md-3">
           MES:
           <select id="mes" class="form-select">
             <option value="0">Solo fecha</option>
@@ -33,12 +35,16 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             <option value="11">NOVIEMBRE</option>
             <option value="12">DICIEMBRE</option>
           </select>
+        </div>
+        <div class="col-md-2">
           AÑO:
           <select id="anio" class="form-select">
             <option value="2023" selected>2023</option>
             <option value="2022">2022</option>
             <option value="2021">2021</option>
           </select>
+        </div>
+        <div class="col-md-2">
           <div class="form-check form-switch">
             <input
               class="form-check-input"
@@ -49,7 +55,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               Solo BOL/FACT
             </label>
           </div>
-          <!-- botón buscar -->
+        </div>
+        <div class="col-md-2">
           <button
             class="btn btn-outline-primary w-100 mt-3"
             id="btn-buscar"
@@ -121,7 +128,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       const tbody = document.getElementById("tabla-comprobantes").tBodies[0];
       comprobantes.forEach((comprobante) => {
-
         const row = tbody.insertRow();
 
         const fecha = row.insertCell();
