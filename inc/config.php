@@ -13,6 +13,11 @@ switch (ENV) {
     define("URL_API_NUEVA", "http://192.168.1.11:8080/hotelarenasspa/api");
     define("URL_API_CARLITOS", "http://192.168.1.11:8080/hotelarenasspa/php-api-carlitos");
     break;
+    
+  case 'vm-prod':
+    define("URL_API_NUEVA", "http://20.22.236.117/apitest");
+    define("URL_API_CARLITOS", "http://20.22.236.117/php-api-carlitos");
+    break;
 }
 
 define("TIEMPO_INACTIVIDAD", 3600 * 24); // 1 dia

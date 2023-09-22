@@ -27,6 +27,7 @@ mostrarHeader("pagina-funcion", $logueado);
                     <th>Nro. Reg. Maestro</th>
                     <th>Nro Reserva</th>
                     <th>Cliente</th>
+                    <th>Nro Personas</th>
                     <th>Fecha Llegada</th>
                     <th>Fecha Salida</th>
                     <th>Acción</th>
@@ -39,7 +40,16 @@ mostrarHeader("pagina-funcion", $logueado);
       </div>
     </div>
 </div>
-<script>
+    // Función para obtener y listar los datos en la tabla
+    <script>
+        setFechaActual();
+        function setFechaActual() {
+          var inputDate = document.getElementById("fecha_busqueda");
+          var fechaActual = new Date().toISOString().slice(0, 10);
+          inputDate.value = fechaActual;
+      }
+    </script>
+    <script>
     // Función para obtener y listar los datos en la tabla
         function listarDatosEnTabla() {
         const url = '<?php echo URL_API_CARLITOS ?>/api-rooming.php'; // Reemplaza 'tu_url_de_la_api' con la URL de tu API
@@ -58,14 +68,15 @@ mostrarHeader("pagina-funcion", $logueado);
             data.forEach(item => {
                 const row = tabla.insertRow();
                 row.innerHTML = `
-                <td>${item.nombre_producto}</td>
-                <td>${item.nro_habitacion}</td>
-                <td>${item.nro_registro_maestro}</td>
-                <td>${item.nro_reserva}</td>
-                <td>${item.nombre}</td>
-                <td>${item.fecha_llegada}</td>
-                <td>${item.fecha_salida}</td>
-                <td><button type="button" class="btn btn-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ObtenerReserva('')">EDITAR</button>
+                <td>${item.nombre_producto || ''}</td>
+                <td>${item.nro_habitacion || ''}</td>
+                <td>${item.nro_registro_maestro || ''}</td>
+                <td>${item.nro_reserva || ''}</td>
+                <td>${item.nombre || ''}</td>
+                <td>${item.nro_personas || ''}</td>
+                <td>${item.fecha_llegada || ''}</td>
+                <td>${item.fecha_salida || ''}</td>
+                <td><a href="http://localhost:8080/prueba/Formulario-Huespedes.php?parametro1=${item.nro_reserva}&parametro2=${item.nro_registro_maestro}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
                 `;
             });
             })
@@ -76,35 +87,40 @@ mostrarHeader("pagina-funcion", $logueado);
         window.addEventListener('load', listarDatosEnTabla);
   </script>
   <script>
-    function buscarPorFecha() {
+   function buscarPorFecha() {
     const fechaBusqueda = document.getElementById('fecha_busqueda').value;
-    const url = '<?php echo URL_API_CARLITOS ?>/api-rooming.php'; // Reemplaza con la URL de tu API
+    
+    const url = `<?php echo URL_API_CARLITOS ?>/api-rooming.php`;
+    const data = { fecha: fechaBusqueda };
 
-    fetch(url,{
-                    method: 'INNER',
-                        })
-        .then(response => response.json())
-        .then(data => {
-            const tabla = document.getElementById('rooming').getElementsByTagName('tbody')[0];
-            tabla.innerHTML = ''; // Limpiar la tabla antes de agregar nuevos datos
+    fetch(url, {
+        method: 'POST2',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        const tabla = document.getElementById('rooming').getElementsByTagName('tbody')[0];
+        tabla.innerHTML = ''; // Limpiar la tabla antes de agregar nuevos datos
 
-            data.forEach(item => {
-                if (fechaBusqueda >= item.fecha_llegada && fechaBusqueda <= item.fecha_salida) {
-                    const row = tabla.insertRow();
-                    row.innerHTML = `
-                    <td>${item.nombre_producto}</td>
-                    <td>${item.nro_habitacion}</td>
-                    <td>${item.nro_registro_maestro}</td>
-                    <td>${item.nro_reserva}</td>
-                    <td>${item.nombre}</td>
-                    <td>${item.fecha_llegada}</td>
-                    <td>${item.fecha_salida}</td>
-                    <td><button type="button" class="btn btn-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ObtenerReserva('')">EDITAR</button>
-                    `;
-                }
-            });
-        })
-        .catch(error => console.error('Error al obtener datos de la API:', error));
+        data.forEach(item => {
+            const row = tabla.insertRow();
+            row.innerHTML = `
+                <td>${item.nombre_producto || ''}</td>
+                <td>${item.nro_habitacion || ''}</td>
+                <td>${item.nro_registro_maestro || ''}</td>
+                <td>${item.nro_reserva || ''}</td>
+                <td>${item.nombre || ''}</td>
+                <td>${item.nro_personas || ''}</td>
+                <td>${item.fecha_llegada || ''}</td>
+                <td>${item.fecha_salida || ''}</td>
+                <td><a href="http://192.168.1.11:8080/hotelarenasspa/cliente/views/gestionar-checkin-hotel?parametro1=${item.nro_reserva}&parametro2=${item.nro_registro_maestro}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
+            `;
+        });
+    })
+    .catch(error => console.error('Error al obtener datos de la API:', error));
 }
     </script>
 <?php

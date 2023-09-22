@@ -40,8 +40,7 @@ mostrarHeader("pagina-funcion", $logueado);
       </div>
     </div>
 </div>
-<script>
-    // Función para obtener y listar los datos en la tabla
+
     <script>
         setFechaActual();
         function setFechaActual() {
@@ -50,6 +49,8 @@ mostrarHeader("pagina-funcion", $logueado);
           inputDate.value = fechaActual;
       }
     </script>
+    <script>
+    // Función para obtener y listar los datos en la tabla
         function listarDatosEnTabla() {
         const url = '<?php echo URL_API_CARLITOS ?>/api-rooming.php'; // Reemplaza 'tu_url_de_la_api' con la URL de tu API
 
@@ -73,9 +74,9 @@ mostrarHeader("pagina-funcion", $logueado);
                 <td>${item.nro_reserva || ''}</td>
                 <td>${item.nombre || ''}</td>
                 <td>${item.nro_personas || ''}</td>
-                <td>${item.fecha_in || ''}</td>
-                <td>${item.fecha_out || ''}</td>
-                <td><a href="http://192.168.1.11:8080/hotelarenasspa/cliente/views/gestionar-checkin-hotel?parametro1=${item.nro_reserva}&parametro2=${item.nro_registro_maestro}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
+                <td>${item.fecha_llegada || ''}</td>
+                <td>${item.fecha_salida || ''}</td>
+                <td><a href="http://localhost:8080/prueba/Formulario-Huespedes.php?parametro1=${item.nro_reserva}&parametro2=${item.nro_registro_maestro}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
                 `;
             });
             })
@@ -86,7 +87,7 @@ mostrarHeader("pagina-funcion", $logueado);
         window.addEventListener('load', listarDatosEnTabla);
   </script>
   <script>
-    function buscarPorFecha() {
+   function buscarPorFecha() {
     const fechaBusqueda = document.getElementById('fecha_busqueda').value;
     
     const url = `<?php echo URL_API_CARLITOS ?>/api-rooming.php`;
@@ -113,15 +114,15 @@ mostrarHeader("pagina-funcion", $logueado);
                 <td>${item.nro_reserva || ''}</td>
                 <td>${item.nombre || ''}</td>
                 <td>${item.nro_personas || ''}</td>
-                <td>${item.fecha_in || ''}</td>
-                <td>${item.fecha_out || ''}</td>
+                <td>${item.fecha_llegada || ''}</td>
+                <td>${item.fecha_salida || ''}</td>
                 <td><a href="http://192.168.1.11:8080/hotelarenasspa/cliente/views/gestionar-checkin-hotel?parametro1=${item.nro_reserva}&parametro2=${item.nro_registro_maestro}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
             `;
         });
     })
     .catch(error => console.error('Error al obtener datos de la API:', error));
 }
-</script>
+    </script>
 <?php
 require "../../inc/footer.php";
 ?>

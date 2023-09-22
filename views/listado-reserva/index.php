@@ -308,18 +308,16 @@ mostrarHeader("pagina-funcion", $logueado);
                     <td>${item.nro_noches}</td>
                     <td>${item.nombre}</td>
                     <td>${item.nro_personas}</td>
-                    <td>${item.nro_habitaciones}</td>
+                    <td>${item.cantidad_habitaciones}</td>
                     <td>${item.lugar_procedencia}</td>
-                
                     <td>
-                    ${item.estado_pago == 0 ? '<span class="badge rounded-pill text-bg-danger">ADELANTO</span>' : 
+                      ${item.estado_pago == 0 ? '<span class="badge rounded-pill text-bg-danger">ADELANTO</span>' : 
                         (item.estado_pago == 1 ? '<span class="badge rounded-pill text-bg-success">CHEKIN</span>' : 
                         '<span class="badge rounded-pill text-bg-info">Adelanto</span>')}
                     </td>
                     <td>${item.nro_registro_maestro}</td>
-                    <td><button type="button" class="btn btn-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ObtenerReserva('${item.nro_reserva},${item.fecha_llegada},${item.fecha_salida},${item.nombre}')">EDITAR</button>
-                    <button type="button" class="btn btn-info" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#ModalChekin" onclick="ObtenerID('${item.nro_reserva}')">CHEKIN</button></td>
-                
+                    <td><button type="button" class="btn btn-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ObtenerReserva('${item.nro_reserva}|${item.fecha_llegada}|${item.fecha_salida}|${item.nombre}|${item.nro_noches}|${item.nro_personas}|${item.nro_habitacion}|${item.lugar_procedencia}|${item.observaciones_hospedaje}|${item.observaciones_pago}')">EDITAR</button>
+                    <button type="button" class="btn btn-info" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#ModalChekin" onclick="ObtenerID('${item.nro_reserva},${item.nombre}')">CHEKIN</button></td>
                     `;
                 }
             });
@@ -346,25 +344,23 @@ mostrarHeader("pagina-funcion", $logueado);
             data.forEach(item => {
                 const row = tabla.insertRow();
                 row.innerHTML = `
-                <td>${item.nro_reserva}</td>
-                <td>${item.fecha_llegada}</td>
-                <td>${item.fecha_salida}</td>
-                <td>${item.nro_noches}</td>
-                <td>${item.nombre}</td>
-                <td>${item.nro_personas}</td>
-                <td>${item.nro_habitaciones}</td>
-                <td>${item.lugar_procedencia}</td>
-               
-                <td>
-                  ${item.estado_pago == 0 ? '<span class="badge rounded-pill text-bg-danger">ADELANTO</span>' : 
-                    (item.estado_pago == 1 ? '<span class="badge rounded-pill text-bg-success">CHEKIN</span>' : 
-                    '<span class="badge rounded-pill text-bg-info">Adelanto</span>')}
-                </td>
-                <td>${item.nro_registro_maestro}</td>
-                <td><button type="button" class="btn btn-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ObtenerReserva('${item.nro_reserva},${item.fecha_llegada},${item.fecha_salida},${item.nombre}')">EDITAR</button>
-                <button type="button" class="btn btn-info" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#ModalChekin" onclick="ObtenerID('${item.nro_reserva},${item.nombre}')">CHEKIN</button></td>
-              
-                `;
+                    <td>${item.nro_reserva}</td>
+                    <td>${item.fecha_llegada}</td>
+                    <td>${item.fecha_salida}</td>
+                    <td>${item.nro_noches}</td>
+                    <td>${item.nombre}</td>
+                    <td>${item.nro_personas}</td>
+                    <td>${item.cantidad_habitaciones}</td>
+                    <td>${item.lugar_procedencia}</td>
+                    <td>
+                      ${item.estado_pago == 0 ? '<span class="badge rounded-pill text-bg-danger">ADELANTO</span>' : 
+                        (item.estado_pago == 1 ? '<span class="badge rounded-pill text-bg-success">CHEKIN</span>' : 
+                        '<span class="badge rounded-pill text-bg-info">Adelanto</span>')}
+                    </td>
+                    <td>${item.nro_registro_maestro}</td>
+                    <td><button type="button" class="btn btn-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ObtenerReserva('${item.nro_reserva}|${item.fecha_llegada}|${item.fecha_salida}|${item.nombre}|${item.nro_noches}|${item.nro_personas}|${item.nro_habitacion}|${item.lugar_procedencia}|${item.observaciones_hospedaje}|${item.observaciones_pago}')">EDITAR</button>
+                    <button type="button" class="btn btn-info" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#ModalChekin" onclick="ObtenerID('${item.nro_reserva},${item.nombre}')">CHEKIN</button></td>
+                    `;
             });
             })
             .catch(error => console.error('Error al obtener datos de la API:', error));
@@ -373,13 +369,18 @@ mostrarHeader("pagina-funcion", $logueado);
         // Llamar a la función para listar los datos cuando la página cargue
         window.addEventListener('load', listarDatosEnTabla);
   </script>
-  <script>
+<script>
     function ObtenerReserva(Reservas){
-        var Reserva = Reservas.split(',');
+        var Reserva = Reservas.split('|');
         document.getElementById('nro_reserva').value = Reserva[0];
         document.getElementById('fecha_llegada').value = Reserva[1];
         document.getElementById('fecha_salida').value = Reserva[2];
         document.getElementById('nombre').value = Reserva[3];
+        document.getElementById('nro_dias').value = Reserva[4];
+        document.getElementById('nro_personas').value = Reserva[5];
+        document.getElementById('lugar_procedencia').value = Reserva[7];
+        document.getElementById('o_hospedaje').value = Reserva[8];
+        document.getElementById('o_pago').value = Reserva[9];
     }
   </script>
   <script>
