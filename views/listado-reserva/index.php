@@ -143,6 +143,7 @@ mostrarHeader("pagina-funcion", $logueado);
     </div>
   </div>
 </div>
+</div>
 <script>
       function setFechaActual() {
           var inputDate = document.getElementById("fecha_busqueda");
@@ -155,13 +156,13 @@ mostrarHeader("pagina-funcion", $logueado);
         let habitacionesEliminadas = [];
         let id;
         window.onload = function() {
-            buscarReservas();
+        
             setFechaActual();
         };
 
-        function buscarReservas() {
+        function buscarReservas(codigo) {
             const nro_reserva = document.getElementById('nro_reserva').value;
-            fetch(`<?php echo URL_API_CARLITOS ?>/api-reservas.php?nro_reserva=${nro_reserva}`)
+            fetch(`<?php echo URL_API_CARLITOS ?>/api-reservas.php?nro_reserva=${codigo}`)
                 .then(response => response.json())
                 .then(data => {
                     habitaciones = data; // Almacena los datos de la API en el array habitaciones
@@ -372,6 +373,7 @@ mostrarHeader("pagina-funcion", $logueado);
 <script>
     function ObtenerReserva(Reservas){
         var Reserva = Reservas.split('|');
+        buscarReservas(Reserva[0]);
         document.getElementById('nro_reserva').value = Reserva[0];
         document.getElementById('fecha_llegada').value = Reserva[1];
         document.getElementById('fecha_salida').value = Reserva[2];

@@ -425,7 +425,7 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       stock_max_temporada_baja: document.getElementById(
         "stock_max_temporada_baja"
       ).value,
-      stock_min_temporada_altas: document.getElementById(
+      stock_min_temporada_alta: document.getElementById(
         "stock_min_temporada_alta"
       ).value,
       stock_max_temporada_alta: document.getElementById(

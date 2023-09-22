@@ -27,8 +27,6 @@ mostrarHeader("pagina-funcion", $logueado);
 
 
 <div class="container mt-5">
-<div class="card mb-4">
-  <div class="card-body">
     <form id="formulario-reservas">
     <h4>FORMULARIO REGISTRO DE RESERVA</h4>
     <div class="row">
@@ -112,8 +110,8 @@ mostrarHeader("pagina-funcion", $logueado);
         </div>
     </div> 
     </form>
-</div></div>
-
+    
+  <br>
     <div class="row">
   <div class="col-sm-12 mb-3 mb-sm-0">
     <div class="card">
@@ -122,10 +120,10 @@ mostrarHeader("pagina-funcion", $logueado);
                     <form id="formulario-carrito" class="mb-3">
                     <div class="row">
                         <div class="col-md-2">
-                        <label for="tipo">Nro Habitacion</label>
-                        <select class="form-select" name="habitacion" id="habitacion">
-                            <option value="0">--Seleccione--</option>
-                            </select>
+                          <label for="tipo">Nro Habitacion</label>
+                          <select class="form-select" name="habitacion" id="habitacion">
+                              <option value="0">--Seleccione--</option>
+                          </select>
                         </div>
                         <div class="col-md-2">
                           <label for="habitacion">Tipo Habitacion:</label>
@@ -185,6 +183,7 @@ mostrarHeader("pagina-funcion", $logueado);
                         <div class="col-md-4">
                         <label for="habitacion">Total Final: S/</label>
                         <input type="text" id="total-final-label" class="form-control" readonly><br>
+                        <input type="hidden" id="total2" class="form-control" readonly><br>
                         </div>
                         <hr>
                         <div class="col-md-4">
@@ -194,6 +193,7 @@ mostrarHeader("pagina-funcion", $logueado);
                         <div class="col-md-4">
                         <label for="lugar_de_procedencia" class="form-label">Adelanto:</label>
                         <input type="text" class="form-control" id="adelanto" readonly>
+                        <input type="hidden" class="form-control" id="adelanto2" readonly>
                         </div>
                       </div>
       </div>
@@ -204,10 +204,11 @@ mostrarHeader("pagina-funcion", $logueado);
     <br>
     <br>
   </div>
-  
+  <div class="col-sm-6">
+    
+  </div>
 </div>
 </div>
-
 <script>
   const inputFecha1 = document.getElementById('fecha_llegada');
   const inputFecha2 = document.getElementById('fecha_ingreso');
@@ -235,9 +236,8 @@ mostrarHeader("pagina-funcion", $logueado);
                     // Sumar uno al valor de numero_correlativo antes de la concatenación
                     let numeroCorrelativo = parseInt(item.numero_correlativo) + 1;
                     var concatenatedData = item.codigo + numeroCorrelativo.toString().padStart(6, '0');
-                    concatenatedDataArray.push(concatenatedData); // Agregar un espacio para separar los valores
+                    concatenatedDataArray.push(concatenatedData);
                 });
-
                 // Actualizar el valor del campo de entrada
                 document.getElementById("nro_reserva").value = concatenatedDataArray;
             })
@@ -301,8 +301,7 @@ mostrarHeader("pagina-funcion", $logueado);
             selectElement.appendChild(option);
         });
         }
-
-        document.addEventListener("DOMContentLoaded", function() {
+            document.addEventListener("DOMContentLoaded", function() {
               selectTipo.addEventListener("change", function() {
               precioVentaInput.value = " ";
               selectPrecios.selectedIndex = 0
@@ -398,6 +397,13 @@ mostrarHeader("pagina-funcion", $logueado);
     let carritoItems = [];
 
 function agregarProducto() {
+  // Obtener los elementos de entrada por su ID
+  var porcentajeInput = document.getElementById("porcentaje");
+  var adelantoInput = document.getElementById("adelanto");
+  
+  // Limpiar los valores de los elementos de entrada
+  porcentajeInput.value = '';
+  adelantoInput.value = '';
   const tipoInput = document.getElementById('tipo');
   const habitacionInput = document.getElementById('habitacion');
   const personasInput = document.getElementById('personas');
@@ -466,8 +472,9 @@ function actualizarCarrito() {
    
    totalFinal = carritoItems.reduce((total, item) => total + (item.monto * item.noches), 0);
    const totalFinalLabel = document.getElementById('total-final-label');
+   const totalFinalLabel2 = document.getElementById('total2');
    totalFinalLabel.value = totalFinal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  
+   totalFinalLabel2.value = totalFinal.toFixed(2);
     // Mostrar el total de personas en el input correspondiente
     const totalPersonasInput = document.getElementById('total-personas');
     totalPersonasInput.value = totalPersonas;
@@ -477,13 +484,16 @@ function actualizarCarrito() {
 document.addEventListener("DOMContentLoaded", function() {
             var porcentajeInput = document.getElementById("porcentaje");
             var adelantoInput = document.getElementById("adelanto");
+            var adelantoInput2 = document.getElementById("adelanto2");
 
             porcentajeInput.addEventListener("change", function() {
                 var porcentaje = parseFloat(porcentajeInput.value);
                 if (!isNaN(porcentaje)) {
                     var result = (porcentaje / 100) * totalFinal;
+                    var total2 = result.toFixed(2);
                     var total = result.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                     adelantoInput.value = total;
+                    adelantoInput2.value = total2;
                 }
             });
 });
@@ -523,8 +533,8 @@ document.addEventListener('DOMContentLoaded', actualizarCarrito);
             var nro_niños = document.getElementById("nro_niños").value;
             var nro_infantes = document.getElementById("nro_infantes").value;
             var nro_personas = document.getElementById("total-personas").value;
-            var monto_total = document.getElementById("total-final-label").value;
-            var adelanto = document.getElementById("adelanto").value;
+            var monto_total = document.getElementById("total2").value;
+            var adelanto = document.getElementById("adelanto2").value;
             var porcentaje_pago = document.getElementById("porcentaje").value;
             var noches = document.getElementById("noches").value;
 

@@ -62,7 +62,7 @@ mostrarHeader("pagina-funcion", $logueado);
             const tabla = document.getElementById('rooming').getElementsByTagName('tbody')[0];
 
             // Limpiar la tabla antes de agregar nuevos datos
-            //tabla.innerHTML = '';
+            tabla.innerHTML = '';
             //console.log(data);
             // Iterar sobre los datos y construir las filas de la tabla
             data.forEach(item => {
@@ -76,8 +76,8 @@ mostrarHeader("pagina-funcion", $logueado);
                 <td>${item.nro_personas || ''}</td>
                 <td>${item.fecha_llegada || ''}</td>
                 <td>${item.fecha_salida || ''}</td>
-                <td><a href="http://localhost:8080/prueba/Formulario-Huespedes.php?parametro1=${item.nro_reserva}&parametro2=${item.nro_registro_maestro}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
-                `;
+                <td><a href="http://192.168.1.11:8080/hotelarenasspa/cliente/views/gestionar-checkin-hotel?parametro1=${item.nro_reserva}&parametro2=${item.nro_registro_maestro}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
+            `;
             });
             })
             .catch(error => console.error('Error al obtener datos de la API:', error));
