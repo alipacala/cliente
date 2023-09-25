@@ -210,6 +210,33 @@ mostrarHeader("pagina-funcion", $logueado);
 </div>
 </div>
 <script>
+        // Función para cargar los datos de la API y actualizar los inputs
+        function cargarDatos() {
+          //obtenemos el numero de registro maestro del forumlario
+          var codigo = document.getElementById('nro_registro').value;
+          const url = `api-reservas.php?codigo=${codigo}`;
+            // Realizar una solicitud HTTP GET a la URL
+            fetch(url, {
+                  method: 'GET4',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Actualizar los inputs con los datos de la API
+                    document.getElementById('ciudad').value = data[0].lugar_procedencia;
+                    document.getElementById('celular').value = data[0].telefono;
+                    document.getElementById('nombres').value = data[0].nombre;
+                    document.getElementById('fecha_in').value = data[0].fecha_llegada;
+                    document.getElementById('fecha_out').value = data[0].fecha_salida;
+                    document.getElementById('hora_in').value = data[0].hora_llegada;
+                    
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Llamar a la función cargarDatos cuando la página se cargue
+        window.addEventListener('load', cargarDatos);
+    </script>
+<script>
   const inputFecha1 = document.getElementById('fecha_llegada');
   const inputFecha2 = document.getElementById('fecha_ingreso');
 

@@ -356,7 +356,7 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       const response = await fetch(apiProductosUrl);
       let data = await response.json();
 
-      data = data.filter((producto) => producto.id_tipo_de_producto != 10 && producto.id_tipo_de_producto != 11 && producto.tipo != 'PAQ');
+      data = data.filter((producto) => producto.id_tipo_de_producto != 10 && producto.id_tipo_de_producto != 11 && producto.tipo != 'PAQ' && producto.tipo != 'SVH');
 
       const insumoSelect = document.getElementById("insumo");
       insumoSelect.innerHTML = "";

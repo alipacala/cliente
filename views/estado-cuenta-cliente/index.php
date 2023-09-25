@@ -1419,6 +1419,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       });
 
       agregarCeldaTotal();
+      actualizarBotonCerrarCuenta();
     } catch (error) {
       console.error(
         "Error al cargar los datos de los documentos detalles: ",

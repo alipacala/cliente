@@ -306,6 +306,33 @@ mostrarHeader("pagina-funcion", $logueado);
 </div>
 </form>
 <script>
+        // Función para cargar los datos de la API y actualizar los inputs
+        function cargarDatos() {
+          //obtenemos el numero de registro maestro del forumlario
+          var codigo = document.getElementById('nro_registro').value;
+          const url = `<?php echo URL_API_CARLITOS ?>/api-reservas.php?codigo=${codigo}`;
+            // Realizar una solicitud HTTP GET a la URL
+            fetch(url, {
+                  method: 'GET4',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Actualizar los inputs con los datos de la API
+                    document.getElementById('ciudad').value = data[0].lugar_procedencia;
+                    document.getElementById('celular').value = data[0].telefono;
+                    document.getElementById('nombres').value = data[0].nombre;
+                    document.getElementById('fecha_in').value = data[0].fecha_llegada;
+                    document.getElementById('fecha_out').value = data[0].fecha_salida;
+                    document.getElementById('hora_in').value = data[0].hora_llegada;
+                    
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Llamar a la función cargarDatos cuando la página se cargue
+        window.addEventListener('load', cargarDatos);
+    </script>
+<script>
  function BuscarReniec() {
     // Obtén los valores de los campos de entrada
     var tipoDocumento = document.getElementById('tipo_documento_comprobante').value;
@@ -430,14 +457,13 @@ var url = window.location.href;
 
 // Crea un objeto URL con la URL actual
 var urlObj = new URL(url);
-
-// Comprueba si la URL contiene el parámetro "foo"
-if (url.includes('parametro1')) {
-  // Si el parámetro "foo" está presente, ejecuta una función
-  funcionConParametros();
-} else {
-  // Si el parámetro "foo" no está presente, ejecuta otra función
+// Comprueba si los parámetros tienen el valor "null"
+if (url.includes('parametro1=null') && url.includes('parametro2=null')) {
+  // Si ambos parámetros tienen el valor "null", ejecuta una función
   funcionSinParametros();
+} else {
+  // Si al menos uno de los parámetros no tiene el valor "null", ejecuta otra función
+  funcionConParametros();
 }
 
 // Define las funciones que deseas ejecutar

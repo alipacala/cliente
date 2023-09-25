@@ -44,7 +44,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             <option value="2021">2021</option>
           </select>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-2 my-auto">
           <div class="form-check form-switch">
             <input
               class="form-check-input"
@@ -73,7 +73,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         <table id="tabla-comprobantes" class="table table-bordered table-hover">
           <thead>
             <tr>
-              <th class="text-center">FECHA</th>
+              <th class="text-center" style="min-width: 100px">FECHA</th>
               <th class="text-center">TIPO DOC</th>
               <th class="text-center">NRO COMPROBANTE</th>
               <th class="text-center">NOMBRE</th>
@@ -87,6 +87,99 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           <tbody></tbody>
         </table>
       </div>
+
+      <button
+        class="btn btn-outline-secondary"
+        onclick="imprimirRegistroVentas(event)"
+      >
+        <i class="fas fa-print"></i> Imprimir
+      </button>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="modal-confirmar-anulado"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal-confirmar-anulado-label"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-confirmar-anulado-label">
+          Detalles del Comprobante
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          id="cerrar-modal-recibo"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row w-75 mx-auto">
+          <div class="col-md-12">
+            <label for="nro-voucher">Cliente:</label>
+            <input type="text" class="form-control" id="cliente" disabled />
+          </div>
+          <div class="col-md-12">
+            <label for="nro-voucher">Nro Comprobante:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nro-comprobante"
+              disabled
+            />
+          </div>
+          <div class="col-md-12">
+            <label for="nro-voucher">Fecha:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="fecha-confirmar"
+              disabled
+            />
+          </div>
+          <div class="col-md-12">
+            <label for="nro-voucher">Monto TOTAL:</label>
+            <input type="text" class="form-control" id="monto-total" disabled />
+          </div>
+        </div>
+
+        <form id="form-confirmar-anulado">
+          <div class="row w-75 mx-auto p-3 border border-1 rounded-2 mt-3">
+            <div class="col-md-12 mb-3">
+              <label for="nro-voucher">Ingrese Usuario:</label>
+              <input type="text" class="form-control" id="usuario" required />
+            </div>
+            <div class="col-md-12 mb-3">
+              <label for="nro-voucher">Ingrese contraseña:</label>
+              <input
+                type="password"
+                class="form-control"
+                id="contraseña"
+                required
+              />
+            </div>
+            <input
+              type="submit"
+              class="btn btn-danger me-auto mb-3"
+              id="anular-comprobante"
+              value="ANULAR"
+            />
+            <button
+              class="btn btn-outline-secondary mb-3"
+              data-bs-dismiss="modal"
+            >
+              SALIR
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>
@@ -94,28 +187,100 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 <script>
   const apiComprobantesVentasUrl =
     "<?php echo URL_API_NUEVA ?>/comprobantes-ventas";
+  const apiReportesUrl = "<?php echo URL_API_NUEVA ?>/reportes";
 
-  async function wrapper() {}
+  let modal;
 
-  function buscarComprobantes() {
+  async function wrapper() {
+    modal = new bootstrap.Modal(
+      document.getElementById("modal-confirmar-anulado")
+    );
+
+    prepararFormulario();
+  }
+
+  function imprimirRegistroVentas(event) {
+    event.preventDefault();
+    const url = `${apiReportesUrl}?tipo=registro-ventas&${prepararUrlParams()}`;
+    open(url, "_blank");
+  }
+
+  function agregarFilaTotal() {
+    const tbody = document.getElementById("tabla-comprobantes").tBodies[0];
+    const row = tbody.insertRow();
+
+    const cell = row.insertCell();
+    cell.colSpan = 4;
+
+    const total = row.insertCell();
+    total.innerHTML = "TOTAL";
+
+    const montoTotal = row.insertCell();
+    montoTotal.innerHTML = calcularTotal();
+    montoTotal.colSpan = 4;
+  }
+
+  function calcularTotal() {
+    const tbody = document.getElementById("tabla-comprobantes").tBodies[0];
+    const rows = tbody.querySelectorAll("tr:not(:last-child)");
+
+    let total = 0;
+
+    rows.forEach((row) => {
+      console.log(row.dataset.monto);
+      total += parseFloat(row.dataset.monto);
+    });
+
+    return formatearCantidad(total);
+  }
+
+  function formatearCantidad(numero) {
+    const numeroFormateado = parseFloat(numero).toFixed(2);
+    const partes = numeroFormateado.toString().split(".");
+    partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return partes.join(".");
+  }
+
+  function prepararFormulario() {
+    const formAnularComprobante = document.getElementById(
+      "form-confirmar-anulado"
+    );
+
+    formAnularComprobante.addEventListener("submit", (event) => {
+      event.preventDefault();
+      anularComprobante();
+    });
+  }
+
+  function prepararUrlParams() {
     const fecha = document.getElementById("fecha").value;
     const mes = document.getElementById("mes").value;
     const anio = document.getElementById("anio").value;
     const soloBolFact = document.getElementById("solo-bol-fact").checked;
+    const usuario = '<?php echo $_SESSION["usuario"]["id_usuario"] ?>';
 
-    let url;
+    let urlParams;
 
     if (mes === "0") {
-      url = `${apiComprobantesVentasUrl}?fecha=${fecha}`;
+      urlParams = `fecha=${fecha}`;
     } else {
-      url = `${apiComprobantesVentasUrl}?mes=${mes}&anio=${anio}`;
+      urlParams = `mes=${mes}&anio=${anio}`;
     }
 
     if (soloBolFact) {
-      url += `${soloBolFact ? "&solo_bol_fact" : ""}`;
+      urlParams += `${soloBolFact ? "&solo_bol_fact" : ""}`;
     }
 
-    cargarComprobantes(url);
+    urlParams += `&id_usuario=${usuario}`;
+
+    return urlParams;
+  }
+
+  async function buscarComprobantes() {
+    const url = apiComprobantesVentasUrl + "?" + prepararUrlParams();
+
+    await cargarComprobantes(url);
+    agregarFilaTotal();
   }
 
   async function cargarComprobantes(url) {
@@ -129,6 +294,12 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       const tbody = document.getElementById("tabla-comprobantes").tBodies[0];
       comprobantes.forEach((comprobante) => {
         const row = tbody.insertRow();
+
+        row.dataset.id = comprobante.id;
+        row.dataset.nombre = comprobante.nombre;
+        row.dataset.nro_comprobante = comprobante.nro_comprobante;
+        row.dataset.fecha = comprobante.fecha;
+        row.dataset.monto = comprobante.monto;
 
         const fecha = row.insertCell();
         fecha.innerHTML = comprobante.fecha;
@@ -146,7 +317,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         dniRuc.innerHTML = comprobante.dni_ruc;
 
         const monto = row.insertCell();
-        monto.innerHTML = comprobante.monto;
+        monto.innerHTML = formatearCantidad(comprobante.monto);
 
         const estado = row.insertCell();
         estado.innerHTML = comprobante.estado;
@@ -155,25 +326,63 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         usuarioReg.innerHTML = comprobante.usuario_reg;
 
         const funcion = row.insertCell();
-        funcion.innerHTML = `
+
+        if (comprobante.estado != "ANULADO") {
+          funcion.innerHTML = `
           <button
-            class="btn btn-outline-danger"
-            onclick="anularComprobante(${comprobante.id})"
+          class="btn btn-outline-danger"
+          onclick="mostrarModalConfirmarAnulado(event)"
           >
-            <i class="fas fa-x"></i>
+          <i class="fas fa-x"></i>
           </button>
-        `;
+          `;
+        }
       });
     } catch (error) {
       console.error("No se pudo cargar los comprobantes de venta: ", error);
     }
   }
 
-  async function anularComprobante(id) {
-    const url = `${apiComprobantesVentasUrl}/${id}`;
+  function mostrarModalConfirmarAnulado(event) {
+    const row = event.target.closest("tr");
+
+    const cliente = document.getElementById("cliente");
+    const nroComprobante = document.getElementById("nro-comprobante");
+    const fecha = document.getElementById("fecha-confirmar");
+    const montoTotal = document.getElementById("monto-total");
+    const form = document.getElementById("form-confirmar-anulado");
+
+    cliente.value = row.dataset.nombre;
+    nroComprobante.value = row.dataset.nro_comprobante;
+    fecha.value = row.dataset.fecha;
+    montoTotal.value = row.dataset.monto;
+    form.dataset.id = row.dataset.id;
+
+    modal.show();
+  }
+
+  async function anularComprobante() {
+    const id = document.getElementById("form-confirmar-anulado").dataset.id;
+    const usuario = document.getElementById("usuario").value;
+    const clave = document.getElementById("contraseña").value;
+
+    // limpiar formulario
+    document.getElementById("usuario").value = "";
+    document.getElementById("contraseña").value = "";
+
+    const url = `${apiComprobantesVentasUrl}/${id}/anular`;
+
+    const body = {
+      usuario,
+      clave,
+    };
 
     const options = {
-      method: "DELETE",
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
     };
 
     try {
@@ -182,6 +391,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       alert(data.mensaje);
       buscarComprobantes();
+
+      modal.hide();
     } catch (error) {
       console.error("No se pudo anular el comprobante: ", error);
     }
