@@ -12,6 +12,7 @@ mostrarHeader("pagina-funcion", $logueado);
 ?>
 
 <div class="container my-5 main-cont">
+  <div id="alert-place"></div>
   <div class="card">
     <div class="card-header py-3">
       <h2 class="text-center">CAMBIO DE PRECIO</h2>
@@ -61,8 +62,10 @@ mostrarHeader("pagina-funcion", $logueado);
 
   let gruposCargados = [];
 
-  function wrapper() {
-    cargarGrupos();
+  async function wrapper() {
+    mostrarAlertaSiHayMensaje();
+
+    await cargarGrupos();
   }
   
   // formatea las cantidades en soles, ejemplo: 1000 -> 1000.00
@@ -98,7 +101,8 @@ mostrarHeader("pagina-funcion", $logueado);
 
       select.addEventListener("change", cargarProductos);
     } catch (error) {
-      console.error("Error al cargar los grupos: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar los grupos", "consultar");
     }
   }
 
@@ -345,7 +349,8 @@ mostrarHeader("pagina-funcion", $logueado);
         });
       });
     } catch (error) {
-      console.error("Error al cargar los productos: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar los productos", "consultar");
     }
 
     prepararInputs();
@@ -441,15 +446,15 @@ mostrarHeader("pagina-funcion", $logueado);
       const response = await fetch(url, options);
       const data = await response.json();
 
-      console.log(data);
+      mostrarAlert("ok", "Se guardaron los cambios correctamente", "editar");
     } catch (error) {
-      console.error("Error al cambiar los precios y costos: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cambiar los precios y costos", "editar");
     }
   }
 
   function prepararInputs() {
     const inputs = document.querySelectorAll("input[type=number]");
-    console.log(inputs);
 
     inputs.forEach((input) => {
       input.addEventListener.addEventListener("keypress", (event) => {

@@ -1521,9 +1521,6 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       ? checking.tipo_documento
       : mapTiposDocumento[persona.tipo_documento] ?? "";
 
-      console.log(persona);
-      console.log(checking);
-
     nombre.value = checking.razon_social
       ? checking.razon_social
       : `${persona.apellidos}, ${persona.nombres}` ?? "";
@@ -1721,8 +1718,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
         direccion.value = limpiarGuiones(personaNaturalJuridica.direccion);
         lugar.value = limpiarGuiones(personaNaturalJuridica.lugar);
       } catch (error) {
-        console.error(error
-        );
+        console.error(error);
         mostrarAlert(
           "error",
           "Error al cargar los datos de la persona",

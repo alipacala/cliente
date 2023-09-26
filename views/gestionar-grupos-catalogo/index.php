@@ -9,6 +9,7 @@ isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
 mostrarHeader("pagina-funcion", $logueado); ?>
 
 <div class="container my-5 main-cont">
+  <div id="alert-place"></div>
   <div class="card">
     <div class="card-header py-3">
       <h2 class="text-center">Módulo Grupos del Catálogo</h2>
@@ -151,6 +152,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   let idGrupo = 0;
 
   async function wrapper() {
+    mostrarAlertaSiHayMensaje();
+
     await cargarGrupos();
     prepararBotonCrearGrupo();
   }
@@ -225,7 +228,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       gruposCargados = data;
       cargarGruposSelect();
     } catch (error) {
-      console.error("Error al cargar los grupos: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar los grupos", "consultar");
     }
   }
 
@@ -275,50 +279,15 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       if (response.status != 200) throw data;
 
-      mostrarNotificacion("ok", data.mensaje, "borrar");
-      console.log("Grupo borrado: ", data);
+      mostrarAlert("ok", data.mensaje, "borrar");
+      console.log(data);
 
       limpiarTabla();
       await cargarGrupos();
     } catch (error) {
-      mostrarNotificacion("error", error.mensaje, "borrar");
-      console.log("Error al borrar el grupo: ", error);
+      console.log(error);
+      mostrarAlert("error", error.mensaje, "borrar");
     }
-  }
-
-  function mostrarNotificacion(tipo, mensaje, operacion) {
-    const tipos = {
-      error: ["Error", "danger"],
-      ok: ["Correcto", "success"],
-    };
-
-    const operaciones = {
-      crear: "plus",
-      editar: "pencil",
-      borrar: "trash",
-    };
-
-    const notificacion = document.getElementById("noti");
-    const titulo = document.getElementById("noti-label");
-    const icono = document.getElementById("icono");
-    const cuerpo = notificacion.querySelector(".modal-body");
-
-    for (const tipoNotificacion in tipos) {
-      notificacion.classList.remove(`modal-${tipos[tipoNotificacion]}`);
-    }
-    notificacion.classList.add(`modal-${tipos[tipo][1]}`);
-
-    for (const operacionNotificacion in operaciones) {
-      icono.classList.remove(`fa-${operaciones[operacionNotificacion]}`);
-    }
-    icono.classList.add(`fa-${operaciones[operacion]}`);
-
-    cuerpo.textContent = mensaje;
-
-    titulo.textContent = tipos[tipo][0];
-
-    const modalNotificacion = new bootstrap.Modal(notificacion);
-    modalNotificacion.show();
   }
 
   async function actualizarGrupo(e, campo) {
@@ -354,8 +323,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       if (response.status != 200) throw data;
 
-      mostrarNotificacion("ok", data.mensaje, "editar");
-      console.log("Grupo actualizado: ", data);
+      console.log(data);
+      mostrarAlert("ok", data.mensaje, "editar");
 
       limpiarTabla();
       await cargarGrupos();
@@ -365,8 +334,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         ocultarModalGrupo();
       }
     } catch (error) {
-      mostrarNotificacion("error", error.mensaje, "editar");
-      console.error("Error al actualizar el grupo: ", error);
+      console.error(error);
+      mostrarAlert("error", error.mensaje, "editar");
     }
   }
 
@@ -425,16 +394,16 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       if (response.status != 201) throw data;
 
-      mostrarNotificacion("ok", data.mensaje, "crear");
-      console.log("Grupo creado: ", data);
+      console.log(data);
+      mostrarAlert("ok", data.mensaje, "crear");
 
       limpiarTabla();
       await cargarGrupos();
       limpiarFormulario();
       ocultarModalGrupo();
     } catch (error) {
-      mostrarNotificacion("error", error.mensaje, "crear");
-      console.error("Error al crear el grupo: ", error);
+      console.error(error);
+      mostrarAlert("error", error.mensaje, "crear");
     }
   }
 

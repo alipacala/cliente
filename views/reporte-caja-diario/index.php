@@ -10,6 +10,7 @@ mostrarHeader("pagina-funcion", $logueado); $editar = isset($_GET["id"]) ?
 $_GET["id"] : false; ?>
 
 <div class="container my-5 main-cont">
+  <div id="alert-place"></div>
   <div class="card">
     <div class="card-header py-3">
       <h2 class="text-center">Reporte diario de caja</h2>
@@ -130,6 +131,8 @@ $_GET["id"] : false; ?>
   const apiRecibosUrl = "<?php echo URL_API_NUEVA ?>/recibos-pago";
 
   function wrapper() {
+    mostrarAlertaSiHayMensaje();
+
     prepararBotonGenerar();
     prepararBotonCerrarTurno1();
     prepararBotonesNoCerrarTurno();
@@ -174,7 +177,8 @@ $_GET["id"] : false; ?>
 
         generarReporte();
       } catch (error) {
-        console.error("Error al cerrar el turno: ", error);
+        console.error(error);
+        mostrarAlert("error", "No se pudo cerrar el turno", "editar");
       }
     });
   }

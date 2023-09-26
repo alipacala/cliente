@@ -74,6 +74,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
   async function wrapper() {
     mostrarAlertaSiHayMensaje();
+    
     await cargarChekings();
   }
 
@@ -163,7 +164,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         0
       );
     } catch (error) {
-      console.log("Error al cargar los chekings: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar los chekings", "consultar");
     }
   }
 

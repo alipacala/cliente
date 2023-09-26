@@ -13,6 +13,7 @@ $idUsuario = $_SESSION["usuario"]["id_usuario"];
 mostrarHeader("pagina-funcion", $logueado);
 ?>
 <div class="container my-5 main-cont">
+  <div id="alert-place"></div>
   <div class="card">
     <div class="card-header py-3">
       <h2 class="text-center">Agregar comanda</h2>
@@ -286,6 +287,8 @@ mostrarHeader("pagina-funcion", $logueado);
   let detalles = [];
 
   async function wrapper() {
+    mostrarAlertaSiHayMensaje();
+
     mostrarCodigoComanda();
     await cargarDatosGruposYProductos();
     await cargarDatosTerapistas();
@@ -333,7 +336,8 @@ mostrarHeader("pagina-funcion", $logueado);
 
       terapistas = data;
     } catch (error) {
-      console.error("Error al cargar los datos de los terapistas: " + error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar los terapistas", "consultar");
     }
   }
 
@@ -436,8 +440,6 @@ mostrarHeader("pagina-funcion", $logueado);
       detalles: detalles,
     };
 
-    console.log(data);
-
     const options = {
       method: "POST",
       headers: {
@@ -454,7 +456,8 @@ mostrarHeader("pagina-funcion", $logueado);
         window.location.href = `./../estado-cuenta-cliente?nro_registro_maestro=${nroRegistroMaestro}&ok&mensaje=Comanda guardada correctamente&op=crear`;
       }
     } catch (error) {
-      console.error("Error al guardar la comanda: " + error);
+      console.error(error);
+      mostrarAlert("error", "Error al guardar la comanda", "crear");
     }
   }
 
@@ -475,7 +478,8 @@ mostrarHeader("pagina-funcion", $logueado);
         selectCliente.appendChild(option);
       });
     } catch (error) {
-      console.error("Error al cargar los datos de los acompañantes: " + error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar los acompañantes", "consultar");
     }
   }
 
@@ -553,7 +557,8 @@ mostrarHeader("pagina-funcion", $logueado);
 
       nroComanda.value = data.codigo;
     } catch (error) {
-      console.error("Error al cargar el codigo de comanda: " + error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar el código de la comanda", "crear");
     }
   }
 
@@ -603,9 +608,8 @@ mostrarHeader("pagina-funcion", $logueado);
 
       cargarGrupos();
     } catch (error) {
-      console.error(
-        "Error al cargar los datos de los grupos y productos: " + error
-      );
+      console.error(error);
+      mostrarAlert("error", "Error al cargar los grupos y productos", "crear");
     }
   }
 

@@ -14,6 +14,7 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
 ?>
 
 <div class="container my-5 main-cont">
+  <div id="alert-place"></div>
   <div class="card">
     <div class="card-header py-3">
       <h2 class="text-center">
@@ -251,6 +252,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
   const id = params.get("id");
 
   async function wrapper() {
+    mostrarAlertaSiHayMensaje();
+
     await cargarProductos();
     await cargarClasificacionVentas();
 

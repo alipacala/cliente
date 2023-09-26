@@ -222,6 +222,8 @@ $_GET["id"] : false; ?>
   const id = params.get("id");
 
   async function wrapper() {
+    mostrarAlertaSiHayMensaje();
+
     await cargarClasificacionVentas();
     await cargarCentralCostos();
     await cargarTiposDeProducto();
@@ -259,8 +261,8 @@ $_GET["id"] : false; ?>
       document.getElementById("cantidad_unidades").value =
         data.cantidad_de_fracciones;
     } catch (error) {
-      mostrarAlert("error", "Error al cargar el producto", "consultar");
       console.error(error);
+      mostrarAlert("error", "Error al cargar el producto", "consultar");
     }
   }
 
@@ -304,12 +306,12 @@ $_GET["id"] : false; ?>
         clasificacionVentasSelect.appendChild(option);
       });
     } catch (error) {
+      console.error(error);
       mostrarAlert(
         "error",
         "Error al cargar las clasificaciones de ventas",
         "consultar"
       );
-      console.error(error);
     }
   }
 
@@ -382,12 +384,12 @@ $_GET["id"] : false; ?>
         centralCostosSelect.appendChild(option);
       });
     } catch (error) {
+      console.error(error);
       mostrarAlert(
         "error",
         "Error al cargar las centrales de costos",
         "consultar"
       );
-      console.error(error);
     }
   }
 
@@ -411,12 +413,12 @@ $_GET["id"] : false; ?>
         tipoDeProductoSelect.appendChild(option);
       });
     } catch (error) {
+      console.error(error);
       mostrarAlert(
         "error",
         "Error al cargar las centrales de costos",
         "consultar"
       );
-      console.error(error);
     }
   }
 
@@ -464,8 +466,8 @@ $_GET["id"] : false; ?>
         editar ? "editar" : "crear"
       }`;
     } catch (error) {
-      mostrarAlert("error", "Error al crear el producto", "crear");
       console.error(error);
+      mostrarAlert("error", "Error al crear el producto", "crear");
     }
   }
 

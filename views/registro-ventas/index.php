@@ -9,6 +9,7 @@ isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
 mostrarHeader("pagina-funcion", $logueado); ?>
 
 <div class="container my-5 main-cont">
+  <div id="alert-place"></div>
   <div class="card">
     <div class="card-header py-3">
       <h2 class="text-center">REGISTRO DE VENTAS</h2>
@@ -192,6 +193,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   let modal;
 
   async function wrapper() {
+    mostrarAlertaSiHayMensaje();
+
     modal = new bootstrap.Modal(
       document.getElementById("modal-confirmar-anulado")
     );
@@ -230,7 +233,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     let total = 0;
 
     rows.forEach((row) => {
-      console.log(row.dataset.monto);
       total += parseFloat(row.dataset.monto);
     });
 
@@ -287,7 +289,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   }
 
   async function cargarComprobantes(url) {
-    console.log(url);
     try {
       const response = await fetch(url);
       const comprobantes = await response.json();
@@ -343,7 +344,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         }
       });
     } catch (error) {
-      console.error("No se pudo cargar los comprobantes de venta: ", error);
+      console.error(error);
+      mostrarAlert("error", "No se pudo cargar los comprobantes", "consultar");
     }
   }
 
@@ -398,7 +400,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       modal.hide();
     } catch (error) {
-      console.error("No se pudo anular el comprobante: ", error);
+      console.error(error);
+      mostrarAlert("error", "No se pudo anular el comprobante", "borrar");
     }
   }
 

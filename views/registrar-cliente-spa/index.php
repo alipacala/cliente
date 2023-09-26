@@ -9,6 +9,7 @@ isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
 mostrarHeader("pagina-funcion", $logueado); ?>
 
 <div class="container my-5 main-cont">
+  <div id="alert-place"></div>
   <div class="card">
     <div class="card-header py-3">
       <h2 class="text-center">Formulario de Registro de Cliente SPA</h2>
@@ -138,7 +139,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   let rowId = 1;
 
   async function wrapper() {
-    cargarNroRegistro();
+    mostrarAlertaSiHayMensaje();
+
+    await cargarNroRegistro();
 
     const apellidosNombresTitular = document.getElementById(
       "apellidos_nombres_titular"
@@ -165,7 +168,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       );
       nroRegistroMaestro.value = data.codigo;
     } catch (error) {
-      console.error("Error al cargar el código correlativo: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar el nro. de registro", "consultar");
     }
   }
 
@@ -238,9 +242,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       const data = await response.json();
       console.log(data);
 
-      window.location.href = "./../relacion-clientes-hotel-spa";
+      window.location.href = "./../relacion-clientes-hotel-spa?ok&mensaje=Checking creado correctamente&op=crear";
     } catch (error) {
-      console.error("Error al crear el cheking:", error);
+      console.error(error);
+      mostrarAlert("error", "Error al registrar el checking", "crear");
     }
   }
 
@@ -287,7 +292,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           agregarFilaAcompanante();
         }
       } catch (error) {
-        console.error("Error al buscar la persona: ", error);
+        console.error(error);
+        mostrarAlert("error", "Error al consultar la persona", "consultar");
       }
     });
   }
@@ -430,8 +436,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       chekingRegistro.titular = null;
       idTitular = 0;
     }
-
-    console.log(chekingRegistro);
   }
 
   function prepararFormulario() {

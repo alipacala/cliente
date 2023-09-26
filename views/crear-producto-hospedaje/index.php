@@ -14,6 +14,7 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
 ?>
 
 <div class="container my-5 main-cont">
+  <div id="alert-place"></div>
   <div class="card">
     <div class="card-header py-3">
       <h2 class="text-center"><?php echo $editar ? "Editar" : "Crear" ?> Ficha de Hospedaje</h2>
@@ -108,6 +109,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
   const id = params.get("id");
 
   async function wrapper() {
+    mostrarAlertaSiHayMensaje();
+
     await cargarClasificacionVentas();
     await cargarCentralCostos();
     
@@ -129,7 +132,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       const codigo = document.getElementById("codigo");
       codigo.value = data.codigo;
     } catch (error) {
-      console.error("Error al cargar el código del producto: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar el código del producto", "consultar");
     }
   }
 
@@ -149,7 +153,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       document.getElementById("fecha_vigencia").value =
         data.fecha_de_vigencia;
     } catch (error) {
-      console.error("Error al cargar el producto: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar el producto", "consultar");
     }
   }
 
@@ -177,7 +182,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
         clasificacionVentasSelect.appendChild(option);
       });
     } catch (error) {
-      console.error("Error al cargar los grupos de la carta: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar la clasificación de ventas", "consultar");
     }
   }
   
@@ -250,7 +256,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
         centralCostosSelect.appendChild(option);
       });
     } catch (error) {
-      console.error("Error al cargar las centrales de costos: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar la central de costos", "consultar");
     }
   }
 
@@ -285,7 +292,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
         editar ? "editar" : "crear"
       }`;
     } catch (error) {
-      console.error("Error al crear el producto: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al crear el producto", "consultar");
     }
   }
 

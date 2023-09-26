@@ -14,6 +14,7 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
 ?>
 
 <div class="container my-5 main-cont">
+  <div id="alert-place"></div>
   <div class="card">
     <div class="card-header py-3">
       <h2 class="text-center">
@@ -283,6 +284,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
   const id = params.get("id");
 
   async function wrapper() {
+    mostrarAlertaSiHayMensaje();
+
     await cargarProductos();
     await cargarClasificacionVentas();
     await cargarCentralesCostos();
@@ -307,7 +310,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       const codigo = document.getElementById("codigo");
       codigo.value = data.codigo;
     } catch (error) {
-      console.error("Error al cargar el código de la receta: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar el código de la receta", "consultar");
     }
   }
 
@@ -376,7 +380,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       actualizarTabla();
       calcularCostoTotal();
     } catch (error) {
-      console.error("Error al cargar el producto receta: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar el producto receta", "consultar");
     }
   }
 
@@ -427,7 +432,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       const agregarInsumoButton = document.getElementById("agregar-insumo");
       agregarInsumoButton.addEventListener("click", alAgregarInsumo);
     } catch (error) {
-      console.error("Error al cargar los productos: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar los productos", "consultar");
     }
   }
 
@@ -492,7 +498,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
         clasificacionVentasSelect.appendChild(option);
       });
     } catch (error) {
-      console.error("Error al cargar los grupos de la carta: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar las clasificaciones de ventas", "consultar");
     }
   }
 
@@ -564,7 +571,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
         centralCostosSelect.appendChild(option);
       });
     } catch (error) {
-      console.error("Error al cargar las centrales de costos: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar las centrales de costos", "consultar");
     }
   }
 
@@ -632,13 +640,12 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       const data = await response.json();
       console.log(data);
       
-      if (editar) {
-        window.location.href = "./../listado-catalogo";
-      } else {
-        window.location.href = "./../listado-catalogo";
-      }
+      window.location.href = `./../listado-catalogo/?ok&mensaje=Receta ${editar ? "actualizada" : "creada"} correctamente&op=${
+        editar ? "editar" : "crear"
+      }`;
     } catch (error) {
-      console.error("Error al crear el producto receta e insumos: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al crear el producto", "crear");
     }
   }
 

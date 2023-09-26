@@ -89,27 +89,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     prepararBotonCrear();
   }
 
-  function mostrarAlert(tipo, mensaje, operacion) {
-    const tipos = {
-      error: "danger",
-      ok: "success",
-    };
-
-    const operaciones = {
-      crear: "plus",
-      editar: "pencil",
-      borrar: "trash",
-      consultar: "table"
-    };
-    
-    const alertWrapper = document.getElementById("alert-place");
-    alertWrapper.innerHTML += `
-      <div class="alert alert-${tipos[tipo]} alert-dismissible" role="alert">
-        <div><i class="fa-solid fa-${operaciones[operacion]} fs-6 me-3"></i> ${mensaje}</div>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>`;
-  }
-
   function prepararBotonCrear() {
     const btnCrearProducto = document.getElementById("btn-crear-producto");
     btnCrearProducto.addEventListener("click", () => {
@@ -158,7 +137,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       select.addEventListener("change", cargarProductosEnTabla);
     } catch (error) {
-      console.error("Error al cargar los grupos: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar los grupos", "consultar");
     }
   }
 
@@ -213,7 +193,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           };
         });
     } catch (error) {
-      console.error("Error al cargar los grupos: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar los productos", "consultar");
     }
   }
 
