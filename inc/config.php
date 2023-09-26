@@ -1,5 +1,5 @@
 <?php
-define("ENV", "dev");
+define("ENV", "lan");
 
 switch (ENV) {
   case 'dev':
@@ -12,11 +12,13 @@ switch (ENV) {
   case 'server':
     define("URL_API_NUEVA", "http://192.168.1.11:8080/hotelarenasspa/api");
     define("URL_API_CARLITOS", "http://192.168.1.11:8080/hotelarenasspa/php-api-carlitos");
+    define("URL", "http://192.168.1.11:8080/hotelarenasspa/cliente/views");
     break;
     
   case 'vm-prod':
     define("URL_API_NUEVA", "http://20.22.236.117/apitest");
     define("URL_API_CARLITOS", "http://20.22.236.117/php-api-carlitos");
+    define("URL", "http://20.22.236.117/cliente/views");
     break;
 }
 

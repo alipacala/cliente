@@ -318,12 +318,39 @@ mostrarHeader("pagina-funcion", $logueado);
                 .then(response => response.json())
                 .then(data => {
                     // Actualizar los inputs con los datos de la API
+                    var selectElement = document.getElementById("habitacion");
+                    const selectedOption = selectElement.options[selectElement.selectedIndex];
+                    document.getElementById('nombres').value = data[0].nombres;
+                    document.getElementById('apellidos').value = data[0].apellidos;
+                    document.getElementById('tipo_documento').value = data[0].tipo_documento;
                     document.getElementById('ciudad').value = data[0].lugar_procedencia;
                     document.getElementById('celular').value = data[0].telefono;
-                    document.getElementById('nombres').value = data[0].nombre;
-                    document.getElementById('fecha_in').value = data[0].fecha_llegada;
-                    document.getElementById('fecha_out').value = data[0].fecha_salida;
-                    document.getElementById('hora_in').value = data[0].hora_llegada;
+                    document.getElementById('sexo').value = data[0].sexo;
+                    document.getElementById('fecha_in').value = data[0].fecha_in;
+                    document.getElementById('fecha_out').value = data[0].fecha_out;
+                    document.getElementById('hora_in').value = data[0].hora_in;
+                    document.getElementById('hora_out').value = data[0].hora_out;
+                    document.getElementById('nro_documento').value = data[0].nro_documento;
+                    document.getElementById('nro_adultos').value = data[0].nro_adultos;
+                    document.getElementById('nro_nino').value = data[0].nro_ninos;
+                    document.getElementById('nro_infantes').value = data[0].nro_infantes;
+                    document.getElementById('estacionamiento').value = data[0].estacionamiento;
+                    document.getElementById('nro_placa').value = data[0].nro_placa;
+                    document.getElementById('ocupacion').value = data[0].ocupacion;
+                    document.getElementById('email').value = data[0].email;
+                    document.getElementById('direccion').value = data[0].direccion;
+                    document.getElementById('edad').value = data[0].edad;
+                    document.getElementById('lugar_de_nacimiento').value = data[0].lugar_de_nacimiento;
+                    document.getElementById('fecha_nacimiento').value = data[0].fecha;
+                    document.getElementById('tipo_comprobante').value = data[0].tipo_comprobante;
+                    document.getElementById('tipo_documento_comprobante').value = data[0].tipo_documento_comprobante;
+                    document.getElementById('nro_documento_comprobante').value = data[0].nro_documento_comprobante;
+                    document.getElementById('razon_social').value = data[0].razon_social;
+                    document.getElementById('direccion_comprobante').value = data[0].direccion_comprobante;
+                    document.getElementById('forma_pago').value = data[0].forma_pago;
+
+                    // Iterar sobre las opciones y deseleccionarlas todas
+                    selectedOption.textContent = data[0].nro_habitacion;
                     
                 })
                 .catch(error => console.error('Error:', error));
@@ -477,11 +504,19 @@ function funcionConParametros() {
   var parametro1 = urlObj.searchParams.get('parametro1');
   // Obtiene el valor del parámetro 'parametro2' de la URL
   var parametro2 = urlObj.searchParams.get('parametro2');
+  var nro_habitacion = urlObj.searchParams.get('nro_habitacion');
+  var selectElement = document.getElementById("habitacion");
+  const selectedOption = selectElement.options[selectElement.selectedIndex];
+  var fecha_in = urlObj.searchParams.get('fecha_in');
+  var fecha_out = urlObj.searchParams.get('fecha_out');
 
     // Verifica si se encontraron los parámetros y actúa en consecuencia
     if (parametro1 !== null && parametro2 !== null) {
       document.getElementById("nro_reserva").value = parametro1;
       document.getElementById("nro_registro").value = parametro2;
+      selectedOption.textContent = nro_habitacion;
+      document.getElementById("fecha_in").value = fecha_in;
+      document.getElementById("fecha_out").value = fecha_out;
       // Puedes realizar acciones con los valores de los parámetros aquí
     } else {
       // Puedes manejar el caso en que uno o ambos parámetros no estén presentes aquí

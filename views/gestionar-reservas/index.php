@@ -88,15 +88,15 @@ mostrarHeader("pagina-funcion", $logueado);
     <div class="row">
         <div class="col-md-4">
         <label for="provincia" class="form-label">Nro Adultos:</label>
-        <input type="text" class="form-control" id="nro_adultos">
+        <input type="text" class="form-control" id="nro_adultos" value="0" required>
         </div>
         <div class="col-md-4">
         <label for="telefono" class="form-label">Nro de Niños:</label>
-        <input type="text" class="form-control" id="nro_niños">
+        <input type="text" class="form-control" id="nro_niños" value="0">
         </div>
         <div class="col-md-4">
         <label for="celular" class="form-label">Nro de Infantes:</label>
-        <input type="text" class="form-control" id="nro_infantes">
+        <input type="text" class="form-control" id="nro_infantes" value="0">
         </div>
     </div>
     <div class="row">

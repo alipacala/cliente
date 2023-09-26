@@ -830,14 +830,6 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       `option[value="${element.value}"]`
     ).textContent;
 
-    const nombre = document.getElementById("nombre");
-    const direccion = document.getElementById("direccion");
-    const lugar = document.getElementById("lugar");
-
-    nombre.value = "";
-    direccion.value = "";
-    lugar.value = "";
-
     if (opcionSeleccionada == "Sin Documento") {
       nroDocumento.value = "";
       nroDocumento.disabled = true;
@@ -1200,7 +1192,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
          <td>${acompanante.sexo}</td>
          <td>${acompanante.edad}</td>
          <td>${
-           acompanante.parentesco
+           acompanante.nro_de_orden_unico > 0
              ? acompanante.parentesco
              : "<span class='fw-bold'>TITULAR</span>"
          }</td>
@@ -1528,6 +1520,9 @@ $_SESSION["usuario"]["id_usuario"]; ?>
     tipoDocumento.value = checking.tipo_documento
       ? checking.tipo_documento
       : mapTiposDocumento[persona.tipo_documento] ?? "";
+
+      console.log(persona);
+      console.log(checking);
 
     nombre.value = checking.razon_social
       ? checking.razon_social
