@@ -78,7 +78,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               <th class="text-center">NRO COMPROBANTE</th>
               <th class="text-center">NOMBRE</th>
               <th class="text-center">DNI/RUC</th>
-              <th class="text-center">MONTO</th>
+              <th class="text-center" style="min-width: 100px">MONTO</th>
               <th class="text-center">ESTADO</th>
               <th class="text-center">USUARIO REG.</th>
               <th class="text-center">FUNCIÓN</th>
@@ -216,8 +216,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     total.innerHTML = "TOTAL";
 
     const montoTotal = row.insertCell();
-    montoTotal.innerHTML = calcularTotal();
-    montoTotal.colSpan = 4;
+    montoTotal.innerHTML = `S/ ${calcularTotal()}`;
+    montoTotal.classList.add("text-end");
+
+    const celdaVacia = row.insertCell();
+    celdaVacia.colSpan = 3;
   }
 
   function calcularTotal() {
@@ -317,6 +320,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         dniRuc.innerHTML = comprobante.dni_ruc;
 
         const monto = row.insertCell();
+        monto.classList.add("text-end");
         monto.innerHTML = formatearCantidad(comprobante.monto);
 
         const estado = row.insertCell();

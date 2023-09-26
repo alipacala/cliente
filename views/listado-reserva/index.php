@@ -72,8 +72,8 @@ mostrarHeader("pagina-funcion", $logueado);
         </div>
       </div>
       <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Aceptar</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary">Modificar</button>
       </div>
       </form>
     </div>
@@ -129,15 +129,27 @@ mostrarHeader("pagina-funcion", $logueado);
       <form class="row g-3 needs-validation" id="formulario-Chekin">
         <div class="col-md-4">
             <label for="validationCustom01" class="form-label">Nro Reserva</label>
-            <input type="text" class="form-control" id="nro_reserva2" readonly required>
+            <input type="text" class="form-control" id="nro_reserva2" readonly>
         </div>
         <div class="col-md-8">
             <label for="validationCustom01" class="form-label">Nom. Cliente</label>
-            <input type="text" class="form-control" id="nombre2" readonly required>
+            <input type="text" class="form-control" id="nombre2" readonly>
+        </div>
+        <div class="col-md-6">
+            <label for="validationCustom02" class="form-label">Fecha Llegada</label>
+            <input type="date" class="form-control" id="fecha_llegada2" readonly>
+        </div>
+        <div class="col-md-6">
+            <label for="validationCustom02" class="form-label">Fecha Salida</label>
+            <input type="date" class="form-control" id="fecha_salida2" readonly>
+        </div>
+        <div class="col-md-4">
+            <label for="validationCustom01" class="form-label">Cant. Personas</label>
+            <input type="text" class="form-control" id="nro_personas2" readonly>
         </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
         <button type="submit" class="btn btn-primary" onclick="RealizarCheckin()">Si</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
       </div>
       </form>
     </div>
@@ -158,6 +170,7 @@ mostrarHeader("pagina-funcion", $logueado);
         window.onload = function() {
         
             setFechaActual();
+            
         };
 
         function buscarReservas(codigo) {
@@ -300,7 +313,7 @@ mostrarHeader("pagina-funcion", $logueado);
             tabla.innerHTML = ''; // Limpiar la tabla antes de agregar nuevos datos
 
             data.forEach(item => {
-                if (fechaBusqueda >= item.fecha_llegada && fechaBusqueda <= item.fecha_salida) {
+                if (item.fecha_llegada >= fechaBusqueda) {
                     const row = tabla.insertRow();
                     row.innerHTML = `
                     <td>${item.nro_reserva}</td>
@@ -318,7 +331,7 @@ mostrarHeader("pagina-funcion", $logueado);
                     </td>
                     <td>${item.nro_registro_maestro}</td>
                     <td><button type="button" class="btn btn-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ObtenerReserva('${item.nro_reserva}|${item.fecha_llegada}|${item.fecha_salida}|${item.nombre}|${item.nro_noches}|${item.nro_personas}|${item.nro_habitacion}|${item.lugar_procedencia}|${item.observaciones_hospedaje}|${item.observaciones_pago}')">EDITAR</button>
-                    <button type="button" class="btn btn-info" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#ModalChekin" onclick="ObtenerID('${item.nro_reserva},${item.nombre}')">CHEKIN</button></td>
+                    <button type="button" class="btn btn-info" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#ModalChekin" onclick="ObtenerID('${item.nro_reserva},${item.nombre},${item.fecha_llegada},${item.fecha_salida},${item.nro_personas}')">CHEKIN</button></td>
                     `;
                 }
             });
@@ -360,7 +373,7 @@ mostrarHeader("pagina-funcion", $logueado);
                     </td>
                     <td>${item.nro_registro_maestro}</td>
                     <td><button type="button" class="btn btn-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ObtenerReserva('${item.nro_reserva}|${item.fecha_llegada}|${item.fecha_salida}|${item.nombre}|${item.nro_noches}|${item.nro_personas}|${item.nro_habitacion}|${item.lugar_procedencia}|${item.observaciones_hospedaje}|${item.observaciones_pago}')">EDITAR</button>
-                    <button type="button" class="btn btn-info" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#ModalChekin" onclick="ObtenerID('${item.nro_reserva},${item.nombre}')">CHEKIN</button></td>
+                    <button type="button" class="btn btn-info" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#ModalChekin" onclick="ObtenerID('${item.nro_reserva},${item.nombre},${item.fecha_llegada},${item.fecha_salida},${item.nro_personas}')">CHEKIN</button></td>
                     `;
             });
             })
@@ -390,6 +403,9 @@ mostrarHeader("pagina-funcion", $logueado);
         var Chekin = Chekin.split(',');
         document.getElementById('nro_reserva2').value = Chekin[0];
         document.getElementById('nombre2').value = Chekin[1];
+        document.getElementById('fecha_llegada2').value = Chekin[2];
+        document.getElementById('fecha_salida2').value = Chekin[3];
+        document.getElementById('nro_personas2').value = Chekin[4];
     }
   </script>
 <?php

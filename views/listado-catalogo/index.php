@@ -9,6 +9,7 @@ isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
 mostrarHeader("pagina-funcion", $logueado); ?>
 
 <div class="container my-5 main-cont">
+  <div id="alert-place"></div>
   <div class="card">
     <div class="card-header py-3">
       <h2 class="text-center">Listado de catálogo</h2>
@@ -80,10 +81,33 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   let gruposConProductos = [];
 
   async function wrapper() {
+    mostrarAlertaSiHayMensaje();
+
     await cargarGrupos();
     await cargarProductos();
     await cargarProductosEnTabla();
     prepararBotonCrear();
+  }
+
+  function mostrarAlert(tipo, mensaje, operacion) {
+    const tipos = {
+      error: "danger",
+      ok: "success",
+    };
+
+    const operaciones = {
+      crear: "plus",
+      editar: "pencil",
+      borrar: "trash",
+      consultar: "table"
+    };
+    
+    const alertWrapper = document.getElementById("alert-place");
+    alertWrapper.innerHTML += `
+      <div class="alert alert-${tipos[tipo]} alert-dismissible" role="alert">
+        <div><i class="fa-solid fa-${operaciones[operacion]} fs-6 me-3"></i> ${mensaje}</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>`;
   }
 
   function prepararBotonCrear() {
@@ -110,15 +134,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           break;
       }
     });
-  }
-
-  // formatea las cantidades en soles, ejemplo: 1000 -> 1000.00
-  function formatearCantidad(numero) {
-    if (!numero) return "";
-    const numeroFormateado = parseFloat(numero).toFixed(2);
-    const partes = numeroFormateado.toString().split(".");
-    partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return partes.join(".");
   }
 
   async function cargarGrupos() {
@@ -341,7 +356,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     tdPrecioVentaCliente.classList.add("text-end");
     tdPrecioVentaCliente.innerText = formatearCantidad(
       producto.precio_venta_01
-    );
+    ) ?? "---";
     const tdPrecioVentaPersonal = trProducto.insertCell();
     tdPrecioVentaPersonal.classList.add("text-end");
     tdPrecioVentaPersonal.innerText = formatearCantidad(

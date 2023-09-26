@@ -71,7 +71,7 @@ mostrarHeader("pagina-funcion", $logueado);
         </select>
         </div>
         <div class="col-md-4">
-        <label for="telefono" class="form-label">Telefono:</label>
+        <label for="telefono" class="form-label">Celular:</label>
         <input type="text" class="form-control" id="telefono">
         </div>
     </div>
@@ -209,6 +209,16 @@ mostrarHeader("pagina-funcion", $logueado);
   </div>
 </div>
 </div>
+<script>
+  setFechaActual();
+      function setFechaActual() {
+          var inputDate = document.getElementById("fecha_llegada");
+          var inputFecha2 = document.getElementById('fecha_ingreso');
+          var fechaActual = new Date().toISOString().slice(0, 10);
+          inputDate.value = fechaActual;
+          inputFecha2.value = fechaActual;
+      }
+    </script>
 <script>
         // Función para cargar los datos de la API y actualizar los inputs
         function cargarDatos() {
@@ -609,7 +619,7 @@ document.addEventListener('DOMContentLoaded', actualizarCarrito);
             .then(response => response.json())
             .then(data => {
                 console.log('Respuesta de la API:');
-                //window.location.reload();
+                // window.location.reload();
                 // Aquí puedes realizar acciones adicionales con la respuesta de la API
             })
             .catch(error => {
@@ -632,8 +642,8 @@ document.addEventListener('DOMContentLoaded', actualizarCarrito);
                   });
               
             });
-            window.location.reload();
-        }
+            window.location.href = "<?php echo URL ?>/listado-reserva/";
+          }
     </script>
     
 <?php

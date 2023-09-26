@@ -281,11 +281,9 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       const data = await response.json();
       console.log(data);
 
-      if (editar) {
-        window.location.href = "./../listado-catalogo";
-      } else {
-        window.location.href = "./../listado-catalogo";
-      }
+      window.location.href = `./../listado-catalogo/?ok&mensaje=Hospedaje ${editar ? "actualizado" : "creado"} correctamente&op=${
+        editar ? "editar" : "crear"
+      }`;
     } catch (error) {
       console.error("Error al crear el producto: ", error);
     }

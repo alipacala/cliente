@@ -11,6 +11,7 @@ $_GET["nro_registro_maestro"] ?? ""; $idUsuario =
 $_SESSION["usuario"]["id_usuario"]; ?>
 
 <div class="container my-5 main-cont">
+  <div id="alert-place"></div>
   <div class="card">
     <div class="card-header py-3">
       <h2 class="text-center">Estado de cuenta del Cliente</h2>
@@ -189,10 +190,10 @@ $_SESSION["usuario"]["id_usuario"]; ?>
               <input type="time" class="form-control hora" id="hora" disabled />
             </div>
             <div class="col-md-4">
-              <label for="monto-total">Monto Total:</label>
+              <label for="monto-total" class="fw-bold fs-5">Monto Total:</label>
               <input
                 type="text"
-                class="form-control monto-total"
+                class="form-control monto-total fw-bold fs-5 text-center"
                 id="monto-total"
                 disabled
               />
@@ -227,7 +228,6 @@ $_SESSION["usuario"]["id_usuario"]; ?>
                   type="text"
                   class="form-control nro-documento"
                   id="nro-documento"
-                  disabled
                 />
                 <div class="input-group-text">
                   <span
@@ -263,18 +263,18 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       <div class="modal-footer">
         <div class="row w-100">
           <button
-            type="button"
-            class="btn btn-outline-secondary col-md-6"
-            data-bs-dismiss="modal"
-          >
-            Salir
-          </button>
-          <button
             type="submit"
             class="btn btn-primary col-md-6"
             id="crear-comprobante"
           >
             Aceptar
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-secondary col-md-6"
+            data-bs-dismiss="modal"
+          >
+            Salir
           </button>
         </div>
       </div>
@@ -638,9 +638,11 @@ $_SESSION["usuario"]["id_usuario"]; ?>
   const apiPersonasUrl = "<?php echo URL_API_NUEVA ?>/personas";
   const apiComprobantesDetallesUrl =
     "<?php echo URL_API_NUEVA ?>/comprobantes-detalles";
-    const apiReportesUrl = "<?php echo URL_API_NUEVA ?>/reportes";
+  const apiReportesUrl = "<?php echo URL_API_NUEVA ?>/reportes";
 
   let checking = null;
+  let persona = null;
+
   let productos = [];
   let acompanantes = [];
   let terapistas = [];
@@ -668,6 +670,8 @@ $_SESSION["usuario"]["id_usuario"]; ?>
   let modalVerComprobante;
 
   async function wrapper() {
+    mostrarAlertaSiHayMensaje();
+
     await cargarDatosChecking();
     await cargarDatosProductos();
     await cargarDatosAcompanantes();
@@ -676,49 +680,39 @@ $_SESSION["usuario"]["id_usuario"]; ?>
     await cargarDatosComprobantes();
     await cargarDatosPersona();
 
-    modalComprobante = new bootstrap.Modal(
-      document.getElementById("modal-comprobante"),
-      {
-        backdrop: "static",
-        keyboard: false,
-      }
-    );
-
-    modalRecibo = new bootstrap.Modal(document.getElementById("modal-recibo"), {
+    const modalOptions = {
       backdrop: "static",
       keyboard: false,
-    });
+    };
+
+    modalComprobante = new bootstrap.Modal(
+      document.getElementById("modal-comprobante"),
+      modalOptions
+    );
+
+    modalRecibo = new bootstrap.Modal(
+      document.getElementById("modal-recibo"),
+      modalOptions
+    );
 
     modalConfirmar = new bootstrap.Modal(
       document.getElementById("modal-cerrar-cuenta"),
-      {
-        backdrop: "static",
-        keyboard: false,
-      }
+      modalOptions
     );
 
     modalAcompanantes = new bootstrap.Modal(
       document.getElementById("modal-acompanantes"),
-      {
-        backdrop: "static",
-        keyboard: false,
-      }
+      modalOptions
     );
 
     modalVerComprobante = new bootstrap.Modal(
       document.getElementById("modal-ver-comprobante"),
-      {
-        backdrop: "static",
-        keyboard: false,
-      }
+      modalOptions
     );
 
     modalVerReporte = new bootstrap.Modal(
       document.getElementById("modal-ver-reporte"),
-      {
-        backdrop: "static",
-        keyboard: false,
-      }
+      modalOptions
     );
 
     prepararSeleccionar();
@@ -847,8 +841,6 @@ $_SESSION["usuario"]["id_usuario"]; ?>
     if (opcionSeleccionada == "Sin Documento") {
       nroDocumento.value = "";
       nroDocumento.disabled = true;
-    } else {
-      nroDocumento.disabled = false;
     }
   }
 
@@ -888,16 +880,17 @@ $_SESSION["usuario"]["id_usuario"]; ?>
         const response = await fetch(apiRecibosUrl, options);
         const data = await response.json();
 
-        const modal = bootstrap.Modal.getInstance(
-          document.getElementById("modal-recibo")
-        );
-        modal.hide();
+        document.getElementById("medio-pago").value = "EFE";
+        document.getElementById("nro-voucher").value = "";
+
+        modalRecibo.hide();
 
         cargarDatosComprobantes();
         cargarDatosDocumentosDetalles();
         actualizarBotonCerrarCuenta();
       } catch (error) {
-        console.error("Error al crear el recibo: ", error);
+        console.error(error);
+        mostrarAlert("error", "Error al crear el recibo", "crear");
       }
     });
   }
@@ -971,9 +964,6 @@ $_SESSION["usuario"]["id_usuario"]; ?>
           comprobantesAgrupados.push(comprobante);
         }
       });
-      /*
-       console.log("comprobantesAgrupados: ", comprobantesAgrupados);
-       return; */
 
       comprobantesAgrupados.forEach((comprobante) => {
         const row = tbody.insertRow();
@@ -1039,7 +1029,12 @@ $_SESSION["usuario"]["id_usuario"]; ?>
         });
       });
     } catch (error) {
-      console.error("Error al cargar los datos de los comprobantes: ", error);
+      console.error(error);
+      mostrarAlert(
+        "error",
+        "Error al cargar los datos de los comprobantes",
+        "consultar"
+      );
     }
   }
 
@@ -1082,7 +1077,9 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
         row.innerHTML = `
            <td>${documentoDetalle.cantidad}</td>
-           <td>${producto.nombre_producto} ${producto.tipo == 'SRV' ? `(${documentoDetalle.fecha_servicio})` : ""}</td>
+           <td>${producto.nombre_producto} ${
+          producto.tipo == "SRV" ? `(${documentoDetalle.fecha_servicio})` : ""
+        }</td>
            <td>${documentoDetalle.precio_unitario}</td>
            <td>${documentoDetalle.precio_total}</td>
          `;
@@ -1095,7 +1092,12 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
       modalVerComprobante.show();
     } catch (error) {
-      console.error("Error al cargar los datos del comprobante: ", error);
+      console.error(error);
+      mostrarAlert(
+        "error",
+        "Error al cargar los datos del comprobante",
+        "consultar"
+      );
     }
   }
 
@@ -1109,7 +1111,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
     const total = document.getElementById("total");
     const monto = document.getElementById("monto");
 
-    tipoComprobante.value = row.dataset.tipoComprobante;
+    tipoComprobante.value = tiposComprobante[row.dataset.tipoComprobante];
     nroComprobante.value = row.dataset.nroComprobante;
     cliente.value = row.dataset.cliente;
     total.value = row.dataset.porPagar;
@@ -1143,8 +1145,6 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       (row) => row.querySelector("input").checked
     );
 
-    console.log("filasSeleccionadas: ", filasSeleccionadas);
-
     let total = 0;
     filasSeleccionadas.forEach((row) => {
       total += parseFloat(row.dataset.total);
@@ -1153,32 +1153,18 @@ $_SESSION["usuario"]["id_usuario"]; ?>
     return total;
   }
 
-  function formatearFecha(fechaString) {
-    const fechaHora = fechaString ? new Date(fechaString) : null;
-    const fechaHoraFormateada = fechaHora
-      ? `${fechaHora.getDate().toString().padStart(2, "0")}/${(
-          fechaHora.getMonth() + 1
-        )
-          .toString()
-          .padStart(2, "0")} ${fechaHora
-          .getHours()
-          .toString()
-          .padStart(2, "0")}:${fechaHora
-          .getMinutes()
-          .toString()
-          .padStart(2, "0")}`
-      : "";
-
-    return fechaHoraFormateada;
-  }
-
   async function cargarDatosTerapistas() {
     try {
       const response = await fetch(apiTerapistasUrl);
       const data = await response.json();
       terapistas = data;
     } catch (error) {
-      console.error("Error al cargar los datos de los terapistas: ", error);
+      console.error(error);
+      mostrarAlert(
+        "error",
+        "Error al cargar los datos de los terapistas",
+        "consultar"
+      );
     }
   }
 
@@ -1193,7 +1179,12 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       const data = await response.json();
       acompanantes = data;
     } catch (error) {
-      console.error("Error al cargar los datos de los acompanantes: ", error);
+      console.error(error);
+      mostrarAlert(
+        "error",
+        "Error al cargar los datos de los acompañantes",
+        "consultar"
+      );
     }
   }
 
@@ -1223,16 +1214,13 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       const data = await response.json();
       productos = data;
     } catch (error) {
-      console.error("Error al cargar los datos de los productos: ", error);
+      console.error(error);
+      mostrarAlert(
+        "error",
+        "Error al cargar los datos de los productos",
+        "consultar"
+      );
     }
-  }
-
-  // formatea las cantidades en soles, ejemplo: 1000 -> 1000.00
-  function formatearCantidad(numero) {
-    const numeroFormateado = parseFloat(numero).toFixed(2);
-    const partes = numeroFormateado.toString().split(".");
-    partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return partes.join(".");
   }
 
   async function cargarDatosDocumentosDetalles() {
@@ -1421,9 +1409,11 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       agregarCeldaTotal();
       actualizarBotonCerrarCuenta();
     } catch (error) {
-      console.error(
-        "Error al cargar los datos de los documentos detalles: ",
-        error
+      console.error(error);
+      mostrarAlert(
+        "error",
+        "Error al cargar los datos de los documentos detalles",
+        "consultar"
       );
     }
   }
@@ -1491,7 +1481,12 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       document.getElementById("nro_registro_maestro").value =
         checking.nro_registro_maestro;
     } catch (error) {
-      console.error("Error al cargar los datos del checking: ", error);
+      console.error(error);
+      mostrarAlert(
+        "error",
+        "Error al cargar los datos del checking",
+        "consultar"
+      );
     }
   }
 
@@ -1517,6 +1512,35 @@ $_SESSION["usuario"]["id_usuario"]; ?>
     const montoTotal = document.querySelector(
       "#form-crear-comprobante .monto-total"
     );
+
+    const nombre = document.getElementById("nombre");
+    const tipoDocumento = document.getElementById("tipo-documento");
+    const nroDocumento = document.getElementById("nro-documento");
+
+    const direccion = document.getElementById("direccion");
+    const lugar = document.getElementById("lugar");
+
+    const mapTiposDocumento = {
+      0: 1,
+      1: 7,
+    }; // TODO: Es temporal
+
+    tipoDocumento.value = checking.tipo_documento
+      ? checking.tipo_documento
+      : mapTiposDocumento[persona.tipo_documento] ?? "";
+
+    nombre.value = checking.razon_social
+      ? checking.razon_social
+      : `${persona.apellidos}, ${persona.nombres}` ?? "";
+    nroDocumento.value = checking.nro_documento
+      ? checking.nro_documento
+      : persona.nro_documento ?? "";
+    direccion.value = checking.direccion_comprobante
+      ? checking.direccion_comprobante
+      : persona.direccion ?? "";
+    lugar.value = checking.lugar_procedencia
+      ? checking.lugar_procedencia
+      : persona.ciudad ?? "";
 
     montoTotal.value = formatearCantidad(calcularTotal());
 
@@ -1594,10 +1618,6 @@ $_SESSION["usuario"]["id_usuario"]; ?>
         detalles: ids,
       };
 
-      /*
-       console.log("comprobante: ", comprobante);
-       return; */
-
       crearComprobante(comprobante);
     });
   }
@@ -1608,15 +1628,10 @@ $_SESSION["usuario"]["id_usuario"]; ?>
     try {
       const response = await fetch(url);
       const data = await response.json();
-      const persona = data;
-
-      const direccion = document.getElementById("direccion");
-      const lugar = document.getElementById("lugar");
-
-      direccion.value = persona.direccion ?? "";
-      lugar.value = persona.lugar ?? "";
+      persona = data;
     } catch (error) {
-      console.error("Error al cargar los datos de la persona: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar los datos de la persona");
     }
   }
 
@@ -1634,6 +1649,11 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       const data = await response.json();
       console.log(data);
 
+      const nroComprobante = data.resultado.comprobante.nro_comprobante;
+
+      const url = `${apiReportesUrl}?tipo=generar-factura&nro_comprobante=${nroComprobante}`;
+      open(url, "_blank");
+
       modalComprobante.hide();
 
       cargarDatosDocumentosDetalles();
@@ -1642,7 +1662,8 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
       actualizarFilasSeleccionables();
     } catch (error) {
-      console.error("Error al crear el comprobante: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al crear el comprobante", "crear");
     }
   }
 
@@ -1704,12 +1725,13 @@ $_SESSION["usuario"]["id_usuario"]; ?>
         nombre.value = personaNaturalJuridica.nombre;
         direccion.value = limpiarGuiones(personaNaturalJuridica.direccion);
         lugar.value = limpiarGuiones(personaNaturalJuridica.lugar);
-
-        nombre.disabled = personaNaturalJuridica.nombre;
       } catch (error) {
-        console.error(
-          "Error al cargar los datos de la persona natural o jurídica: ",
-          error
+        console.error(error
+        );
+        mostrarAlert(
+          "error",
+          "Error al cargar los datos de la persona",
+          "consultar"
         );
       }
     });
@@ -1736,11 +1758,11 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       const cerrarCuenta = data;
 
       if (cerrarCuenta) {
-        console.log("cerrarCuenta: ", cerrarCuenta);
-        window.location.href = "../relacion-clientes-hotel-spa";
+        window.location.href = "../relacion-clientes-hotel-spa/?ok&mensaje=La cuenta se cerró correctamente&op=editar";
       }
     } catch (error) {
-      console.error("Error al cerrar la cuenta: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cerrar la cuenta", "editar");
     }
   }
 

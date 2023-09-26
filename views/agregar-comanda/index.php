@@ -451,7 +451,7 @@ mostrarHeader("pagina-funcion", $logueado);
       const data = await response.json();
 
       if (data.resultado) {
-        window.location.href = `./../estado-cuenta-cliente?nro_registro_maestro=${nroRegistroMaestro}`;
+        window.location.href = `./../estado-cuenta-cliente?nro_registro_maestro=${nroRegistroMaestro}&ok&mensaje=Comanda guardada correctamente&op=crear`;
       }
     } catch (error) {
       console.error("Error al guardar la comanda: " + error);

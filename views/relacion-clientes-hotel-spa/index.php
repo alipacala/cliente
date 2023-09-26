@@ -9,6 +9,7 @@ isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
 mostrarHeader("pagina-funcion", $logueado); ?>
 
 <div class="container my-5 main-cont">
+  <div id="alert-place"></div>
   <div class="card">
     <div class="card-header py-3">
       <h2 class="text-center">
@@ -72,6 +73,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   const apiRoomingUrl = "<?php echo URL_API_NUEVA ?>/rooming";
 
   async function wrapper() {
+    mostrarAlertaSiHayMensaje();
     await cargarChekings();
   }
 

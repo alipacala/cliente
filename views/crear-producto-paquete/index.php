@@ -274,7 +274,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       const codigo = document.getElementById("codigo");
       codigo.value = data.codigo;
     } catch (error) {
-      console.error("Error al cargar el código del producto: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar el código del producto", "consultar");
     }
   }
 
@@ -335,7 +336,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       actualizarTabla();
       calcularCostoTotal();
     } catch (error) {
-      console.error("Error al cargar el producto paquete: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar el producto", "consultar");
     }
   }
 
@@ -386,7 +388,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       const agregarInsumoButton = document.getElementById("agregar-insumo");
       agregarInsumoButton.addEventListener("click", alAgregarInsumo);
     } catch (error) {
-      console.error("Error al cargar los productos: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar los productos", "consultar");
     }
   }
 
@@ -446,7 +449,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
         clasificacionVentasSelect.appendChild(option);
       });
     } catch (error) {
-      console.error("Error al cargar los grupos de la carta: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al cargar los grupos de la carta", "consultar");
     }
   }
 
@@ -522,7 +526,7 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       fecha_de_vigencia: document.getElementById("fecha_vigencia").value,
     };
 
-    if (id) {
+    if (id) { // TODO: Lo he cambiado mil veces... no se si esta bien
       producto.insumos_agregados = insumosAgregados.map((insumo) => {
         return {
           id_producto_producto: insumo.id_insumo,
@@ -540,9 +544,6 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
         };
       });
     }
-    /* 
-    console.log(producto);
-    return; */
 
     const url = id
       ? apiProductosUrl + "/" + id + "/con-subproductos"
@@ -561,13 +562,12 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       const data = await response.json();
       console.log(data);
 
-      if (editar) {
-        window.location.href = "./../listado-catalogo";
-      } else {
-        window.location.href = "./../listado-catalogo";
-      }
+      window.location.href = `./../listado-catalogo/?ok&mensaje=Paquete ${editar ? "actualizado" : "creado"} correctamente&op=${
+        editar ? "editar" : "crear"
+      }`;
     } catch (error) {
-      console.error("Error al crear el producto paquete y subproductos: ", error);
+      console.error(error);
+      mostrarAlert("error", "Error al crear el producto", "crear");
     }
   }
 

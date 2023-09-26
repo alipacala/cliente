@@ -3,17 +3,14 @@ require "../../inc/header.php";
 
 session_start();
 $tiempoTranscurrido = isset($_SESSION['ultima_actividad']) ? time() - $_SESSION['ultima_actividad'] : null;
-if ($tiempoTranscurrido && ($tiempoTranscurrido > TIEMPO_INACTIVIDAD)) {
-  session_unset();
-  session_destroy();
-}
-$logueado = isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
-mostrarHeader("pagina-funcion", $logueado);
-
-$editar = isset($_GET["id"]) ? $_GET["id"] : false;
-?>
+if ($tiempoTranscurrido && ($tiempoTranscurrido >
+TIEMPO_INACTIVIDAD)) { session_unset(); session_destroy(); } $logueado =
+isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
+mostrarHeader("pagina-funcion", $logueado); $editar = isset($_GET["id"]) ?
+$_GET["id"] : false; ?>
 
 <div class="container my-5 main-cont">
+  <div id="alert-place"></div>
   <div class="card">
     <div class="card-header py-3">
       <h2 class="text-center">
@@ -81,13 +78,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
           </div>
           <div class="form-group col-md-4">
             <label for="fecha_vigencia">Fecha de Vigencia del Producto</label>
-            <input
-              type="date"
-              class="form-control"
-              id="fecha_vigencia"
-              name="fecha_vigencia"
-              value="<?php echo date("Y-m-d") ?>"
-              required
+            <input type="date" class="form-control" id="fecha_vigencia"
+            name="fecha_vigencia" value="<?php echo date("Y-m-d") ?>" required
             />
           </div>
         </div>
@@ -199,7 +191,9 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
     <div class="modal-content">
       <div class="modal-header">
         <i class="fa-solid fa-plus fs-3 me-3" id="icono"></i>
-        <h1 class="modal-title fs-5" id="noti-label">Gestionar grupos de catálogo</h1>
+        <h1 class="modal-title fs-5" id="noti-label">
+          Gestionar grupos de catálogo
+        </h1>
         <button
           type="button"
           class="btn-close"
@@ -231,7 +225,7 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
     cargarClasificacionVentas();
     cargarCentralCostos();
     cargarTiposDeProducto();
-    
+
     if (id) {
       cargarProducto();
     } else {
@@ -262,10 +256,11 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
         data.stock_min_temporada_alta;
       document.getElementById("stock_max_temporada_alta").value =
         data.stock_max_temporada_alta;
-      document.getElementById("cantidad_unidades").value = data.cantidad_de_fracciones;
+      document.getElementById("cantidad_unidades").value =
+        data.cantidad_de_fracciones;
     } catch (error) {
-      mostrarNotificacion("error", "Error al cargar el producto", "consultar");
-      console.error("Error al cargar el producto: ", error);
+      mostrarAlert("error", "Error al cargar el producto", "consultar");
+      console.error(error);
     }
   }
 
@@ -278,8 +273,11 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       const codigo = document.getElementById("codigo");
       codigo.value = data.codigo;
     } catch (error) {
-      mostrarNotificacion("error", "Error al cargar el código del producto", "consultar");
-      console.error("Error al cargar el código del producto: ", error);
+      mostrarAlert(
+        "error",
+        "Error al cargar el código del producto",
+        "consultar"
+      );
     }
   }
 
@@ -306,11 +304,15 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
         clasificacionVentasSelect.appendChild(option);
       });
     } catch (error) {
-      mostrarNotificacion("error", "Error al cargar las clasificaciones de ventas", "consultar");
-      console.error("Error al cargar las clasificaciones de ventas: ", error);
+      mostrarAlert(
+        "error",
+        "Error al cargar las clasificaciones de ventas",
+        "consultar"
+      );
+      console.error(error);
     }
   }
-  
+
   function ordenarGrupos(grupos) {
     // ordenar los grupos por nro_orden
     grupos.sort((a, b) => {
@@ -380,8 +382,12 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
         centralCostosSelect.appendChild(option);
       });
     } catch (error) {
-      mostrarNotificacion("error", "Error al cargar las centrales de costos", "consultar");
-      console.error("Error al cargar las centrales de costos: ", error);
+      mostrarAlert(
+        "error",
+        "Error al cargar las centrales de costos",
+        "consultar"
+      );
+      console.error(error);
     }
   }
 
@@ -405,8 +411,12 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
         tipoDeProductoSelect.appendChild(option);
       });
     } catch (error) {
-      mostrarNotificacion("error", "Error al cargar las centrales de costos", "consultar");
-      console.error("Error al cargar las centrales de costos: ", error);
+      mostrarAlert(
+        "error",
+        "Error al cargar las centrales de costos",
+        "consultar"
+      );
+      console.error(error);
     }
   }
 
@@ -431,7 +441,8 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       stock_max_temporada_alta: document.getElementById(
         "stock_max_temporada_alta"
       ).value,
-      cantidad_de_fracciones: document.getElementById("cantidad_unidades").value,
+      cantidad_de_fracciones:
+        document.getElementById("cantidad_unidades").value,
     };
 
     const url = apiProductosUrl + (editar ? "/" + id : "/insumo-terminado");
@@ -449,10 +460,12 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       const data = await response.json();
       console.log(data);
 
-      window.location.href = "./../listado-catalogo";
+      window.location.href = `./../listado-catalogo/?ok&mensaje=Producto ${editar ? "actualizado" : "creado"} correctamente&op=${
+        editar ? "editar" : "crear"
+      }`;
     } catch (error) {
-      mostrarNotificacion("error", "Error al crear el producto", "crear");
-      console.error("Error al crear el producto: ", error);
+      mostrarAlert("error", "Error al crear el producto", "crear");
+      console.error(error);
     }
   }
 
@@ -462,43 +475,6 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       event.preventDefault();
       crearProducto(id);
     });
-  }
-
-  
-  function mostrarNotificacion(tipo, mensaje, operacion) {
-    const tipos = {
-      error: ["Error", "danger"],
-      ok: ["Correcto", "success"],
-    };
-
-    const operaciones = {
-      crear: "plus",
-      editar: "pencil",
-      borrar: "trash",
-      consultar: "table"
-    };
-
-    const notificacion = document.getElementById("noti");
-    const titulo = document.getElementById("noti-label");
-    const icono = document.getElementById("icono");
-    const cuerpo = notificacion.querySelector(".modal-body");
-
-    for (const tipoNotificacion in tipos) {
-      notificacion.classList.remove(`modal-${tipos[tipoNotificacion]}`);
-    }
-    notificacion.classList.add(`modal-${tipos[tipo][1]}`);
-
-    for (const operacionNotificacion in operaciones) {
-      icono.classList.remove(`fa-${operaciones[operacionNotificacion]}`);
-    }
-    icono.classList.add(`fa-${operaciones[operacion]}`);
-
-    cuerpo.textContent = mensaje;
-
-    titulo.textContent = tipos[tipo][0];
-
-    const modalNotificacion = new bootstrap.Modal(notificacion);
-    modalNotificacion.show();
   }
 
   window.addEventListener("load", wrapper);

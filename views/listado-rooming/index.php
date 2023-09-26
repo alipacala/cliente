@@ -76,7 +76,7 @@ mostrarHeader("pagina-funcion", $logueado);
                 <td>${item.nro_personas || ''}</td>
                 <td>${item.fecha_llegada || ''}</td>
                 <td>${item.fecha_salida || ''}</td>
-                <td><a href="http://192.168.1.11:8080/hotelarenasspa/cliente/views/gestionar-checkin-hotel?parametro1=${item.nro_reserva}&parametro2=${item.nro_registro_maestro}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
+                <td><a href="<?php echo URL ?>/gestionar-checkin-hotel?parametro1=${item.nro_reserva}&parametro2=${item.nro_registro_maestro}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
             `;
             });
             })
@@ -116,7 +116,7 @@ mostrarHeader("pagina-funcion", $logueado);
                 <td>${item.nro_personas || ''}</td>
                 <td>${item.fecha_llegada || ''}</td>
                 <td>${item.fecha_salida || ''}</td>
-                <td><a href="http://192.168.1.11:8080/hotelarenasspa/cliente/views/gestionar-checkin-hotel?parametro1=${item.nro_reserva}&parametro2=${item.nro_registro_maestro}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
+                <td><a href="<?php echo URL ?>/gestionar-checkin-hotel?parametro1=${item.nro_reserva}&parametro2=${item.nro_registro_maestro}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
             `;
         });
     })

@@ -128,7 +128,7 @@ mostrarHeader("pagina-funcion", $logueado);
                     </div>
   <div class="col-md-12">
     <label for="hora_de_ingreso">Ocupacion:</label>
-    <textarea name="ocupacion" id="ocupacion" class="form-control" required></textarea>
+    <textarea name="ocupacion" id="ocupacion" class="form-control"></textarea>
   </div>
   <div class="col-md-6">
     <label for="hora_de_salida">Direccion:</label>
@@ -281,7 +281,7 @@ mostrarHeader("pagina-funcion", $logueado);
               <label for="validationCustom02" class="form-label">Buscar DNI</label>
               <div class="input-group">
                 <span class="input-group-text">Nro DNI/RUC</span>
-                  <input type="text" class="form-control" id="nro_documento_comprobante" required>
+                  <input type="text" class="form-control" id="nro_documento_comprobante">
                   <button type="button" class="btn btn-info" onclick="BuscarReniec()">Buscar</button>
               </div>
             </div>
@@ -309,11 +309,11 @@ mostrarHeader("pagina-funcion", $logueado);
         // Función para cargar los datos de la API y actualizar los inputs
         function cargarDatos() {
           //obtenemos el numero de registro maestro del forumlario
-          var codigo = document.getElementById('nro_registro').value;
+          var codigo = document.getElementById('nro_reserva').value;
           const url = `<?php echo URL_API_CARLITOS ?>/api-reservas.php?codigo=${codigo}`;
             // Realizar una solicitud HTTP GET a la URL
             fetch(url, {
-                  method: 'GET4',
+                  method: 'GET5',
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -454,14 +454,18 @@ mostrarHeader("pagina-funcion", $logueado);
   // Obtén la URL actual
 // Obtén la URL actual
 var url = window.location.href;
-
 // Crea un objeto URL con la URL actual
 var urlObj = new URL(url);
-// Comprueba si los parámetros tienen el valor "null"
-if (url.includes('parametro1=null') && url.includes('parametro2=null')) {
+// Comprueba si los parámetros tienen el valor "null" o vacio
+if (url.includes('parametro1=null') && url.includes('parametro2=null') || url.includes('parametro1=') && url.includes('parametro2=')) {
   // Si ambos parámetros tienen el valor "null", ejecuta una función
+  funcionConParametros();
+}
+else if (url === "<?php echo URL ?>/gestionar-checkin-hotel/") {
+  // Si la URL es igual a la URL específica, haz algo
   funcionSinParametros();
-} else {
+} 
+else {
   // Si al menos uno de los parámetros no tiene el valor "null", ejecuta otra función
   funcionConParametros();
 }
@@ -771,7 +775,7 @@ function actualizarTabla() {
         // Procesar los datos de la primera API
         if (dataApi1.length > 0) {
           console.log("Datos de API 2:");
-          //console.log(dataApi1);
+          console.log(dataApi1);
           // Procesar los datos de la segunda API
           if (dataApi1.length > 0) {
                 const primerUsuarioApi1 = dataApi1[0];
@@ -797,7 +801,7 @@ function actualizarTabla() {
         // Procesar los datos de la segunda API
         if (dataApi2.length > 0) {
           console.log("Datos de API 5:");
-         // console.log(dataApi2);
+         console.log(dataApi2);
           // Procesar los datos de la segunda API
           if (dataApi2.length > 0) {
                 const primerUsuarioApi2 = dataApi2[0];
