@@ -282,15 +282,15 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
 
-  function wrapper() {
-    cargarProductos();
-    cargarClasificacionVentas();
-    cargarCentralesCostos();
+  async function wrapper() {
+    await cargarProductos();
+    await cargarClasificacionVentas();
+    await cargarCentralesCostos();
 
     if (id) {
-      cargarProductoReceta();
+      await cargarProductoReceta();
     } else {
-      cargarCodigoProductoReceta();
+      await cargarCodigoProductoReceta();
     }
 
     prepararFormularioReceta();

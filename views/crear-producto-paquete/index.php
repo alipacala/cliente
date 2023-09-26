@@ -250,14 +250,14 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
 
-  function wrapper() {
-    cargarProductos();
-    cargarClasificacionVentas();
+  async function wrapper() {
+    await cargarProductos();
+    await cargarClasificacionVentas();
 
     if (id) {
-      cargarProductoPaquete();
+      await cargarProductoPaquete();
     } else {
-      cargarCodigoProductoPaquete();
+      await cargarCodigoProductoPaquete();
     }
 
     prepararFormularioPaquete();

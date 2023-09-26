@@ -313,16 +313,16 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
 
-  function wrapper() {
-    cargarProductos();
-    cargarClasificacionVentas();
-    cargarHabilidades();
-    cargarCentralesCostos();
+  async function wrapper() {
+    await cargarProductos();
+    await cargarClasificacionVentas();
+    await cargarHabilidades();
+    await cargarCentralesCostos();
 
     if (id) {
-      cargarProductoServicio();
+      await cargarProductoServicio();
     } else {
-      cargarCodigoProductoServicio();
+      await cargarCodigoProductoServicio();
     }
 
     prepararFormularioServicio();

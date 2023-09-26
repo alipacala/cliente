@@ -107,14 +107,14 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
 
-  function wrapper() {
-    cargarClasificacionVentas();
-    cargarCentralCostos();
+  async function wrapper() {
+    await cargarClasificacionVentas();
+    await cargarCentralCostos();
     
     if (id) {
-      cargarProducto();
+      await cargarProducto();
     } else {
-      cargarCodigoProductoHospedaje();
+      await cargarCodigoProductoHospedaje();
     }
 
     prepararFormulario();

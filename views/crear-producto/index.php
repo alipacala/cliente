@@ -221,15 +221,15 @@ $_GET["id"] : false; ?>
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
 
-  function wrapper() {
-    cargarClasificacionVentas();
-    cargarCentralCostos();
-    cargarTiposDeProducto();
+  async function wrapper() {
+    await cargarClasificacionVentas();
+    await cargarCentralCostos();
+    await cargarTiposDeProducto();
 
     if (id) {
-      cargarProducto();
+      await cargarProducto();
     } else {
-      cargarCodigoProducto();
+      await cargarCodigoProducto();
     }
 
     prepararFormulario();
