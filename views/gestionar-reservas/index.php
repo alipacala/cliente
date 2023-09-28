@@ -122,19 +122,17 @@ mostrarHeader("pagina-funcion", $logueado);
                         <div class="col-md-2">
                           <label for="tipo">Nro Habitacion</label>
                           <select class="form-select" name="habitacion" id="habitacion">
-                              <option value="0">--Seleccione--</option>
                           </select>
                         </div>
                         <div class="col-md-2">
                           <label for="habitacion">Tipo Habitacion:</label>
                           <select class="form-select" name="tipo" id="tipo">
-                                <option value="0">--Seleccione--</option>
+                          <option value="0">-Seleccione-</option>
                             </select>
                         </div>
                         <div class="col-md-2">
                           <label for="tipo">Tipo Precios</label>
                           <select class="form-select" id="selectPrecios">
-                              <option value="0">--Seleccione--</option>
                               <option value="precio_venta_01">Precio Normal</option>
                               <option value="precio_venta_02">Precio Coorporativo</option>
                               <option value="precio_venta_03">Precio Cliente Premiun</option>
@@ -142,7 +140,7 @@ mostrarHeader("pagina-funcion", $logueado);
                         </div>
                         <div class="col-md-2">
                         <label for="personas">Personas:</label>
-                        <input type="number" id="personas" class="form-control" required>
+                        <input type="number" id="personas" class="form-control" value="1" required>
                         </div>
                         <div class="col-md-2">
                         <label for="monto">Monto:</label>
@@ -209,16 +207,56 @@ mostrarHeader("pagina-funcion", $logueado);
   </div>
 </div>
 </div>
+
+<script>
+// Obtén la referencia al elemento input de tipo time
+const inputHoraActual = document.getElementById('hora_llegada');
+
+// Función para obtener la hora actual en formato HH:mm
+function obtenerHoraActual() {
+  const ahora = new Date();
+  const hora = ahora.getHours().toString().padStart(2, '0');
+  const minutos = ahora.getMinutes().toString().padStart(2, '0');
+  return `${hora}:${minutos}`;
+}
+
+// Establece el valor del campo de entrada con la hora actual
+inputHoraActual.value = obtenerHoraActual();
+</script>
 <script>
   setFechaActual();
       function setFechaActual() {
           var inputDate = document.getElementById("fecha_llegada");
           var inputFecha2 = document.getElementById('fecha_ingreso');
+          var inputFecha3 = document.getElementById('fecha_salida');
           var fechaActual = new Date().toISOString().slice(0, 10);
+          // Obtener la fecha actual
+          var fechaA = new Date();
+            // Sumar un día
+            fechaA.setDate(fechaA.getDate() + 1);
+
+            // Formatear la nueva fecha como una cadena en formato ISO (yyyy-mm-dd)
+            var fechaMañana = fechaA.toISOString().slice(0, 10);
           inputDate.value = fechaActual;
           inputFecha2.value = fechaActual;
+          inputFecha3.value = fechaMañana;
       }
     </script>
+    <script>
+  obtenerHoy();
+  function obtenerHoy(){
+    var fechaInicio = new Date(document.getElementById('fecha_ingreso').value);
+    var fechaFin = new Date(document.getElementById('fecha_salida').value);
+    console.log(fechaInicio);
+    console.log(fechaFin);
+    // Calcular la diferencia en días entre las fechas
+    var diferenciaEnMs = fechaFin - fechaInicio;
+    var numNoches = Math.round(diferenciaEnMs / (1000 * 60 * 60 * 24));
+
+    // Mostrar el resultado en el input de número de noches
+    document.getElementById('noches').value = numNoches;
+  }
+</script>
 <script>
         // Función para cargar los datos de la API y actualizar los inputs
         function cargarDatos() {
@@ -354,7 +392,7 @@ mostrarHeader("pagina-funcion", $logueado);
                     JSON.stringify(data);
                         console.log(data);
                         productos = data;
-                      
+                        precioVentaInput.value = productos[0]['precio_venta_01'];
                     })
                     .catch(error => {
                         console.error("Error en la solicitud a la API:", error);

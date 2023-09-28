@@ -266,14 +266,15 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         spinner.classList.remove("visible");
         spinner.classList.add("invisible");
 
-        if (data.length < 1) {
+        if (!data) {
           personaExiste = false;
           desbloquearInputs();
           limpiarInputs();
           return;
         }
 
-        const personaEncontrada = data[0];
+        const personaEncontrada = data;
+
         personaExiste = true;
 
         document.getElementById("apellidos_nombres_titular").value =

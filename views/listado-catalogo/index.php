@@ -75,18 +75,32 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 <script>
   const apiGruposUrl = "<?php echo URL_API_NUEVA ?>/grupos-carta";
   const apiProductosUrl = "<?php echo URL_API_NUEVA ?>/productos";
+  const apiImpresorasUrl = "<?php echo URL_API_NUEVA ?>/impresoras";
 
   let gruposCargados = [];
   let productosCargados = [];
   let gruposConProductos = [];
+  let impresoras = [];
 
   async function wrapper() {
     mostrarAlertaSiHayMensaje();
 
+    await cargarImpresoras();
     await cargarGrupos();
     await cargarProductos();
     await cargarProductosEnTabla();
     prepararBotonCrear();
+  }
+
+  async function cargarImpresoras() {
+    try {
+      const response = await fetch(apiImpresorasUrl);
+      const data = await response.json();
+      impresoras = data;
+    } catch (error) {
+      console.error(error);
+      mostrarAlert("error", "Error al cargar las impresoras", "consultar");
+    }
   }
 
   function prepararBotonCrear() {
@@ -331,20 +345,41 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
   function crearFilaProducto(producto, body) {
     const trProducto = body.insertRow();
+    trProducto.dataset.idProducto = producto.id_producto;
+
     const tdNombreProducto = trProducto.insertCell();
     tdNombreProducto.innerText = producto.nombre_producto;
     const tdPrecioVentaCliente = trProducto.insertCell();
     tdPrecioVentaCliente.classList.add("text-end");
-    tdPrecioVentaCliente.innerText = formatearCantidad(
-      producto.precio_venta_01
-    ) ?? "---";
+    tdPrecioVentaCliente.innerText =
+      formatearCantidad(producto.precio_venta_01) ?? "---";
     const tdPrecioVentaPersonal = trProducto.insertCell();
     tdPrecioVentaPersonal.classList.add("text-end");
     tdPrecioVentaPersonal.innerText = formatearCantidad(
       producto.precio_venta_02
     );
+
+    // crear select de impresoras
     const tdImpresoraComanda = trProducto.insertCell();
-    tdImpresoraComanda.innerText = producto.id_impresora;
+
+    const options = impresoras.map((impresora) => {
+      return `<option value="${impresora.id_impresora}">${impresora.nombre_impresora}</option>`;
+    });
+    tdImpresoraComanda.innerHTML = `
+      <select class="form-select" id="impresora-comanda-${producto.id_producto}">
+        <option value="">Seleccione una impresora</option>
+        ${options}
+      </select>
+    `;
+
+    // seleccionar la impresora del producto
+    const selectImpresora = document.getElementById(
+      `impresora-comanda-${producto.id_producto}`
+    );
+    selectImpresora.value = producto.id_impresora ?? "";
+
+    selectImpresora.addEventListener("change", alCambiarImpresoraComanda);
+
     const tdEditar = trProducto.insertCell();
     const btnEditar = document.createElement("button");
     btnEditar.classList.add("btn", "btn-outline-warning");
@@ -371,6 +406,37 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       }
     });
     tdEditar.appendChild(btnEditar);
+  }
+
+  async function alCambiarImpresoraComanda(event) {
+    const idProducto = event.target.closest("tr").dataset.idProducto;
+    const idImpresora = this.value;
+
+    const url = `${apiProductosUrl}/${idProducto}`;
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id_impresora: idImpresora,
+      }),
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+
+      if (data.error) {
+        mostrarAlert("error", data.error, "editar");
+      } else {
+        mostrarAlert("ok", "Impresora actualizada correctamente", "editar");
+      }
+
+    } catch (error) {
+      console.error(error);
+      mostrarAlert("error", "Error al actualizar la impresora", "editar");
+    }
   }
 
   function limpiarTabla() {

@@ -74,9 +74,9 @@ mostrarHeader("pagina-funcion", $logueado);
                 <td>${item.nro_reserva || ''}</td>
                 <td>${item.nombre || ''}</td>
                 <td>${item.nro_personas || ''}</td>
-                <td>${item.fecha_llegada || ''}</td>
-                <td>${item.fecha_salida || ''}</td>
-                <td><a href="<?php echo URL ?>/gestionar-checkin-hotel?parametro1=${item.nro_reserva}&parametro2=${item.nro_registro_maestro}&nro_habitacion=${item.nro_habitacion}&fecha_in=${item.fecha_llegada}&fecha_out=${item.fecha_salida}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
+                <td>${item.fecha_in || ''}</td>
+                <td>${item.fecha_out || ''}</td>
+                <td><a href="<?php echo URL ?>/gestionar-checkin-hotel?parametro1=${item.nro_reserva}&parametro2=${item.nro_registro_maestro}&nro_habitacion=${item.nro_habitacion}&fecha_in=${item.fecha_in}&fecha_out=${item.fecha_out}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
             `;
             });
             })
@@ -114,9 +114,9 @@ mostrarHeader("pagina-funcion", $logueado);
                 <td>${item.nro_reserva || ''}</td>
                 <td>${item.nombre || ''}</td>
                 <td>${item.nro_personas || ''}</td>
-                <td>${item.fecha_llegada || ''}</td>
-                <td>${item.fecha_salida || ''}</td>
-                <td><a href="<?php echo URL ?>/gestionar-checkin-hotel?parametro1=${item.nro_reserva}&parametro2=${item.nro_registro_maestro}&nro_habitacion=${item.nro_habitacion}&fecha_in=${item.fecha_llegada}&fecha_out=${item.fecha_salida}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
+                <td>${item.fecha_in || ''}</td>
+                <td>${item.fecha_out || ''}</td>
+                <td><a href="<?php echo URL ?>/gestionar-checkin-hotel?parametro1=${item.nro_reserva}&parametro2=${item.nro_registro_maestro}&nro_habitacion=${item.nro_habitacion}&fecha_in=${item.fecha_in}&fecha_out=${item.fecha_out}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
             `;
         });
     })

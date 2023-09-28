@@ -33,24 +33,24 @@ mostrarHeader("pagina-funcion", $logueado);
           </div>
         </div>
         <div class="row">
-          <div class="table-responsive col-md-8">
+          <div class="table-responsive col-md-7">
             <table class="table table-hover" id="tabla-comandas">
               <thead>
                 <tr>
-                  <th>Fecha</th>
+                  <th style="width: 100px">Fecha</th>
                   <th>Producto</th>
-                  <th>Cantidad</th>
-                  <th>P. Venta</th>
-                  <th>P. Total</th>
-                  <th>Eliminar</th>
+                  <th style="width: 100px">Cantidad</th>
+                  <th style="width: 100px">P. Venta</th>
+                  <th style="width: 100px">P. Total</th>
+                  <th style="width: 100px">Eliminar</th>
                 </tr>
               </thead>
               <tbody></tbody>
             </table>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-5">
             <div class="row">
-              <div class="col">
+              <div class="col-4">
                 <div
                   class="list-group"
                   id="lista-grupos"
@@ -60,12 +60,12 @@ mostrarHeader("pagina-funcion", $logueado);
                     class="button-group list-group-item list-group-item-action"
                     id="cabecera-grupos"
                   >
-                    <div class="fw-bold">Grupo</div>
+                    <div class="fw-bold">Grupos</div>
                   </div>
                 </div>
               </div>
               <div
-                class="col table-responsive"
+                class="col-8 table-responsive"
                 id="tabla-productos-wrapper"
                 data-page="agregar-comanda"
               >
@@ -668,6 +668,8 @@ mostrarHeader("pagina-funcion", $logueado);
       const tablaProductos = document.getElementById("tabla-productos");
       const tbody = tablaProductos.querySelector("tbody");
       tbody.innerHTML = "";
+
+      // debería cambiar el texto a "Grupos"
     });
     cabeceraGrupos.appendChild(botonVolver);
 
@@ -682,19 +684,17 @@ mostrarHeader("pagina-funcion", $logueado);
     const tbody = tablaProductos.querySelector("tbody");
     tbody.innerHTML = "";
     productos.forEach((producto) => {
-      const tr = document.createElement("tr");
-      const tdProducto = document.createElement("td");
-      const tdPrecio = document.createElement("td");
-      tdProducto.textContent = producto.nombre_producto;
-      tdPrecio.textContent = producto.precio_venta_01;
-      tr.appendChild(tdProducto);
-      tr.appendChild(tdPrecio);
+      const tr = tbody.insertRow();
+      const tdProducto = tr.insertCell();
+      const tdPrecio = tr.insertCell();
+
+      tdPrecio.classList.add("text-end");
+      tdProducto.innerHTML = `<a href="#" class="text-decoration-none text-body">${producto.nombre_producto}</a>`;
+      tdPrecio.innerHTML = `<a href="#" class="text-decoration-none text-body">${producto.precio_venta_01 ? formatearCantidad(producto.precio_venta_01) : ""}</a>`;
 
       tr.dataset.idProducto = producto.id_producto;
       tr.dataset.tipo = producto.tipo;
       tr.dataset.requiereProgramacion = producto.requiere_programacion;
-
-      tbody.appendChild(tr);
     });
   }
   async function prepararTablaProductos() {

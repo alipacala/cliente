@@ -29,7 +29,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
           />
         </div>
         <div class="form-group col-md-2">
-          <label for="tipo">Tipo</label>
+          <label for="tipo-checkin">Tipo</label>
           <input
             type="text"
             class="form-control"
@@ -1334,7 +1334,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
         const fechaHoraServicioFormateada =
           producto.tipo == "SRV"
             ? formatearFecha(
-                `${documentoDetalle.fecha_servicio}T${documentoDetalle.hora_servicio}:00`
+                `${documentoDetalle.fecha_servicio}T${documentoDetalle.hora_servicio ? documentoDetalle.hora_servicio : "00:00"}:00`
               )
             : "";
 

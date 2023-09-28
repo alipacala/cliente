@@ -11,9 +11,9 @@ modules:
             url: http://localhost/cliente/views
             browser: chrome
         - Db:
-            dsn: 'mysql:host=localhost;dbname=apitestdb'
-            user: 'root'
-            password: ''
+            dsn: 'mysql:host=192.168.1.11;port=3307;dbname=hotelarenasspa'
+            user: 'abraham'
+            password: 'Admin123'
 # add Codeception\Step\Retry trait to AcceptanceTester to enable retries
 step_decorators:
     - Codeception\Step\ConditionalAssertion

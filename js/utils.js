@@ -23,6 +23,12 @@ function mostrarAlert(tipo, mensaje, operacion) {
       <div><i class="fa-solid fa-${operaciones[operacion]} fs-6 me-3"></i> ${mensaje}</div>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>`;
+
+  // cerrar el alert tras 2 segundos con un fadeout
+  const alert = bootstrap.Alert.getOrCreateInstance(".alert");
+  setTimeout(() => {
+    alert.close();
+  }, 3000);
 }
 
 /**
