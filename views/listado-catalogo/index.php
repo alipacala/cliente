@@ -16,9 +16,17 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     </div>
     <div class="card-body">
       <div class="row mb-3">
-        <div class="col-md-4">
+        <div class="col-md-3">
           GRUPO:
           <select id="grupo" name="grupo" class="form-select"></select>
+        </div>
+        <div class="col-md-3">
+          <button
+            class="btn btn-outline-secondary w-100 mt-auto"
+            id="btn-ver-reporte"
+          >
+            <i class="fas fa-print"></i> Ver reporte
+          </button>
         </div>
         <div class="col-md-6 ms-auto">
           Crear producto:
@@ -76,6 +84,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   const apiGruposUrl = "<?php echo URL_API_NUEVA ?>/grupos-carta";
   const apiProductosUrl = "<?php echo URL_API_NUEVA ?>/productos";
   const apiImpresorasUrl = "<?php echo URL_API_NUEVA ?>/impresoras";
+  const apiReportesUrl = "<?php echo URL_API_NUEVA ?>/reportes";
 
   let gruposCargados = [];
   let productosCargados = [];
@@ -90,6 +99,15 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     await cargarProductos();
     await cargarProductosEnTabla();
     prepararBotonCrear();
+    prepararBotonVerReporte();
+  }
+
+  function prepararBotonVerReporte() {
+    const btnVerReporte = document.getElementById("btn-ver-reporte");
+    btnVerReporte.addEventListener("click", () => {
+      const idGrupo = document.getElementById("grupo").value;
+      open(`${apiReportesUrl}?tipo=listado-catalogo${idGrupo ? `&id_grupo=${idGrupo}` : ""}`);
+    });
   }
 
   async function cargarImpresoras() {
