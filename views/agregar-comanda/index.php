@@ -50,7 +50,7 @@ mostrarHeader("pagina-funcion", $logueado);
           </div>
           <div class="col-md-5">
             <div class="row">
-              <div class="col-4">
+              <div class="col-12 px-0">
                 <div
                   class="list-group"
                   id="lista-grupos"
@@ -60,12 +60,12 @@ mostrarHeader("pagina-funcion", $logueado);
                     class="button-group list-group-item list-group-item-action"
                     id="cabecera-grupos"
                   >
-                    <div class="fw-bold">Grupos</div>
+                    <span class="fw-bold ms-2">GRUPOS</span>
                   </div>
                 </div>
               </div>
               <div
-                class="col-8 table-responsive"
+                class="col-12 table-responsive"
                 id="tabla-productos-wrapper"
                 data-page="agregar-comanda"
               >
@@ -628,6 +628,10 @@ mostrarHeader("pagina-funcion", $logueado);
 
       botonGrupo.addEventListener("click", function (event) {
         event.preventDefault();
+        
+        const textoCabecera = document.querySelector("#cabecera-grupos span");
+        textoCabecera.textContent = "GRUPO: " + grupo.grupo;
+
         cargarProductos(grupo.productos);
         cargarSubgrupos(grupo.subgrupos);
       });
@@ -656,11 +660,11 @@ mostrarHeader("pagina-funcion", $logueado);
     });
 
     const cabeceraGrupos = document.getElementById("cabecera-grupos");
-    cabeceraGrupos.innerHTML = "";
+    const textoCabecera = cabeceraGrupos.querySelector("span");
 
     const botonVolver = document.createElement("button");
     botonVolver.classList.add("btn", "btn-outline-primary");
-    botonVolver.innerHTML = `<i class="fas fa-arrow-left"></i>`;
+    botonVolver.innerHTML = `<i class="fas fa-arrow-left"></i>` + botonVolver.innerHTML;
     botonVolver.addEventListener("click", function (event) {
       event.preventDefault();
       cargarGrupos();
@@ -670,13 +674,10 @@ mostrarHeader("pagina-funcion", $logueado);
       tbody.innerHTML = "";
 
       // debería cambiar el texto a "Grupos"
+      const texto = document.querySelector("#cabecera-grupos span");
+      texto.textContent = "GRUPOS";
     });
-    cabeceraGrupos.appendChild(botonVolver);
-
-    const texto = document.createElement("span");
-    texto.textContent = "Subgrupos";
-    texto.classList.add("fw-bold", "ms-2");
-    cabeceraGrupos.appendChild(texto);
+    cabeceraGrupos.insertBefore(botonVolver, textoCabecera);
   }
 
   function cargarProductos(productos) {
