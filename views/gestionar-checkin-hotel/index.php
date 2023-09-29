@@ -747,47 +747,47 @@ function actualizarTabla() {
    
     console.log(formData);
     //Make a fetch POST request to your PHP API endpoint
-  //   if (nro_reserva === '' || nro_reserva.trim() === '') {
-  //   fetch('<?php echo URL_API_CARLITOS ?>/api-huespedes.php', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify(formData)
-  //   })
-  //   .then(response => response.json())
-  //   .then(data => {
-  //     // Handle the response from the API
-  //     console.log(data);
-  //     // You can do further processing here
-  //     //window.location.reload();
-  //   })
-  //   .catch(error => {
-  //     // Handle errors if any
-  //     console.error(error);
-  //     //window.location.reload();
-  //   });
-  // } else {
-  //   fetch('<?php echo URL_API_CARLITOS ?>/api-huespedes.php', {
-  //     method: 'PUT',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify(formData)
-  //   })
-  //   .then(response => response.json())
-  //   .then(data => {
-  //     // Handle the response from the API
-  //     console.log(data);
-  //     // You can do further processing here
-  //     window.location.reload();
-  //   })
-  //   .catch(error => {
-  //     // Handle errors if any
-  //     console.error(error);
-  //     window.location.reload();
-  //   });
-  // }
+    if (nro_reserva === '' || nro_reserva.trim() === '') {
+    fetch('<?php echo URL_API_CARLITOS ?>/api-huespedes.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Handle the response from the API
+      console.log(data);
+      // You can do further processing here
+      window.location.reload();
+    })
+    .catch(error => {
+      // Handle errors if any
+      console.error(error);
+      window.location.reload();
+    });
+  } else {
+    fetch('<?php echo URL_API_CARLITOS ?>/api-huespedes.php', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Handle the response from the API
+      console.log(data);
+      // You can do further processing here
+      window.location.reload();
+    })
+    .catch(error => {
+      // Handle errors if any
+      console.error(error);
+      window.location.reload();
+    });
+  }
   });
 });
 </script>
