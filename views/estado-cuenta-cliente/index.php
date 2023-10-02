@@ -62,15 +62,19 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
       <div class="row mb-3">
         <div class="col-md-12 text-end">
-          <button class="btn btn-warning" id="cerrar-cuenta" disabled>
-            Cerrar cuenta
-          </button>
           <a
             href="./../agregar-comanda?nro_registro_maestro=<?php echo $checkingId; ?>"
             class="btn btn-success"
           >
+            <i class="fas fa-plus"></i>
             Agregar comanda
           </a>
+          <button class="btn btn-danger" id="anular-items">
+            <i class="fas fa-minus"></i>
+            Anular items</button>
+          <button class="btn btn-warning" id="cerrar-cuenta" disabled>
+            Cerrar cuenta
+          </button>
         </div>
       </div>
 
@@ -622,6 +626,61 @@ $_SESSION["usuario"]["id_usuario"]; ?>
   </div>
 </div>
 
+<div
+  class="modal fade"
+  id="modal-anular-items"
+  tabindex="-1"
+  aria-labelledby="modal-anular-items-label"
+  style="display: none"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
+  >
+    <div class="modal-content">
+      <div class="modal-body">
+        <h5 class="modal-title" id="modal-anular-items-label">
+          ¿Realmente desea anular los items?
+        </h5>
+        <p>Ha seleccionado los siguientes items:</p>
+        <div class="table-responsive">
+          <table
+            class="table table-bordered table-hover"
+            id="tabla-anular-items"
+          >
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Precio Total</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="row w-100">
+          <button
+            type="button"
+            class="btn btn-danger col-md-6"
+            id="confirmar-anular-items"
+            data-bs-dismiss="modal"
+          >
+            Anular items
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-secondary col-md-6"
+            data-bs-dismiss="modal"
+          >
+            Salir
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   const configId = 4;
   const apiConfigUrl = `<?php echo URL_API_NUEVA ?>/config/${configId}/codigo`;
@@ -668,6 +727,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
   let modalConfirmar;
   let modalAcompanantes;
   let modalVerComprobante;
+  let modalAnularItems;
 
   async function wrapper() {
     mostrarAlertaSiHayMensaje();
@@ -715,6 +775,11 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       modalOptions
     );
 
+    modalAnularItems = new bootstrap.Modal(
+      document.getElementById("modal-anular-items"),
+      modalOptions
+    );
+
     prepararSeleccionar();
     prepararCrearComprobante();
     prepararTotalizar();
@@ -728,6 +793,8 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
     prepararVerAcompanantes();
     prepararVerReporte();
+    prepararAnularItems();
+    prepararConfirmarAnularItems();
 
     cargarAcompanantesEnTabla();
 
@@ -740,6 +807,91 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
     actualizarFechaHora();
     setInterval(actualizarFechaHora, 1000);
+  }
+
+  function prepararConfirmarAnularItems() {
+    const confirmarAnularItems = document.getElementById(
+      "confirmar-anular-items"
+    );
+
+    confirmarAnularItems.addEventListener("click", async () => {
+      const filasSeleccionadas = filasSeleccionables.filter(
+        (row) => row.querySelector("input").checked
+      );
+
+      const ids = filasSeleccionadas.map((row) => row.dataset.id);
+
+      const options = {
+        method: "DELETE",
+      };
+
+      let seAnularon = true;
+      ids.forEach(async (id) => {
+        const url = `${apiDocumentosDetallesUrl}/${id}/anular`;
+
+        try {
+          const response = await fetch(url, options);
+          const data = await response.json();
+
+          if (!response.ok) {
+            seAnularon = false;
+            console.error(data);
+          }
+        } catch (error) {
+          seAnularon = false;
+          console.error(error);
+        }
+
+        if (seAnularon) {
+          mostrarAlert("ok", "Se anularon los items seleccionados", "borrar");
+          await cargarDatosDocumentosDetalles();
+        } else {
+          mostrarAlert("error", "No se pudo anular los items", "borrar");
+        }
+      });
+    });
+  }
+
+  function prepararAnularItems() {
+    const anularItems = document.getElementById("anular-items");
+    anularItems.addEventListener("click", () => {
+      const filasSeleccionadas = filasSeleccionables.filter(
+        (row) => row.querySelector("input").checked
+      );
+
+      if (filasSeleccionadas.length == 0) {
+        mostrarAlert("error", "Debe seleccionar al menos un item", "borrar");
+        return;
+      }
+
+      // obtener el nombre de los productos seleccionados
+      const detallesSeleccionados = filasSeleccionadas.map((fila) => ({
+        nombre: fila.dataset.nombreProducto,
+        cantidad: formatearCantidad(fila.dataset.cantidad),
+        precio: formatearCantidad(fila.dataset.precioUnitario),
+        total: formatearCantidad(fila.dataset.total),
+      }));
+
+      // cargar los datos en la tabla de confirmación
+      const tablaAnularItems = document.getElementById("tabla-anular-items");
+      const tbody = tablaAnularItems.querySelector("tbody");
+      tbody.innerHTML = "";
+
+      detallesSeleccionados.forEach((detalle) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${detalle.nombre}</td>
+          <td class="text-end">${detalle.cantidad}</td>
+          <td class="text-end">${detalle.precio}</td>
+          <td class="text-end">${detalle.total}</td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+
+      // mostrar el modal de confirmación
+      modalAnularItems.show();
+    });
   }
 
   function prepararVerReporte() {
@@ -1231,6 +1383,11 @@ $_SESSION["usuario"]["id_usuario"]; ?>
         (documentoDetalle) => documentoDetalle.id_item == 0
       );
 
+      // filtrar los documentos detalles que tengan anulado = 1
+      documentosDetallesD1 = documentosDetallesD1.filter(
+        (documentoDetalle) => !documentoDetalle.anulado
+      );
+
       // ordenar los documentos detalles por nro_habitacion y luego por fecha_hora_registro
       documentosDetallesD1.sort((a, b) => {
         if (a.nro_habitacion < b.nro_habitacion) {
@@ -1293,6 +1450,8 @@ $_SESSION["usuario"]["id_usuario"]; ?>
         const row = tbody.insertRow();
 
         row.dataset.id = documentoDetalle.id_documentos_detalle;
+        row.dataset.precioUnitario = documentoDetalle.precio_unitario;
+        row.dataset.cantidad = documentoDetalle.cantidad;
         row.dataset.total = documentoDetalle.precio_total;
         row.dataset.pagado =
           documentoDetalle.nro_comprobante && documentoDetalle.fecha_pago
@@ -1331,10 +1490,16 @@ $_SESSION["usuario"]["id_usuario"]; ?>
           (producto) => producto.id_producto == documentoDetalle.id_producto
         );
 
+        row.dataset.nombreProducto = producto.nombre_producto;
+
         const fechaHoraServicioFormateada =
           producto.tipo == "SRV"
             ? formatearFecha(
-                `${documentoDetalle.fecha_servicio}T${documentoDetalle.hora_servicio ? documentoDetalle.hora_servicio : "00:00"}:00`
+                `${documentoDetalle.fecha_servicio}T${
+                  documentoDetalle.hora_servicio
+                    ? documentoDetalle.hora_servicio
+                    : "00:00"
+                }:00`
               )
             : "";
 
@@ -1716,11 +1881,11 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
         nombre.value = personaNaturalJuridica.nombre;
 
-        if (!limpiarGuiones(personaNaturalJuridica.direccion) == '') {
+        if (!limpiarGuiones(personaNaturalJuridica.direccion) == "") {
           direccion.value = limpiarGuiones(personaNaturalJuridica.direccion);
         }
 
-        if (!limpiarGuiones(personaNaturalJuridica.lugar) == '') {
+        if (!limpiarGuiones(personaNaturalJuridica.lugar) == "") {
           lugar.value = limpiarGuiones(personaNaturalJuridica.lugar);
         }
       } catch (error) {
@@ -1755,7 +1920,8 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       const cerrarCuenta = data;
 
       if (cerrarCuenta) {
-        window.location.href = "../relacion-clientes-hotel-spa/?ok&mensaje=La cuenta se cerró correctamente&op=editar";
+        window.location.href =
+          "../relacion-clientes-hotel-spa/?ok&mensaje=La cuenta se cerró correctamente&op=editar";
       }
     } catch (error) {
       console.error(error);

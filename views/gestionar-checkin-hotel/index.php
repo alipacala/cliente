@@ -180,7 +180,7 @@ mostrarHeader("pagina-funcion", $logueado);
   </div>
   <div class="col-md-3">
     <label for="monto">Monto:</label>
-    <input type="number" step="0.01" id="monto" class="form-control" required>
+    <input type="number" step="0.01" id="monto" class="form-control" required readonly>
   </div>
   <div class="col-md-6">
     <label for="activo">Fecha IN:</label>
@@ -214,7 +214,7 @@ mostrarHeader("pagina-funcion", $logueado);
     <label for="activo">Nro Infantes</label>
     <input type="number" class="form-control" id="nro_infantes" name="nro_infantes" value="0">
   </div>
-  </div>
+ </div>
 </div>
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal"><strong>+</strong>Agregar Acompañante</button><br><br>
 <div class="row">
@@ -238,7 +238,6 @@ mostrarHeader("pagina-funcion", $logueado);
       </div>
     </div>
   </div>
-
 </div>
 <br>
 <br>
@@ -310,7 +309,13 @@ mostrarHeader("pagina-funcion", $logueado);
         function cargarDatos() {
           //obtenemos el numero de registro maestro del forumlario
           var codigo = document.getElementById('nro_reserva').value;
-          const url = `<?php echo URL_API_CARLITOS ?>/api-reservas.php?codigo=${codigo}`;
+          var selectElement = document.getElementById("habitacion");
+          const selectedOption = selectElement.options[selectElement.selectedIndex];
+          // igualar el selectedOption a la variable codigo
+          var codigo2 = selectedOption.text;
+          var codigo3 = document.getElementById('nro_registro').value;
+            // Construir la URL de la API
+          const url = `<?php echo URL_API_CARLITOS ?>/api-reservas.php?codigo=${codigo}&codigo2=${codigo2}&codigo3=${codigo3}`;
             // Realizar una solicitud HTTP GET a la URL
             fetch(url, {
                   method: 'GET5',
@@ -320,6 +325,10 @@ mostrarHeader("pagina-funcion", $logueado);
                     // Actualizar los inputs con los datos de la API
                     var selectElement = document.getElementById("habitacion");
                     const selectedOption = selectElement.options[selectElement.selectedIndex];
+                    var selectElementtipohabitacion = document.getElementById("tipo");
+                    const selectedOptiontipoproducto = selectElementtipohabitacion.options[selectElementtipohabitacion.selectedIndex];
+                    var selectElementprecios = document.getElementById("selectPrecios");
+                    const selectedOptionprecios = selectElementprecios.options[selectElementprecios.selectedIndex];
                     document.getElementById('nombres').value = data[0].nombres;
                     document.getElementById('apellidos').value = data[0].apellidos;
                     document.getElementById('tipo_documento').value = data[0].tipo_documento;
@@ -348,9 +357,13 @@ mostrarHeader("pagina-funcion", $logueado);
                     document.getElementById('razon_social').value = data[0].razon_social;
                     document.getElementById('direccion_comprobante').value = data[0].direccion_comprobante;
                     document.getElementById('forma_pago').value = data[0].forma_pago;
+                    document.getElementById('monto').value = data[0].tarifa;
+                    selectedOptionprecios.textContent = data[0].tipo_precio;
+                    selectedOptiontipoproducto.textContent = data[0].nombre_producto;
 
                     // Iterar sobre las opciones y deseleccionarlas todas
                     selectedOption.textContent = data[0].nro_habitacion;
+                    console.log(data);
                     
                 })
                 .catch(error => console.error('Error:', error));
