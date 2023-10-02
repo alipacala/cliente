@@ -1715,8 +1715,14 @@ $_SESSION["usuario"]["id_usuario"]; ?>
         const lugar = document.getElementById("lugar");
 
         nombre.value = personaNaturalJuridica.nombre;
-        direccion.value = limpiarGuiones(personaNaturalJuridica.direccion);
-        lugar.value = limpiarGuiones(personaNaturalJuridica.lugar);
+
+        if (!limpiarGuiones(personaNaturalJuridica.direccion) == '') {
+          direccion.value = limpiarGuiones(personaNaturalJuridica.direccion);
+        }
+
+        if (!limpiarGuiones(personaNaturalJuridica.lugar) == '') {
+          lugar.value = limpiarGuiones(personaNaturalJuridica.lugar);
+        }
       } catch (error) {
         console.error(error);
         mostrarAlert(

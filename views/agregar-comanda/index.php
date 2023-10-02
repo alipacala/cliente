@@ -3,14 +3,10 @@ require "../../inc/header.php";
 
 session_start();
 $tiempoTranscurrido = isset($_SESSION['ultima_actividad']) ? time() - $_SESSION['ultima_actividad'] : null;
-if ($tiempoTranscurrido && ($tiempoTranscurrido > TIEMPO_INACTIVIDAD)) {
-  session_unset();
-  session_destroy();
-}
-$logueado = isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
-$idUsuario = $_SESSION["usuario"]["id_usuario"];
-
-mostrarHeader("pagina-funcion", $logueado);
+if ($tiempoTranscurrido && ($tiempoTranscurrido >
+TIEMPO_INACTIVIDAD)) { session_unset(); session_destroy(); } $logueado =
+isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false; $idUsuario =
+$_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
 ?>
 <div class="container my-5 main-cont">
   <div id="alert-place"></div>
@@ -80,7 +76,11 @@ mostrarHeader("pagina-funcion", $logueado);
                       <th>P. Unitario</th>
                     </tr>
                   </thead>
-                  <tbody></tbody>
+                  <tbody>
+                    <tr>
+                      <td colspan="2" class="text-center text-muted">Debe seleccionar un grupo</td>
+                    </tr>
+                  </tbody>
                 </table>
               </div>
             </div>
@@ -574,7 +574,10 @@ mostrarHeader("pagina-funcion", $logueado);
       let dataProductos = await responseProductos.json();
 
       dataProductos = dataProductos.filter(
-        (producto) => ['SRV', 'PAQ', 'RST'].includes(producto.tipo) || [12, 13].includes(producto.id_tipo_de_producto));
+        (producto) =>
+          ["SRV", "PAQ", "RST"].includes(producto.tipo) ||
+          [12, 13].includes(producto.id_tipo_de_producto)
+      );
 
       productos = dataProductos;
 
@@ -628,7 +631,7 @@ mostrarHeader("pagina-funcion", $logueado);
 
       botonGrupo.addEventListener("click", function (event) {
         event.preventDefault();
-        
+
         const textoCabecera = document.querySelector("#cabecera-grupos span");
         textoCabecera.textContent = "GRUPO: " + grupo.grupo;
 
@@ -642,29 +645,44 @@ mostrarHeader("pagina-funcion", $logueado);
   function cargarSubgrupos(subgrupos) {
     const listaGrupos = document.getElementById("lista-grupos");
 
+    console.log(subgrupos);
+
     // borrar los botones que ya estaban
     listaGrupos.querySelectorAll("button").forEach((boton) => {
       boton.remove();
     });
 
-    subgrupos.forEach((subgrupo) => {
-      const botonSubgrupo = document.createElement("button");
-      botonSubgrupo.classList.add("list-group-item", "list-group-item-action");
-      botonSubgrupo.textContent = subgrupo.subgrupo;
+    if (subgrupos.length > 0) {
+      subgrupos.forEach((subgrupo) => {
+        const botonSubgrupo = document.createElement("button");
+        botonSubgrupo.classList.add(
+          "list-group-item",
+          "list-group-item-action"
+        );
+        botonSubgrupo.textContent = subgrupo.subgrupo;
 
-      botonSubgrupo.addEventListener("click", function (event) {
-        event.preventDefault();
-        cargarProductos(subgrupo.productos);
+        botonSubgrupo.addEventListener("click", function (event) {
+          event.preventDefault();
+          cargarProductos(subgrupo.productos);
+        });
+        listaGrupos.appendChild(botonSubgrupo);
       });
-      listaGrupos.appendChild(botonSubgrupo);
-    });
+    } else {
+      // mostrar un mensaje que diga que no hay subgrupos
+      const noSubgrupos = document.createElement("button");
+      noSubgrupos.classList.add("list-group-item", "text-center", "text-muted");
+      noSubgrupos.textContent = "No hay subgrupos";
+
+      listaGrupos.appendChild(noSubgrupos);
+    }
 
     const cabeceraGrupos = document.getElementById("cabecera-grupos");
     const textoCabecera = cabeceraGrupos.querySelector("span");
 
     const botonVolver = document.createElement("button");
     botonVolver.classList.add("btn", "btn-outline-primary");
-    botonVolver.innerHTML = `<i class="fas fa-arrow-left"></i>` + botonVolver.innerHTML;
+    botonVolver.innerHTML =
+      `<i class="fas fa-arrow-left"></i>` + botonVolver.innerHTML;
     botonVolver.addEventListener("click", function (event) {
       event.preventDefault();
       cargarGrupos();
@@ -676,6 +694,12 @@ mostrarHeader("pagina-funcion", $logueado);
       // debería cambiar el texto a "Grupos"
       const texto = document.querySelector("#cabecera-grupos span");
       texto.textContent = "GRUPOS";
+
+      // mostrar un mensaje que diga que debe seleccionar un grupo
+      const noProductos = document.createElement("tr");
+      noProductos.classList.add("text-center", "text-muted");
+      noProductos.innerHTML = `<td colspan="2">Debe seleccionar un grupo</td>`;
+      tbody.appendChild(noProductos);
     });
     cabeceraGrupos.insertBefore(botonVolver, textoCabecera);
   }
@@ -684,19 +708,32 @@ mostrarHeader("pagina-funcion", $logueado);
     const tablaProductos = document.getElementById("tabla-productos");
     const tbody = tablaProductos.querySelector("tbody");
     tbody.innerHTML = "";
-    productos.forEach((producto) => {
-      const tr = tbody.insertRow();
-      const tdProducto = tr.insertCell();
-      const tdPrecio = tr.insertCell();
 
-      tdPrecio.classList.add("text-end");
-      tdProducto.innerHTML = `<a href="#" class="text-decoration-none text-body">${producto.nombre_producto}</a>`;
-      tdPrecio.innerHTML = `<a href="#" class="text-decoration-none text-body">${producto.precio_venta_01 ? formatearCantidad(producto.precio_venta_01) : ""}</a>`;
+    if (productos.length > 0) {
+      productos.forEach((producto) => {
+        const tr = tbody.insertRow();
+        const tdProducto = tr.insertCell();
+        const tdPrecio = tr.insertCell();
 
-      tr.dataset.idProducto = producto.id_producto;
-      tr.dataset.tipo = producto.tipo;
-      tr.dataset.requiereProgramacion = producto.requiere_programacion;
-    });
+        tdPrecio.classList.add("text-end");
+        tdProducto.innerHTML = `<a href="#" class="text-decoration-none text-body">${producto.nombre_producto}</a>`;
+        tdPrecio.innerHTML = `<a href="#" class="text-decoration-none text-body">${
+          producto.precio_venta_01
+            ? formatearCantidad(producto.precio_venta_01)
+            : ""
+        }</a>`;
+
+        tr.dataset.idProducto = producto.id_producto;
+        tr.dataset.tipo = producto.tipo;
+        tr.dataset.requiereProgramacion = producto.requiere_programacion;
+      });
+    } else {
+      // mostrar un mensaje que diga que no hay productos
+      const noProductos = document.createElement("tr");
+      noProductos.classList.add("text-center", "text-muted");
+      noProductos.innerHTML = `<td colspan="2">No hay productos</td>`;
+      tbody.appendChild(noProductos);
+    }
   }
   async function prepararTablaProductos() {
     const tablaProductos = document.getElementById("tabla-productos");
@@ -705,6 +742,9 @@ mostrarHeader("pagina-funcion", $logueado);
     tbody.addEventListener("click", function (event) {
       event.preventDefault();
       const tr = event.target.closest("tr");
+
+      if (!tr.dataset.idProducto) return;
+
       const idProducto = tr.dataset.idProducto;
 
       const producto = productos.find(
