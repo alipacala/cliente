@@ -72,6 +72,10 @@ mostrarHeader("pagina-funcion", $logueado);
   <div class="card-body">
   <h1>Formulario Huespedes y Acompañantes</h1>
     <form class="row g-3 needs-validation" id="formulario-huesped">
+  <div class="col-md-12">
+    <label for="validationCustom02" class="form-label">ID PERSONA:</label>
+    <input type="text" class="form-control" id="id_persona" readonly>
+  </div>
   <div class="col-md-6">
     <label for="validationCustom02" class="form-label">Nro. Registro:</label>
     <input type="text" class="form-control" id="nro_registro" readonly>
@@ -363,7 +367,7 @@ mostrarHeader("pagina-funcion", $logueado);
 
                     // Iterar sobre las opciones y deseleccionarlas todas
                     selectedOption.textContent = data[0].nro_habitacion;
-                    console.log(data);
+                    //console.log(data);
                     
                 })
                 .catch(error => console.error('Error:', error));
@@ -718,6 +722,7 @@ function actualizarTabla() {
         razon_social: document.getElementById('razon_social').value,
         direccion_comprobante: document.getElementById('direccion_comprobante').value,
         sexo: document.getElementById('sexo').value,
+        id_persona: document.getElementById('id_persona').value,
         acompanantes: registros
       };
     }else{
@@ -754,6 +759,7 @@ function actualizarTabla() {
       razon_social: document.getElementById('razon_social').value,
       direccion_comprobante: document.getElementById('direccion_comprobante').value,
       sexo: document.getElementById('sexo').value,
+      id_persona: document.getElementById('id_persona').value,
       acompanantes: registros
     };
     }
@@ -761,25 +767,25 @@ function actualizarTabla() {
     console.log(formData);
     //Make a fetch POST request to your PHP API endpoint
     if (nro_reserva === '' || nro_reserva.trim() === '') {
-    fetch('<?php echo URL_API_CARLITOS ?>/api-huespedes.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
-    .then(response => response.json())
-    .then(data => {
-      // Handle the response from the API
-      console.log(data);
-      // You can do further processing here
-      window.location.reload();
-    })
-    .catch(error => {
-      // Handle errors if any
-      console.error(error);
-      window.location.reload();
-    });
+      fetch('<?php echo URL_API_CARLITOS ?>/api-huespedes.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Handle the response from the API
+        console.log(data);
+        // You can do further processing here
+        //window.location.reload();
+      })
+      .catch(error => {
+        // Handle errors if any
+        console.error(error);
+        //window.location.reload();
+      });
   } else {
     fetch('<?php echo URL_API_CARLITOS ?>/api-huespedes.php', {
       method: 'PUT',
@@ -793,12 +799,12 @@ function actualizarTabla() {
       // Handle the response from the API
       console.log(data);
       // You can do further processing here
-      window.location.reload();
+      //window.location.reload();
     })
     .catch(error => {
       // Handle errors if any
       console.error(error);
-      window.location.reload();
+      //window.location.reload();
     });
   }
   });

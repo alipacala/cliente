@@ -123,6 +123,14 @@ function mostrarHeader($pagina, $logueado)
                   </li>
                 </ul>
               </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown"
+                  aria-expanded="false"> Tablas </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/gestionar-tipos-gasto">Gestionar Tipos de gastos</a></li>
+                  <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/gestionar-unidades-negocio">Gestionar Unidades de negocio</a></li>
+                </ul>
+              </li>
               <li class="nav-item">
                 <form action="<?php echo $pre ?>/cliente/views/login/cerrar_sesion.php" method="POST">
                   <input class="btn btn-outline-danger text-white" type="submit" value="Cerrar sesión">

@@ -248,8 +248,6 @@ inputHoraActual.value = obtenerHoraActual();
   function obtenerHoy(){
     var fechaInicio = new Date(document.getElementById('fecha_ingreso').value);
     var fechaFin = new Date(document.getElementById('fecha_salida').value);
-    console.log(fechaInicio);
-    console.log(fechaFin);
     // Calcular la diferencia en días entre las fechas
     var diferenciaEnMs = fechaFin - fechaInicio;
     var numNoches = Math.round(diferenciaEnMs / (1000 * 60 * 60 * 24));
@@ -345,23 +343,13 @@ inputHoraActual.value = obtenerHoraActual();
     // Función para llenar el select con los datos del objeto
     function llenarSelectHabitaciones(data) {
         var selectElement = document.getElementById('habitacion');
+
         data.forEach(function(producto) {
             var option = document.createElement('option');
-            option.value = producto.nombre_producto;
+            option.value = producto.id_producto;
             option.textContent = producto.nombre_producto;
             selectTipo.appendChild(option);
         });
-        
-        
-	    selectElement.addEventListener("change", () => {
-	      selectTipo.selectedIndex = 1;
-	
-	      var eventoChange = new Event("change", {
-	        bubbles: true,
-	        cancelable: true,
-	      });
-	      selectTipo.dispatchEvent(eventoChange);
-	    });
         }
   </script>
   <script>
@@ -387,6 +375,28 @@ inputHoraActual.value = obtenerHoraActual();
             option.textContent = producto.nro_habitacion;
             selectElement.appendChild(option);
         });
+
+        // Escuchar el evento de cambio en el select, cambiar el tipo de habitacion según el valor seleccionado que es el id
+        selectElement.addEventListener("change", () => {
+          const nroHabitacion = selectElement.selectedOptions[0].textContent.trim();
+
+          fetch('<?php echo URL_API_CARLITOS ?>/api-reservahabitaciones.php')
+          .then(response => response.json())
+          .then(reservaHabitaciones => {
+            const producto = reservaHabitaciones.find(reservaHab => reservaHab.nro_habitacion === nroHabitacion);
+            const selectTipo = document.getElementById("tipo");
+
+            console.log(nroHabitacion);
+            console.log(reservaHabitaciones);
+
+            selectTipo.value = producto.id_producto;
+            var eventoChange = new Event("change", {
+              bubbles: true,
+              cancelable: true,
+            });
+            selectTipo.dispatchEvent(eventoChange);
+          })
+        });
         }
             document.addEventListener("DOMContentLoaded", function() {
               selectTipo.addEventListener("change", function() {
@@ -402,7 +412,6 @@ inputHoraActual.value = obtenerHoraActual();
                     .then(data => {
                         // Manipular los datos devueltos por la API
                     JSON.stringify(data);
-                        console.log(data);
                         productos = data;
                         precioVentaInput.value = productos[0]['precio_venta_01'];
                     })

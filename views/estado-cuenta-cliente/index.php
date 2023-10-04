@@ -71,7 +71,8 @@ $_SESSION["usuario"]["id_usuario"]; ?>
           </a>
           <button class="btn btn-danger" id="anular-items">
             <i class="fas fa-minus"></i>
-            Anular items</button>
+            Anular items
+          </button>
           <button class="btn btn-warning" id="cerrar-cuenta" disabled>
             Cerrar cuenta
           </button>
@@ -819,7 +820,11 @@ $_SESSION["usuario"]["id_usuario"]; ?>
         (row) => row.querySelector("input").checked
       );
 
-      const ids = filasSeleccionadas.map((row) => row.dataset.id);
+      const filasSeleccionadasNoSVH = filasSeleccionadas.filter(
+        (row) => row.dataset.tipo_producto != "SVH"
+      );
+
+      const ids = filasSeleccionadasNoSVH.map((row) => row.dataset.id);
 
       const options = {
         method: "DELETE",
@@ -859,15 +864,23 @@ $_SESSION["usuario"]["id_usuario"]; ?>
         (row) => row.querySelector("input").checked
       );
 
-      if (filasSeleccionadas.length == 0) {
-        mostrarAlert("error", "Debe seleccionar al menos un item", "borrar");
+      const filasSeleccionadasNoSVH = filasSeleccionadas.filter(
+        (row) => row.dataset.tipo_producto != "SVH"
+      );
+
+      if (filasSeleccionadasNoSVH.length == 0) {
+        mostrarAlert(
+          "error",
+          "Debe seleccionar al menos un item (no se pueden seleccionar habitaciones para anular)",
+          "borrar"
+        );
         return;
       }
 
       // obtener el nombre de los productos seleccionados
-      const detallesSeleccionados = filasSeleccionadas.map((fila) => ({
+      const detallesSeleccionados = filasSeleccionadasNoSVH.map((fila) => ({
         nombre: fila.dataset.nombreProducto,
-        cantidad: formatearCantidad(fila.dataset.cantidad),
+        cantidad: fila.dataset.cantidad,
         precio: formatearCantidad(fila.dataset.precioUnitario),
         total: formatearCantidad(fila.dataset.total),
       }));
@@ -881,7 +894,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${detalle.nombre}</td>
-          <td class="text-end">${detalle.cantidad}</td>
+          <td class="text-center">${detalle.cantidad}</td>
           <td class="text-end">${detalle.precio}</td>
           <td class="text-end">${detalle.total}</td>
         `;
@@ -1491,6 +1504,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
         );
 
         row.dataset.nombreProducto = producto.nombre_producto;
+        row.dataset.tipo_producto = producto.tipo;
 
         const fechaHoraServicioFormateada =
           producto.tipo == "SRV"

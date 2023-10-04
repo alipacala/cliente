@@ -362,11 +362,15 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
         day: "2-digit",
       });
 
+      tdCantidad.classList.add("text-center");
+      tdPrecioVenta.classList.add("text-end");
+      tdPrecioTotal.classList.add("text-end");
+
       tdFecha.textContent = fechaFormateada;
       tdProducto.textContent = detalle.producto;
       tdCantidad.textContent = detalle.cantidad;
-      tdPrecioVenta.textContent = detalle.precio_unitario;
-      tdPrecioTotal.textContent = detalle.precio_unitario * detalle.cantidad;
+      tdPrecioVenta.textContent = formatearCantidad(detalle.precio_unitario);
+      tdPrecioTotal.textContent = formatearCantidad(detalle.precio_unitario * detalle.cantidad);
       tdEliminar.innerHTML = `<button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>`;
 
       const btnEliminar = tdEliminar.querySelector("button");
