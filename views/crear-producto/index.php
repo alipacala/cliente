@@ -94,7 +94,7 @@ $_GET["id"] : false; ?>
             />
           </div>
           <div class="form-group col-md-4">
-            <label for="tipo_de_unidad">Tipo de Unidad</label>
+            <label for="tipo_unidad">Tipo de Unidad</label>
             <select
               class="form-select"
               id="tipo_unidad"
@@ -263,23 +263,6 @@ $_GET["id"] : false; ?>
     } catch (error) {
       console.error(error);
       mostrarAlert("error", "Error al cargar el producto", "consultar");
-    }
-  }
-
-  async function cargarCodigoProducto() {
-    try {
-      const url = apiConfigUrl + "/6/codigo"; // 6 es el id de los productos
-      const response = await fetch(url);
-      const data = await response.json();
-
-      const codigo = document.getElementById("codigo");
-      codigo.value = data.codigo;
-    } catch (error) {
-      mostrarAlert(
-        "error",
-        "Error al cargar el código del producto",
-        "consultar"
-      );
     }
   }
 

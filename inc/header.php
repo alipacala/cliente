@@ -100,6 +100,13 @@ function mostrarHeader($pagina, $logueado)
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown"
+                  aria-expanded="false"> Compras </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/relacion-cuentas-por-pagar">Relación de Cuentas por Pagar</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown"
                   aria-expanded="false"> Usuarios </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/gestionar-terapistas">Registro de

@@ -239,13 +239,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     return formatearCantidad(total);
   }
 
-  function formatearCantidad(numero) {
-    const numeroFormateado = parseFloat(numero).toFixed(2);
-    const partes = numeroFormateado.toString().split(".");
-    partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return partes.join(".");
-  }
-
   function prepararFormulario() {
     const formAnularComprobante = document.getElementById(
       "form-confirmar-anulado"

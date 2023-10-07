@@ -76,7 +76,7 @@ mostrarHeader("pagina-funcion", $logueado);
                 <td>${item.nro_personas || ''}</td>
                 <td>${item.fecha_in || ''}</td>
                 <td>${item.fecha_out || ''}</td>
-                <td><a href="<?php echo URL ?>/gestionar-checkin-hotel?parametro1=${item.nro_reserva}&parametro2=${item.nro_registro_maestro}&nro_habitacion=${item.nro_habitacion}&fecha_in=${item.fecha_in}&fecha_out=${item.fecha_out}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
+                <td><a href="<?php echo URL ?>/gestionar-checkin-hotel?id_checkin=${item.id_checkin}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
             `;
             });
             })
@@ -116,7 +116,7 @@ mostrarHeader("pagina-funcion", $logueado);
                 <td>${item.nro_personas || ''}</td>
                 <td>${item.fecha_in || ''}</td>
                 <td>${item.fecha_out || ''}</td>
-                <td><a href="<?php echo URL ?>/gestionar-checkin-hotel?parametro1=${item.nro_reserva}&parametro2=${item.nro_registro_maestro}&nro_habitacion=${item.nro_habitacion}&fecha_in=${item.fecha_in}&fecha_out=${item.fecha_out}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
+                <td><a href="<?php echo URL ?>/gestionar-checkin-hotel?id_checkin=${item.id_checkin}" " class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
             `;
         });
     })

@@ -76,6 +76,10 @@ mostrarHeader("pagina-funcion", $logueado);
     <label for="validationCustom02" class="form-label">ID PERSONA:</label>
     <input type="text" class="form-control" id="id_persona" readonly>
   </div>
+  <div class="col-md-12">
+    <label for="validationCustom02" class="form-label">ID CHECKIN:</label>
+    <input type="text" class="form-control" id="id_checkin" readonly>
+  </div>
   <div class="col-md-6">
     <label for="validationCustom02" class="form-label">Nro. Registro:</label>
     <input type="text" class="form-control" id="nro_registro" readonly>
@@ -309,17 +313,54 @@ mostrarHeader("pagina-funcion", $logueado);
 </div>
 </form>
 <script>
+  let fechas = [];
+  let objfechas = [];
+  function generar_objetofechas() {
+            let fechas = [];
+            let fechaIn = document.getElementById("fecha_in").value;
+            let fechaOut = document.getElementById("fecha_out").value;
+            let currentDate = new Date(fechaIn);
+            // Convierte las fechas en objetos Date
+            var dateIn = new Date(fechaIn);
+            var dateOut = new Date(fechaOut);
+            
+            // Obtiene la fecha actual
+            var fechaActual = new Date();
+             // Verifica si fecha_out es mayor que la fecha actual antes de continuar
+            if (dateOut <= fechaActual) {
+              alert("La fecha de salida debe ser mayor que la fecha actual.");
+              return null; // Retorna null para indicar que no se pudo generar el objeto
+            }
+            while (currentDate < new Date(fechaOut)) {
+                fechas.push({ fecha: currentDate.toISOString().split('T')[0] });
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            var codigo = document.getElementById('id_checkin').value;
+            // Enviar las fechas al servidor
+            fetch('<?php echo URL_API_CARLITOS ?>/api-rooming.php', {
+                method: 'FECHA',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    codigo: codigo, // Reemplaza 'tu_codigo' con el valor correcto
+                    fechasJson: fechas
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+</script>
+<script>
         // Función para cargar los datos de la API y actualizar los inputs
         function cargarDatos() {
           //obtenemos el numero de registro maestro del forumlario
-          var codigo = document.getElementById('nro_reserva').value;
-          var selectElement = document.getElementById("habitacion");
-          const selectedOption = selectElement.options[selectElement.selectedIndex];
-          // igualar el selectedOption a la variable codigo
-          var codigo2 = selectedOption.text;
-          var codigo3 = document.getElementById('nro_registro').value;
+          var codigo = document.getElementById('id_checkin').value;
             // Construir la URL de la API
-          const url = `<?php echo URL_API_CARLITOS ?>/api-reservas.php?codigo=${codigo}&codigo2=${codigo2}&codigo3=${codigo3}`;
+          const url = `<?php echo URL_API_CARLITOS ?>/api-reservas.php?codigo=${codigo}`;
             // Realizar una solicitud HTTP GET a la URL
             fetch(url, {
                   method: 'GET5',
@@ -333,7 +374,10 @@ mostrarHeader("pagina-funcion", $logueado);
                     const selectedOptiontipoproducto = selectElementtipohabitacion.options[selectElementtipohabitacion.selectedIndex];
                     var selectElementprecios = document.getElementById("selectPrecios");
                     const selectedOptionprecios = selectElementprecios.options[selectElementprecios.selectedIndex];
-                    document.getElementById('nombres').value = data[0].nombres;
+                    document.getElementById('nombres').value = data[0].nombre;
+                    document.getElementById('nro_reserva').value = data[0].nro_reserva;
+                    document.getElementById('id_persona').value = data[0].id_persona;
+                    document.getElementById('nro_registro').value = data[0].nro_registro_maestro;
                     document.getElementById('apellidos').value = data[0].apellidos;
                     document.getElementById('tipo_documento').value = data[0].tipo_documento;
                     document.getElementById('ciudad').value = data[0].lugar_procedencia;
@@ -496,49 +540,31 @@ mostrarHeader("pagina-funcion", $logueado);
     </script>
 <script>
   // Obtén la URL actual
-// Obtén la URL actual
 var url = window.location.href;
-// Crea un objeto URL con la URL actual
-var urlObj = new URL(url);
+// Obtén la URL actual
+const params = new URLSearchParams(window.location.search);
+let id = params.get("id_checkin");
+  console.log(id);
 // Comprueba si los parámetros tienen el valor "null" o vacio
-if (url.includes('parametro1=null') && url.includes('parametro2=null') || url.includes('parametro1=') && url.includes('parametro2=')) {
-  // Si ambos parámetros tienen el valor "null", ejecuta una función
-  funcionConParametros();
-}
-else if (url === "<?php echo URL ?>/gestionar-checkin-hotel/") {
-  // Si la URL es igual a la URL específica, haz algo
-  funcionSinParametros();
-} 
-else {
-  // Si al menos uno de los parámetros no tiene el valor "null", ejecuta otra función
-  funcionConParametros();
-}
-
-// Define las funciones que deseas ejecutar
-function funcionConParametros() {
-  // Crea un objeto URLSearchParams con la URL
-  // Obtén el valor del parámetro 'parametro1'
-  var parametro1 = urlObj.searchParams.get('parametro1');
-  // Obtiene el valor del parámetro 'parametro2' de la URL
-  var parametro2 = urlObj.searchParams.get('parametro2');
-  var nro_habitacion = urlObj.searchParams.get('nro_habitacion');
-  var selectElement = document.getElementById("habitacion");
-  const selectedOption = selectElement.options[selectElement.selectedIndex];
-  var fecha_in = urlObj.searchParams.get('fecha_in');
-  var fecha_out = urlObj.searchParams.get('fecha_out');
-
-    // Verifica si se encontraron los parámetros y actúa en consecuencia
-    if (parametro1 !== null && parametro2 !== null) {
-      document.getElementById("nro_reserva").value = parametro1;
-      document.getElementById("nro_registro").value = parametro2;
-      selectedOption.textContent = nro_habitacion;
-      document.getElementById("fecha_in").value = fecha_in;
-      document.getElementById("fecha_out").value = fecha_out;
-      // Puedes realizar acciones con los valores de los parámetros aquí
-    } else {
-      // Puedes manejar el caso en que uno o ambos parámetros no estén presentes aquí
+  if (id === "null" || id == null) {
+    // Si ambos parámetros tienen el valor "null", ejecuta una función
+    funcionSinParametros();
+  }
+  else if (url === "<?php echo URL ?>/gestionar-checkin-hotel/") {
+      
+      funcionSinParametros();
+  }
+  else {
+      // Si la URL es igual a la URL específica, haz algo
+      // Si al menos uno de los parámetros no tiene el valor "null", ejecuta otra función
+      funcionConParametros();
     }
-}
+  // Define las funciones que deseas ejecutar
+  function funcionConParametros() {
+    // asignar el valor de id a un campo de entrada
+    document.getElementById("id_checkin").value = id;
+    
+  }
 
 function funcionSinParametros() {
   fetch("<?php echo URL_API_CARLITOS ?>/api-config.php", {
@@ -763,50 +789,53 @@ function actualizarTabla() {
       acompanantes: registros
     };
     }
-   
-    console.log(formData);
-    //Make a fetch POST request to your PHP API endpoint
-    if (nro_reserva === '' || nro_reserva.trim() === '') {
-      fetch('<?php echo URL_API_CARLITOS ?>/api-huespedes.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      })
-      .then(response => response.json())
-      .then(data => {
-        // Handle the response from the API
-        console.log(data);
-        // You can do further processing here
-        //window.location.reload();
-      })
-      .catch(error => {
-        // Handle errors if any
-        console.error(error);
-        //window.location.reload();
-      });
-  } else {
-    fetch('<?php echo URL_API_CARLITOS ?>/api-huespedes.php', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
-    .then(response => response.json())
-    .then(data => {
-      // Handle the response from the API
-      console.log(data);
-      // You can do further processing here
-      //window.location.reload();
-    })
-    .catch(error => {
-      // Handle errors if any
-      console.error(error);
-      //window.location.reload();
-    });
-  }
+    //almacenar id_checkin en una variable
+    var id_checkin = document.getElementById('id_checkin').value;
+    //console.log(formData);
+    generar_objetofechas();
+  
+  //   //Make a fetch POST request to your PHP API endpoint
+  //   if (id_checkin === '' || id_checkin.trim() === '') {
+  //     fetch('<?php echo URL_API_CARLITOS ?>/api-huespedes.php', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify(formData)
+  //     })
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       // Handle the response from the API
+  //       //console.log(data);
+  //       // You can do further processing here
+  //       window.location.reload();
+  //     })
+  //     .catch(error => {
+  //       // Handle errors if any
+  //       console.error(error);
+  //       window.location.reload();
+  //     });
+  // } else {
+  //   fetch('<?php echo URL_API_CARLITOS ?>/api-huespedes.php', {
+  //     method: 'PUT',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify(formData)
+  //   })
+  //   .then(response => response.json())
+  //   .then(data => {
+  //     // Handle the response from the API
+  //     //console.log(data);
+  //     // You can do further processing here
+  //     window.location.reload();
+  //   })
+  //   .catch(error => {
+  //     // Handle errors if any
+  //     console.error(error);
+  //     window.location.reload();
+  //   });
+  // }
   });
 });
 </script>

@@ -37,7 +37,7 @@ function mostrarAlert(tipo, mensaje, operacion) {
  * @returns {string} numeroFormateado
  */
 function formatearCantidad(numero) {
-  if (!numero) return "---";
+  if (!numero) return "0.00";
   const numeroFormateado = parseFloat(numero).toFixed(2);
   const partes = numeroFormateado.toString().split(".");
   partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");

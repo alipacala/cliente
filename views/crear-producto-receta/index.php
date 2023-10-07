@@ -315,15 +315,6 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
     }
   }
 
-  // formatea las cantidades en soles, ejemplo: 1000 -> 1000.00
-  function formatearCantidad(numero) {
-    if (!numero) return "";
-    const numeroFormateado = parseFloat(numero).toFixed(2);
-    const partes = numeroFormateado.toString().split(".");
-    partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return partes.join(".");
-  }
-
   async function cargarProductoReceta() {
     try {
       const response = await fetch(`${apiProductosUrl}/${id}/con-insumos`);
