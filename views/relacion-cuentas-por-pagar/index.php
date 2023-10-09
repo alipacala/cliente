@@ -35,7 +35,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           </div>
         </div>
         <div class="col-md-3 d-flex align-items-end">
-          <button class="btn btn-outline-secondary w-100" id="btn-buscar">
+          <button class="btn btn-outline-secondary w-100" id="btn-reporte">
             <i class="fas fa-print"></i> Reporte de cuentas por pagar
           </button>
         </div>
@@ -74,6 +74,45 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   </div>
 </div>
 
+<div
+  class="modal fade"
+  id="modal-borrar-compra"
+  tabindex="-1"
+  aria-labelledby="modal-borrar-compra-label"
+  style="display: none"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <h5 class="modal-title" id="modal-borrar-compra-label">
+          ¿Está seguro que desea borrar este comprobante de compra?
+        </h5>
+      </div>
+      <div class="modal-footer">
+        <div class="row w-100">
+          <button
+            type="button"
+            class="btn btn-danger col-md-6"
+            onclick="borrarComprobante(event)"
+            data-bs-dismiss="modal"
+          >
+            Sí
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-secondary col-md-6"
+            id="confirmar-borrar-compra"
+            data-bs-dismiss="modal"
+          >
+            No
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   const apiComprobantesVentasUrl =
     "<?php echo URL_API_NUEVA ?>/comprobantes-ventas";
@@ -81,11 +120,19 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
   let tablaComprobantesBody = null;
 
+  let modalBorrarCompra = null;
+
+  let idCompraBorrar = null;
+
   async function wrapper() {
     mostrarAlertaSiHayMensaje();
     tablaComprobantesBody = document
       .getElementById("tabla-comprobantes")
       .querySelector("tbody");
+
+    modalBorrarCompra = new bootstrap.Modal(
+      document.getElementById("modal-borrar-compra")
+    );
 
     buscarComprobantes();
 
@@ -206,10 +253,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     agregarFilaTotal();
   }
 
-  async function borrarComprobante(event, idComprobante) {
+  async function borrarComprobante(event) {
     event.preventDefault();
 
-    const url = `${apiComprobantesVentasUrl}/${idComprobante}/compra`;
+    const url = `${apiComprobantesVentasUrl}/${idCompraBorrar}/compra`;
     const options = {
       method: "DELETE",
     };
@@ -284,7 +331,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
         const borrar = row.insertCell();
         borrar.classList.add("text-center");
-        borrar.innerHTML = `<a href="#" class="btn btn-danger btn-sm" onclick="borrarComprobante(event, ${comprobante.id_comprobante})"><i class="fas fa-trash"></i></a>`;
+        borrar.innerHTML = `<a href="#" class="btn btn-danger btn-sm" onclick="alBorrarComprobante(event, ${comprobante.id_comprobante})"><i class="fas fa-trash"></i></a>`;
 
         const pagar = row.insertCell();
         pagar.classList.add("text-center");
@@ -298,6 +345,12 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         "consultar"
       );
     }
+  }
+
+  function alBorrarComprobante(event, id) {
+    event.preventDefault();
+    idCompraBorrar = id;
+    modalBorrarCompra.show();
   }
 
   function limpiarTabla() {

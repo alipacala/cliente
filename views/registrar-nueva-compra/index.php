@@ -27,9 +27,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               onchange="alCambiarTipoComprobante(event)"
             >
               <option value="">Seleccione un tipo de comprobante</option>
+              <option value="00">Orden de pedido</option>
               <option value="01" selected>Factura</option>
               <option value="03">Boleta</option>
-              <option value="05">Comprobante del servicio</option>
+              <option value="05">Recibo por honorarios</option>
             </select>
           </div>
           <div class="form-group col-md-3">
@@ -1010,6 +1011,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
   function alCambiarPrecioUnitario(event) {
     const el = event.target;
+    const tipoComprobante = document.getElementById("tipo_comprobante");
     const precioUnitarioConIgv = document.getElementById(
       "precio_unitario_con_igv"
     );
@@ -1017,10 +1019,16 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       "precio_unitario_sin_igv"
     );
 
-    if (el.id == "precio_unitario_sin_igv") {
-      precioUnitarioConIgv.value = (el.value * 1.18).toFixed(2);
+    if (tipoComprobante.value == "01") {
+      // factura
+      if (el.id == "precio_unitario_sin_igv") {
+        precioUnitarioConIgv.value = (el.value * 1.18).toFixed(6);
+      } else {
+        precioUnitarioSinIgv.value = (el.value / 1.18).toFixed(6);
+      }
     } else {
-      precioUnitarioSinIgv.value = (el.value / 1.18).toFixed(2);
+      precioUnitarioConIgv.value = el.value;
+      precioUnitarioSinIgv.value = el.value;
     }
 
     // calcular subtotal
@@ -1029,7 +1037,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
     const precioUnitario = precioUnitarioSinIgv.value;
 
-    subtotal.value = (precioUnitario * cantidad).toFixed(2);
+    subtotal.value = (precioUnitario * cantidad).toFixed(6);
   }
 
   function alCambiarSubtotal(event) {
@@ -1047,13 +1055,13 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     const subtotal = el.value;
     const precioUnitario = subtotal / cantidad.value;
 
-    precioUnitarioSinIgv.value = precioUnitario.toFixed(2);
+    precioUnitarioSinIgv.value = precioUnitario.toFixed(6);
 
     if (tipoComprobante.value == "01") {
       // factura
-      precioUnitarioConIgv.value = (precioUnitario * 1.18).toFixed(2);
+      precioUnitarioConIgv.value = (precioUnitario * 1.18).toFixed(6);
     } else {
-      precioUnitarioConIgv.value = precioUnitario.toFixed(2);
+      precioUnitarioConIgv.value = precioUnitario.toFixed(6);
     }
   }
 
@@ -1072,14 +1080,14 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     const subtotal = subtotalInput.value;
     const precioUnitario = subtotal / cantidad;
 
-    precioUnitarioSinIgv.value = precioUnitario.toFixed(2);
+    precioUnitarioSinIgv.value = precioUnitario.toFixed(6);
     if (tipoComprobante.value == "01") {
       // factura
-      precioUnitarioConIgv.value = (precioUnitario * 1.18).toFixed(2);
+      precioUnitarioConIgv.value = (precioUnitario * 1.18).toFixed(6);
     } else {
-      precioUnitarioConIgv.value = precioUnitario.toFixed(2);
+      precioUnitarioConIgv.value = precioUnitario.toFixed(6);
     }
-    subtotalInput.value = (precioUnitario * cantidad).toFixed(2);
+    subtotalInput.value = (precioUnitario * cantidad).toFixed(6);
   }
 
   // #endregion
@@ -1235,7 +1243,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     if (tipoComprobante.value == "01") {
       costoUnitarioConIGVInput.value = (
         productoSeleccionado.costo_unitario * 1.18
-      ).toFixed(2);
+      ).toFixed(6);
     } else {
       costoUnitarioConIGVInput.value = productoSeleccionado.costo_unitario;
     }
@@ -1491,8 +1499,34 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     calcularCostoTotal();
   }
 
-  function alCambiarTipoComprobante(event) {
+  async function alCambiarTipoComprobante(event) {
+    const tipoComprobante = event.target.value;
+    const nroComprobante = document.getElementById("nro_comprobante");
+
+    if (tipoComprobante == "00") {
+      // cargar el codigo de pedido
+      nroComprobante.value = await cargarCodigoPedido();
+      nroComprobante.disabled = true;
+    } else {
+      nroComprobante.value = "";
+      nroComprobante.disabled = false;
+    }
+
     calcularCostoTotal();
+  }
+
+  async function cargarCodigoPedido() {
+    const url = apiConfigUrl + "/20/codigo"; // 7 es el id de los pedidos
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+
+      return data.codigo;
+    } catch (error) {
+      console.error(error);
+      mostrarAlert("error", "Error al cargar el código del pedido", "crear");
+    }
   }
 
   function agregarInsumoATabla(insumo) {
