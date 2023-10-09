@@ -183,6 +183,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                     <th>T. Unidad</th>
                     <th>P. Unitario</th>
                     <th>Subtotal</th>
+                    <th>Borrar</th>
                   </tr>
                 </thead>
                 <tbody></tbody>
@@ -470,7 +471,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                 class="form-select"
                 id="clasificacion_ventas"
                 name="clasificacion_ventas"
-                required
               ></select>
             </div>
             <div class="form-group col-md-4">
@@ -479,7 +479,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                 class="form-select"
                 id="central_costos"
                 name="central_costos"
-                required
               ></select>
             </div>
           </div>
@@ -1415,7 +1414,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
     try {
       const response = await fetch(url, options);
-      
+
       if (!response.ok) {
         const data = await response.json();
         console.log(data);
@@ -1525,7 +1524,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   }
 
   async function cargarCodigoPedido() {
-    const url = apiConfigUrl + "/20/codigo"; // 7 es el id de los pedidos
+    const url = apiConfigUrl + "/20/codigo"; // 20 es el id de los pedidos
 
     try {
       const response = await fetch(url);
@@ -1547,19 +1546,29 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     const celdaPrecioUnitario = row.insertCell(3);
     const celdaSubtotal = row.insertCell(4);
 
+    const celdaBorrar = row.insertCell(5);
+
     celdaCantidad.classList.add("text-center");
     celdaUnidad.classList.add("text-center");
     celdaPrecioUnitario.classList.add("text-end");
     celdaSubtotal.classList.add("text-end");
+    celdaBorrar.classList.add("text-center");
 
     // Asignar valores a las celdas
     celdaProducto.textContent = insumo.nombre_insumo;
     celdaCantidad.textContent = insumo.cantidad;
     celdaUnidad.textContent = insumo.tipo_de_unidad;
-    celdaPrecioUnitario.textContent = formatearCantidad(insumo.costo_unitario);
-    celdaSubtotal.textContent = formatearCantidad(
-      insumo.cantidad * insumo.costo_unitario
-    );
+    celdaPrecioUnitario.textContent = (+insumo.costo_unitario).toFixed(6);
+    celdaSubtotal.textContent = (insumo.cantidad * insumo.costo_unitario).toFixed(6);
+
+    // Agregar el botón de borrar
+    const botonBorrar = document.createElement("button");
+    botonBorrar.classList.add("btn", "btn-danger", "btn-sm");
+    botonBorrar.innerHTML = '<i class="fas fa-minus"></i>';
+    botonBorrar.onclick = () => {
+      borrarInsumo(insumo.idFila);
+    };
+    celdaBorrar.appendChild(botonBorrar);
 
     row.dataset.idProducto = insumo.id_insumo;
     row.dataset.idFila = insumo.idFila;
@@ -1567,6 +1576,21 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     if (insumo.id_receta) {
       row.dataset.idReceta = insumo.id_receta;
     }
+  }
+
+  function borrarInsumo(idFila) {
+    const detalles = detallesDeTabla.filter(
+      (detalle) => detalle.idFila != idFila
+    );
+    detallesDeTabla = detalles;
+
+    const insumos = insumosAgregados.filter(
+      (insumo) => insumo.idFila != idFila
+    );
+    insumosAgregados = insumos;
+
+    actualizarTabla();
+    calcularCostoTotal();
   }
 
   function limpiarFormularioDetalle() {

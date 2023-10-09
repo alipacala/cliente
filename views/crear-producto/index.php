@@ -53,7 +53,6 @@ $_GET["id"] : false; ?>
               class="form-select"
               id="clasificacion_ventas"
               name="clasificacion_ventas"
-              required
             ></select>
           </div>
           <div class="form-group col-md-4">
@@ -62,7 +61,6 @@ $_GET["id"] : false; ?>
               class="form-select"
               id="central_costos"
               name="central_costos"
-              required
             ></select>
           </div>
         </div>
@@ -451,6 +449,23 @@ $_GET["id"] : false; ?>
     } catch (error) {
       console.error(error);
       mostrarAlert("error", "Error al crear el producto", "crear");
+    }
+  }
+  
+  async function cargarCodigoProducto() {
+    try {
+      const url = apiConfigUrl + "/6/codigo"; // 6 es el id de los productos
+      const response = await fetch(url);
+      const data = await response.json();
+
+      const codigo = document.getElementById("codigo");
+      codigo.value = data.codigo;
+    } catch (error) {
+      mostrarAlert(
+        "error",
+        "Error al cargar el código del producto",
+        "consultar"
+      );
     }
   }
 

@@ -113,14 +113,109 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   </div>
 </div>
 
+<div
+  class="modal fade modal-lg"
+  id="modal-ver-comprobante"
+  tabindex="-1"
+  aria-labelledby="modal-ver-comprobante-label"
+  style="display: none"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-ver-comprobante-label">
+          Comprobante de compra
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          id="cerrar-modal-ver-comprobante"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <label for="ver-fecha-comprobante">Fecha:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ver-fecha-comprobante"
+              disabled
+            />
+          </div>
+          <div class="col-md-3">
+            <label for="ver-nro-comprobante">Nro comprobante:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ver-nro-comprobante"
+              disabled
+            />
+          </div>
+          <div class="col-md-3">
+            <label for="ver-doc-cliente">DNI/RUC:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ver-doc-cliente"
+              disabled
+            />
+          </div>
+          <div class="col-md-3">
+            <label for="ver-nombre-razon-social">Nombre/Razón Social:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ver-nombre-razon-social"
+              disabled
+            />
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table
+            class="table table-bordered table-hover"
+            id="tabla-ver-comprobante"
+          >
+            <thead>
+              <tr>
+                <th>Cantidad</th>
+                <th>Producto</th>
+                <th>Precio Unitario</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          data-bs-dismiss="modal"
+        >
+          Salir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   const apiComprobantesVentasUrl =
     "<?php echo URL_API_NUEVA ?>/comprobantes-ventas";
   const apiReportesUrl = "<?php echo URL_API_NUEVA ?>/reportes";
+  const apiComprobantesDetallesUrl =
+    "<?php echo URL_API_NUEVA ?>/comprobantes-detalles";
 
   let tablaComprobantesBody = null;
 
   let modalBorrarCompra = null;
+  let modalVerComprobante = null;
 
   let idCompraBorrar = null;
 
@@ -132,6 +227,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
     modalBorrarCompra = new bootstrap.Modal(
       document.getElementById("modal-borrar-compra")
+    );
+    modalVerComprobante = new bootstrap.Modal(
+      document.getElementById("modal-ver-comprobante")
     );
 
     buscarComprobantes();
@@ -210,7 +308,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     percepcion.classList.add("text-end");
     percepcion.innerHTML = `<span class='fw-bold'>${formatearCantidad(
       totales.percepcion
-    )}</span>`;	
+    )}</span>`;
 
     const granTotal = rowTotales.insertCell();
     granTotal.classList.add("text-end");
@@ -289,6 +387,13 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         row.dataset.por_pagar = comprobante.por_pagar;
         row.dataset.id_comprobante = comprobante.id_comprobante;
 
+        row.dataset.fechaComprobante = comprobante.fecha;
+        row.dataset.nroComprobante = comprobante.nro_comprobante;
+        row.dataset.docCliente = comprobante.ruc;
+        row.dataset.cliente = comprobante.proveedor;
+        row.dataset.granTotal = comprobante.gran_total;
+
+
         const fecha = row.insertCell();
         fecha.innerHTML = formatearFecha(comprobante.fecha);
 
@@ -336,12 +441,73 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         const pagar = row.insertCell();
         pagar.classList.add("text-center");
         pagar.innerHTML = `<a href="./../registrar-pago-compra/?id_comprobante=${comprobante.id_comprobante}" class="btn btn-primary btn-sm"><i class="fas fa-dollar-sign"></i></a>`;
+
+        // al hacer click en la fila se muestra el modal comprobante
+        row.addEventListener("click", (event) => {
+          event.preventDefault();
+          mostrarModalVerComprobante(row.dataset);
+        });
       });
     } catch (error) {
       console.error(error);
       mostrarAlert(
         "error",
         "No se pudo cargar los comprobantes de compra",
+        "consultar"
+      );
+    }
+  }
+  
+  async function mostrarModalVerComprobante(data) {
+    const idComprobante = data.id_comprobante;
+    const total = data.granTotal;
+
+    const verFechaComprobante = document.getElementById(
+      "ver-fecha-comprobante"
+    );
+    const verNroComprobante = document.getElementById("ver-nro-comprobante");
+    const verDocCliente = document.getElementById("ver-doc-cliente");
+    const verNombreRazonSocial = document.getElementById(
+      "ver-nombre-razon-social"
+    );
+
+    verFechaComprobante.value = data.fechaComprobante;
+    verNroComprobante.value = data.nroComprobante;
+    verDocCliente.value = data.docCliente;
+    verNombreRazonSocial.value = data.cliente;
+
+    const url = `${apiComprobantesDetallesUrl}?comprobante_compra=${idComprobante}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      const detalles = data;
+
+      const tbody = document.getElementById("tabla-ver-comprobante").tBodies[0];
+      tbody.innerHTML = "";
+
+      detalles.forEach((documentoDetalle) => {
+        const row = tbody.insertRow();
+
+        row.innerHTML = `
+           <td>${documentoDetalle.cantidad}</td>
+           <td>${documentoDetalle.nombre_producto}</td>
+           <td>${documentoDetalle.precio_unitario}</td>
+           <td>${documentoDetalle.precio_total}</td>
+         `;
+      });
+
+      tbody.insertRow().innerHTML = `
+         <td colspan="3" class="fw-bold text-end">TOTAL</td>
+         <td class="fw-bold">${total}</td>
+       `;
+
+      modalVerComprobante.show();
+    } catch (error) {
+      console.error(error);
+      mostrarAlert(
+        "error",
+        "Error al cargar los datos del comprobante",
         "consultar"
       );
     }
