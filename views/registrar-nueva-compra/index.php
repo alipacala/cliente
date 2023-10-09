@@ -1415,8 +1415,17 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
     try {
       const response = await fetch(url, options);
-      const data = await response.json();
-      console.log(data);
+      
+      if (!response.ok) {
+        const data = await response.json();
+        console.log(data);
+        mostrarAlert(
+          "error",
+          "Error al registrar el Comprobante de compra",
+          "crear"
+        );
+        return;
+      }
 
       window.location.href =
         "./../relacion-cuentas-por-pagar/?ok&mensaje=Comprobante de compra registrada correctamente&op=crear";
