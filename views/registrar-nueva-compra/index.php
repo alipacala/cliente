@@ -158,7 +158,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
         <div class="card mb-3">
           <div class="card-header">
-            <h4>Productos</h4>
+            <h4>Detalles de compra</h4>
           </div>
           <div class="card-body">
             <button
@@ -168,7 +168,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               data-bs-toggle="modal"
               data-bs-target="#modal-detalle"
             >
-              Agregar Producto
+              Agregar Detalle
             </button>
 
             <div class="table-responsive">
@@ -298,7 +298,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modal-detalle-label">Agregar Producto</h5>
+        <h5 class="modal-title" id="modal-detalle-label">Agregar Detalle</h5>
         <button
           type="button"
           class="btn-close"
@@ -328,6 +328,17 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                 <i class="fas fa-plus"></i> Nuevo producto
               </button>
             </div>
+          </div>
+
+          <div class="form-group mb-3">
+            <label for="descripcion">Descripción</label>
+            <input
+              type="text"
+              class="form-control"
+              id="descripcion"
+              name="descripcion"
+              onchange="alCambiarDescripcion(event)"
+            />
           </div>
 
           <div class="form-group mb-3">
@@ -479,6 +490,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                 class="form-select"
                 id="central_costos"
                 name="central_costos"
+                required
               ></select>
             </div>
           </div>
@@ -1178,23 +1190,28 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       productosSelect.innerHTML = "";
 
       const option = document.createElement("option");
-      option.value = "";
-      option.textContent = "Seleccione un insumo";
+      option.value = "0";
+      option.textContent = "Otro insumo - Ingrese descripción";
       productosSelect.appendChild(option);
-
+      
       data.forEach((insumo) => {
         const option = document.createElement("option");
-
+        
         insumosCargados = [...insumosCargados, insumo];
-
+        
         option.value = insumo.id_producto;
         option.textContent = insumo.nombre_producto;
         productosSelect.appendChild(option);
       });
-
+      
       limpiarFormularioDetalle();
 
       productosSelect.addEventListener("change", alCambiarInsumo);
+
+      // seleccionar la opción 0
+      productosSelect.value = "0";
+      // lanzar el evento change para que se carguen los datos del producto
+      productosSelect.dispatchEvent(new Event("change"));
 
       const agregarInsumoButton = document.getElementById("agregar-producto");
       agregarInsumoButton.addEventListener("click", alAgregarInsumo);
@@ -1204,14 +1221,29 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     }
   }
 
+  function alCambiarDescripcion(event) {
+    const agregarInsumoButton = document.getElementById("agregar-producto");
+    const descripcion = event.target.value;
+
+    if (descripcion) {
+      agregarInsumoButton.disabled = false;
+    } else {
+      agregarInsumoButton.disabled = true;
+    }
+  }
+
   function alCambiarInsumo() {
     const productoSelect = document.getElementById("producto");
     const agregarInsumoButton = document.getElementById("agregar-producto");
     const tipoComprobante = document.getElementById("tipo_comprobante");
 
-    if (!productoSelect.value) {
-      limpiarFormularioDetalle();
+    if (productoSelect.value != 0) {
+      agregarInsumoButton.disabled = false;
+      descripcion.disabled = true;
+      descripcion.value = "";
+    } else {
       agregarInsumoButton.disabled = true;
+      descripcion.disabled = false;
       return;
     }
 
@@ -1249,8 +1281,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
     subtotalInput.value =
       +productoSeleccionado.costo_unitario * +cantidadInput.value;
-
-    agregarInsumoButton.disabled = false;
   }
 
   async function cargarClasificacionVentas() {
@@ -1396,6 +1426,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     comprobante.detalles = detallesDeTabla.map((detalle) => {
       return {
         id_producto: detalle.id_insumo,
+        descripcion: detalle.nombre_insumo,
         tipo_de_unidad: detalle.tipo_de_unidad,
         cantidad: detalle.cantidad,
         precio_unitario: detalle.costo_unitario,
@@ -1459,7 +1490,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
     const detalle = {
       id_insumo: selectProducto.value,
-      nombre_insumo: selectProducto.options[selectProducto.selectedIndex].text,
+      nombre_insumo:
+        selectProducto.selectedIndex == 0
+          ? descripcion.value
+          : selectProducto.options[selectProducto.selectedIndex].text,
       cantidad: document.getElementById("cantidad").value,
       tipo_de_unidad: document.getElementById("tipo_unidad_detalle").value,
       costo_unitario: document.getElementById("precio_unitario_sin_igv").value,
@@ -1559,7 +1593,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     celdaCantidad.textContent = insumo.cantidad;
     celdaUnidad.textContent = insumo.tipo_de_unidad;
     celdaPrecioUnitario.textContent = (+insumo.costo_unitario).toFixed(6);
-    celdaSubtotal.textContent = (insumo.cantidad * insumo.costo_unitario).toFixed(6);
+    celdaSubtotal.textContent = (
+      insumo.cantidad * insumo.costo_unitario
+    ).toFixed(6);
 
     // Agregar el botón de borrar
     const botonBorrar = document.createElement("button");

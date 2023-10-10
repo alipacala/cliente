@@ -53,6 +53,7 @@ $_GET["id"] : false; ?>
               class="form-select"
               id="clasificacion_ventas"
               name="clasificacion_ventas"
+              required
             ></select>
           </div>
           <div class="form-group col-md-4">
@@ -61,6 +62,7 @@ $_GET["id"] : false; ?>
               class="form-select"
               id="central_costos"
               name="central_costos"
+              required
             ></select>
           </div>
         </div>

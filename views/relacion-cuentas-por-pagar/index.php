@@ -234,6 +234,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
     buscarComprobantes();
 
+    prepararBotonVerReporte();
     prepararInputsFechas();
   }
 
@@ -328,12 +329,12 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     celdaVacia3.colSpan = 2;
   }
 
-  function prepararUrlParams() {
+  function prepararUrlParams(reporte = false) {
     const fechaInicio = document.getElementById("fecha-inicio").value;
     const fechaFin = document.getElementById("fecha-fin").value;
     const usuario = '<?php echo $_SESSION["usuario"]["id_usuario"] ?>';
 
-    let urlParams = "compras";
+    let urlParams = reporte ? "tipo=compras" : "compras";
 
     if (fechaInicio && fechaFin) {
       urlParams += `&fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`;
@@ -457,6 +458,16 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       );
     }
   }
+
+  function prepararBotonVerReporte() {
+    const btnReporte = document.getElementById("btn-reporte");
+    btnReporte.addEventListener("click", () => {
+      open(
+        `${apiReportesUrl}?${prepararUrlParams(true)}`,
+        "_blank"
+      );
+    });
+  }
   
   async function mostrarModalVerComprobante(data) {
     const idComprobante = data.id_comprobante;
@@ -491,7 +502,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
         row.innerHTML = `
            <td>${documentoDetalle.cantidad}</td>
-           <td>${documentoDetalle.nombre_producto}</td>
+           <td>${documentoDetalle.descripcion}</td>
            <td>${documentoDetalle.precio_unitario}</td>
            <td>${documentoDetalle.precio_total}</td>
          `;
@@ -515,6 +526,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
   function alBorrarComprobante(event, id) {
     event.preventDefault();
+    event.stopPropagation();
+
     idCompraBorrar = id;
     modalBorrarCompra.show();
   }
