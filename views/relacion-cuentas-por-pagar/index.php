@@ -118,7 +118,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   id="modal-ver-comprobante"
   tabindex="-1"
   aria-labelledby="modal-ver-comprobante-label"
-  style="display: none"
+  style="display: none; z-index: 1056"
   aria-hidden="true"
 >
   <div class="modal-dialog">
@@ -205,22 +205,170 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   </div>
 </div>
 
+<div
+  class="modal modal-lg fade"
+  id="modal-pago"
+  tabindex="-1"
+  aria-labelledby="modal-pago-label"
+  style="display: none"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-pago-label">Registro de pago</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          id="cerrar-modal-pago"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="form-crear-pago">
+          <div class="row">
+            <div class="col-md-3">
+              <label for="tipo_doc">Tipo Doc:</label>
+              <input class="form-control" id="tipo_doc" disabled />
+            </div>
+            <div class="col-md-3">
+              <label for="nro_comprobante">Nro de comprobante:</label>
+              <input class="form-control" id="nro_comprobante" disabled />
+            </div>
+            <div class="col-md-4 ms-auto mb-3">
+              <label for="total" class="fw-bold fs-5">TOTAL:</label>
+              <input
+                type="number"
+                class="form-control fw-bold fs-5"
+                id="total"
+                disabled
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <span class="col-form-label col-md-4 mb-3">Doc Identidad</span>
+            <div class="col-md-8 mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="doc_identidad"
+                name="doc_identidad"
+                disabled
+              />
+            </div>
+            <span class="col-form-label col-md-4 mb-3">Proveedor</span>
+            <div class="col-md-8 mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="proveedor"
+                name="proveedor"
+                disabled
+              />
+            </div>
+            <span class="col-form-label col-md-4 mb-3">Tipo de gasto</span>
+            <div class="col-md-8 mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="tipo_gasto"
+                name="tipo_gasto"
+                disabled
+              />
+            </div>
+            <span class="col-form-label col-md-4 mb-3">Items</span>
+            <div class="col-md-8 mb-3">
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                id="btn-ver-detalles"
+              >
+                Ver detalles
+              </button>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <label for="origen-pago">Origen de Pago</label>
+              <select class="form-select" id="origen-pago"></select>
+            </div>
+            <div class="col-md-4">
+              <label for="medio-pago">Forma de Pago</label>
+              <select class="form-select" id="medio-pago">
+                <option value="EFE">Efectivo</option>
+                <option value="YAP">Yape</option>
+                <option value="PLI">Plin</option>
+                <option value="TJT">Tarjeta</option>
+                <option value="DEP">Depósito</option>
+                <option value="TRA">Transferencia</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="nro_voucher">Nro de Voucher</label>
+              <input type="text" class="form-control" id="nro_voucher" disabled />
+            </div>
+            <div class="col-md-4">
+              <label for="fecha">Fecha</label>
+              <input type="date" class="form-control" id="fecha" value="<?php echo date("Y-m-d") ?>"
+              />
+            </div>
+            <div class="col-md-4">
+              <label for="monto">Monto</label>
+              <input type="number" class="form-control" id="monto" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <div class="col-md-6">
+          <div class="d-flex justify-content-end">
+            <button
+              type="button"
+              class="btn btn-primary me-2"
+              id="registrar-pago"
+              onclick="registrarPago()"
+            >
+              ACEPTAR
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Salir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   const apiComprobantesVentasUrl =
     "<?php echo URL_API_NUEVA ?>/comprobantes-ventas";
   const apiReportesUrl = "<?php echo URL_API_NUEVA ?>/reportes";
   const apiComprobantesDetallesUrl =
     "<?php echo URL_API_NUEVA ?>/comprobantes-detalles";
+  const apiCajasUrl = "<?php echo URL_API_NUEVA ?>/cajas";
+  const apiRecibosUrl = "<?php echo URL_API_NUEVA ?>/recibos-pago";
 
   let tablaComprobantesBody = null;
 
   let modalBorrarCompra = null;
   let modalVerComprobante = null;
+  let modalPago = null;
 
-  let idCompraBorrar = null;
+  let idCompra = null;
 
   async function wrapper() {
     mostrarAlertaSiHayMensaje();
+
+    cargarCajas();
+
     tablaComprobantesBody = document
       .getElementById("tabla-comprobantes")
       .querySelector("tbody");
@@ -231,11 +379,33 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     modalVerComprobante = new bootstrap.Modal(
       document.getElementById("modal-ver-comprobante")
     );
+    modalPago = new bootstrap.Modal(document.getElementById("modal-pago"));
 
     buscarComprobantes();
 
     prepararBotonVerReporte();
     prepararInputsFechas();
+    prepararSelectMedioPago();
+  }
+
+  async function cargarCajas() {
+    try {
+      const response = await fetch(apiCajasUrl);
+      const cajas = await response.json();
+
+      const selectOrigenPago = document.getElementById("origen-pago");
+
+      cajas.forEach((caja) => {
+        const option = document.createElement("option");
+        option.value = caja.nro_de_caja;
+        option.textContent = caja.nombre_caja;
+
+        selectOrigenPago.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
+      mostrarAlert("error", "No se pudo cargar las cajas", "consultar");
+    }
   }
 
   function prepararInputsFechas() {
@@ -355,7 +525,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   async function borrarComprobante(event) {
     event.preventDefault();
 
-    const url = `${apiComprobantesVentasUrl}/${idCompraBorrar}/compra`;
+    const url = `${apiComprobantesVentasUrl}/${idCompra}/compra`;
     const options = {
       method: "DELETE",
     };
@@ -389,11 +559,13 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         row.dataset.id_comprobante = comprobante.id_comprobante;
 
         row.dataset.fechaComprobante = comprobante.fecha;
+        row.dataset.tipoComprobante = comprobante.tipo_comprobante;
         row.dataset.nroComprobante = comprobante.nro_comprobante;
         row.dataset.docCliente = comprobante.ruc;
         row.dataset.cliente = comprobante.proveedor;
         row.dataset.granTotal = comprobante.gran_total;
 
+        row.dataset.tipoGasto = comprobante.nombre_gasto;
 
         const fecha = row.insertCell();
         fecha.innerHTML = formatearFecha(comprobante.fecha);
@@ -441,7 +613,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
         const pagar = row.insertCell();
         pagar.classList.add("text-center");
-        pagar.innerHTML = `<a href="./../registrar-pago-compra/?id_comprobante=${comprobante.id_comprobante}" class="btn btn-primary btn-sm"><i class="fas fa-dollar-sign"></i></a>`;
+        pagar.innerHTML = `<a href="#" onclick="mostrarModalRecibo(event, ${comprobante.id_comprobante})" class="btn btn-primary btn-sm">PAGAR</a>`;
 
         // al hacer click en la fila se muestra el modal comprobante
         row.addEventListener("click", (event) => {
@@ -462,13 +634,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   function prepararBotonVerReporte() {
     const btnReporte = document.getElementById("btn-reporte");
     btnReporte.addEventListener("click", () => {
-      open(
-        `${apiReportesUrl}?${prepararUrlParams(true)}`,
-        "_blank"
-      );
+      open(`${apiReportesUrl}?${prepararUrlParams(true)}`, "_blank");
     });
   }
-  
+
   async function mostrarModalVerComprobante(data) {
     const idComprobante = data.id_comprobante;
     const total = data.granTotal;
@@ -514,6 +683,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
        `;
 
       modalVerComprobante.show();
+
+      // mostrar el overlay del modal delante del otro modal
+      if (document.querySelectorAll(".modal-backdrop")[1]) {
+        document.querySelectorAll(".modal-backdrop")[1].style.zIndex = 1055;
+      }
     } catch (error) {
       console.error(error);
       mostrarAlert(
@@ -524,11 +698,93 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     }
   }
 
+  function prepararSelectMedioPago() {
+    const medioPago = document.getElementById("medio-pago");
+    medioPago.addEventListener("change", (event) => {
+      const nroComprobante = document.getElementById("nro_voucher");
+      if (event.target.value == "EFE") {
+        nroComprobante.disabled = true;
+        nroComprobante.value = "";
+      } else {
+        nroComprobante.disabled = false;
+      }
+    });
+  }
+
+  function mostrarModalRecibo(event, idComprobante) {
+    event.stopPropagation();
+    const row = event.target.closest("tr");
+
+    idCompra = idComprobante;
+
+    const tipoComprobante = document.getElementById("tipo_doc");
+    const nroComprobante = document.getElementById("nro_comprobante");
+    const total = document.getElementById("total");
+
+    const docIdentidad = document.getElementById("doc_identidad");
+    const proveedor = document.getElementById("proveedor");
+    const tipoGasto = document.getElementById("tipo_gasto");
+    const monto = document.getElementById("monto");
+
+    const btnVerDetalles = document.getElementById("btn-ver-detalles");
+
+    tipoComprobante.value = row.dataset.tipoComprobante;
+    nroComprobante.value = row.dataset.nroComprobante;
+    total.value = row.dataset.por_pagar;
+
+    docIdentidad.value = row.dataset.docCliente;
+    proveedor.value = row.dataset.cliente;
+    tipoGasto.value = `Compra ${row.dataset.tipoGasto}`;
+    monto.value = row.dataset.por_pagar;
+
+    btnVerDetalles.addEventListener("click", () => {
+      mostrarModalVerComprobante(row.dataset);
+    });
+
+    modalPago.show();
+  }
+
+  async function registrarPago() {
+    const recibo = {
+      id_comprobante_ventas: idCompra,
+      nro_de_caja: document.getElementById("origen-pago").value,
+      id_usuario: '<?php echo $_SESSION["usuario"]["id_usuario"] ?>',
+      medio_pago: document.getElementById("medio-pago").value,
+      fecha: document.getElementById("fecha").value,
+      total: document.getElementById("monto").value,
+      esCompra: true,
+    };
+
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(recibo),
+    };
+
+    try {
+      const response = await fetch(apiRecibosUrl, options);
+      const data = await response.json();
+
+      if (response.ok) {
+        mostrarAlert("ok", "Pago registrado correctamente", "registrar");
+        buscarComprobantes();
+        modalPago.hide();
+      } else {
+        mostrarAlert("error", data.mensaje, "registrar");
+      }
+    } catch (error) {
+      console.error(error);
+      mostrarAlert("error", "No se pudo registrar el pago", "registrar");
+    }
+  }
+
   function alBorrarComprobante(event, id) {
     event.preventDefault();
     event.stopPropagation();
 
-    idCompraBorrar = id;
+    idCompra = id;
     modalBorrarCompra.show();
   }
 
