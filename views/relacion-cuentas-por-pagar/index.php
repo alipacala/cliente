@@ -613,7 +613,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
         const pagar = row.insertCell();
         pagar.classList.add("text-center");
-        pagar.innerHTML = `<a href="#" onclick="mostrarModalRecibo(event, ${comprobante.id_comprobante})" class="btn btn-primary btn-sm">PAGAR</a>`;
+        pagar.innerHTML = comprobante.por_pagar == 0 ? "" :
+        `<a href="#" onclick="mostrarModalRecibo(event, ${comprobante.id_comprobante})" class="btn btn-primary btn-sm">PAGAR</a>`;
 
         // al hacer click en la fila se muestra el modal comprobante
         row.addEventListener("click", (event) => {
