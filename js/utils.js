@@ -45,27 +45,45 @@ function formatearCantidad(numero) {
 }
 
 /**
- * Función que formatea una fecha a formato dd/mm hh:mm
+ * Formatea una fecha en formato dd/mm (opcionalmente con año en formato dd/mm/yyyy)
+ * @param {string} fechaString - Fecha a formatear
+ * @param {boolean} conAño - Indica si se debe incluir el año en la fecha formateada
+ * @returns {string} fechaFormateada
+ */
+function formatearFecha(fechaString, conAño = false) {
+  if (!fechaString) return "";
+  const fecha = new Date(fechaString);
+  const fechaLocal = new Date(fecha.getTime() + fecha.getTimezoneOffset() * 60000);
+
+  return `${fechaLocal.getDate().toString().padStart(2, "0")}/${(
+    fechaLocal.getMonth() + 1
+  )
+    .toString()
+    .padStart(2, "0")}` + (conAño ? `/${fechaLocal.getFullYear()}` : "");
+}
+
+/**
+ * Formatea una fecha en formato hh:mm
+ * @param {string} fechaString - Fecha a formatear
+ * @returns {string} horaFormateada
+ */
+function formatearHora(fechaString) {
+  if (!fechaString) return "";
+  const hora = new Date(fechaString);
+  const horaLocal = new Date(hora.getTime() + hora.getTimezoneOffset() * 60000);
+
+  return `${horaLocal.getHours().toString().padStart(2, "0")}:${horaLocal.getMinutes().toString().padStart(2, "0")}`;
+}
+
+/**
+ * Formatea una fecha en formato dd/mm hh:mm
  * @param {string} fechaString - Fecha a formatear
  * @returns {string} fechaHoraFormateada
  */
-function formatearFecha(fechaString) {
-  const fechaHora = fechaString ? new Date(fechaString) : null;
-  const fechaHoraFormateada = fechaHora
-    ? `${fechaHora.getDate().toString().padStart(2, "0")}/${(
-        fechaHora.getMonth() + 1
-      )
-        .toString()
-        .padStart(2, "0")} ${fechaHora
-        .getHours()
-        .toString()
-        .padStart(2, "0")}:${fechaHora
-        .getMinutes()
-        .toString()
-        .padStart(2, "0")}`
-    : "";
-
-  return fechaHoraFormateada;
+function formatearFechaYHora(fechaString) {
+  const fecha = formatearFecha(fechaString);
+  const hora = formatearHora(fechaString);
+  return fecha && hora ? `${fecha} ${hora}` : "";
 }
 
 /**

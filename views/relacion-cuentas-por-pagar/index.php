@@ -651,7 +651,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       "ver-nombre-razon-social"
     );
 
-    verFechaComprobante.value = data.fechaComprobante;
+    verFechaComprobante.value = formatearFecha(data.fechaComprobante, true);
     verNroComprobante.value = data.nroComprobante;
     verDocCliente.value = data.docCliente;
     verNombreRazonSocial.value = data.cliente;

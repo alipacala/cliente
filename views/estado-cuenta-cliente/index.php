@@ -1137,7 +1137,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
         row.dataset.total = comprobante.total_comprobante;
 
         row.innerHTML = `
-           <td>${comprobante.fecha_comprobante}</td>
+           <td>${formatearFecha(comprobante.fecha_comprobante)}</td>
            <td>${comprobante.nro_comprobante}</td>
            <td>${comprobante.nro_doc_cliente}</td>
            <td>${comprobante.nombre_razon_social}</td>
@@ -1497,7 +1497,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
           ? `${terapista.apellidos}, ${terapista.nombres}`
           : "";
 
-        const fechaHoraFormateada = formatearFecha(documentoDetalle.fecha);
+        const fechaHoraFormateada = formatearFechaYHora(documentoDetalle.fecha);
 
         const producto = productos.find(
           (producto) => producto.id_producto == documentoDetalle.id_producto
@@ -1508,7 +1508,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
         const fechaHoraServicioFormateada =
           producto.tipo == "SRV"
-            ? formatearFecha(
+            ? formatearFechaYHora(
                 `${documentoDetalle.fecha_servicio}T${
                   documentoDetalle.hora_servicio
                     ? documentoDetalle.hora_servicio
