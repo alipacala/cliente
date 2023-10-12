@@ -82,32 +82,55 @@ $_GET["id"] : false; ?>
             name="fecha_vigencia" value="<?php echo date("Y-m-d") ?>" required
             />
           </div>
+          <div class="form-group col-md-4">
+            <label for="tipo_de_unidad">Tipo de Unidad</label>
+            <select
+              class="form-select"
+              id="tipo_de_unidad"
+              name="tipo_de_unidad"
+              required
+            >
+              <option value="UN" selected>UNIDAD</option>
+              <option value="KG">KILO</option>
+              <option value="GR">GRAMO</option>
+              <option value="LT">LITRO</option>
+              <option value="ML">MILILITRO</option>
+              <option value="OZ">ONZA</option>
+            </select>
+          </div>
         </div>
         <div class="row mb-3">
           <div class="form-group col-md-4">
-            <label for="cantidad_unidades">Cantidad de Unidades</label>
+            <label for="cantidad_de_fracciones"
+              >Cantidad de Unidades de Fracciones</label
+            >
             <input
               type="text"
               class="form-control"
-              id="cantidad_unidades"
-              name="cantidad_unidades"
+              id="cantidad_de_fracciones"
+              name="cantidad_de_fracciones"
             />
           </div>
+
           <div class="form-group col-md-4">
-            <label for="tipo_unidad">Tipo de Unidad</label>
+            <label for="tipo_de_unidad_de_fracciones"
+              >Tipo de Unidad de Fracciones</label
+            >
             <select
               class="form-select"
-              id="tipo_unidad"
-              name="tipo_unidad"
+              id="tipo_de_unidad_de_fracciones"
+              name="tipo_de_unidad_de_fracciones"
               required
             >
-              <option value="UNIDAD" selected>UNIDAD</option>
-              <option value="KILO">KILO</option>
-              <option value="GRAMO">GRAMO</option>
-              <option value="LITRO">LITRO</option>
-              <option value="ONZA">ONZA</option>
+              <option value="UN" selected>UNIDAD</option>
+              <option value="KG">KILO</option>
+              <option value="GR">GRAMO</option>
+              <option value="LT">LITRO</option>
+              <option value="ML">MILILITRO</option>
+              <option value="OZ">ONZA</option>
             </select>
           </div>
+
           <div class="form-group col-md-4">
             <label for="proveedor_asignado">Proveedor Asignado</label>
             <input
@@ -409,7 +432,7 @@ $_GET["id"] : false; ?>
     const producto = {
       nombre_producto: document.getElementById("nombre_producto").value,
       codigo: document.getElementById("codigo").value,
-      tipo_de_unidad: document.getElementById("tipo_unidad").value,
+      tipo_de_unidad: document.getElementById("tipo_de_unidad").value,
       id_grupo: document.getElementById("clasificacion_ventas").value,
       id_central_de_costos: document.getElementById("central_costos").value,
       id_tipo_de_producto: document.getElementById("tipo_producto").value,
@@ -426,8 +449,11 @@ $_GET["id"] : false; ?>
       stock_max_temporada_alta: document.getElementById(
         "stock_max_temporada_alta"
       ).value,
-      cantidad_de_fracciones:
-        document.getElementById("cantidad_unidades").value,
+      cantidad_de_fracciones: document.getElementById("cantidad_de_fracciones")
+        .value,
+      tipo_de_unidad_de_fracciones: document.getElementById(
+        "tipo_de_unidad_de_fracciones"
+      ).value,
     };
 
     const url = apiProductosUrl + (editar ? "/" + id : "/insumo-terminado");
@@ -445,15 +471,15 @@ $_GET["id"] : false; ?>
       const data = await response.json();
       console.log(data);
 
-      window.location.href = `./../listado-catalogo/?ok&mensaje=Producto ${editar ? "actualizado" : "creado"} correctamente&op=${
-        editar ? "editar" : "crear"
-      }`;
+      window.location.href = `./../listado-catalogo/?ok&mensaje=Producto ${
+        editar ? "actualizado" : "creado"
+      } correctamente&op=${editar ? "editar" : "crear"}`;
     } catch (error) {
       console.error(error);
       mostrarAlert("error", "Error al crear el producto", "crear");
     }
   }
-  
+
   async function cargarCodigoProducto() {
     try {
       const url = apiConfigUrl + "/6/codigo"; // 6 es el id de los productos

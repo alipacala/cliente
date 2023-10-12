@@ -52,7 +52,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         </div>
       </div>
 
-      <div class="table-container">
+      <div class="table-responsive">
         <table
           id="tabla-listado-catalogo"
           class="table table-bordered table-hover"

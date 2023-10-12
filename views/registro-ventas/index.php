@@ -70,7 +70,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       <h5>Registro de ventas</h5>
 
-      <div class="table-container">
+      <div class="table-responsive">
         <table id="tabla-comprobantes" class="table table-bordered table-hover">
           <thead>
             <tr>

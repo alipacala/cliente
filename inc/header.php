@@ -103,6 +103,14 @@ function mostrarHeader($pagina, $logueado)
                   aria-expanded="false"> Compras </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/relacion-cuentas-por-pagar">Relación de Cuentas por Pagar</a></li>
+                  <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/registro-ingreso-egreso">Registro de ingreso / egreso</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown"
+                  aria-expanded="false"> Kardexes </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/consultar-productos">Consultar productos / insumos</a></li>
                 </ul>
               </li>
               <li class="nav-item dropdown">

@@ -3,22 +3,19 @@ require "../../inc/header.php";
 
 session_start();
 $tiempoTranscurrido = isset($_SESSION['ultima_actividad']) ? time() - $_SESSION['ultima_actividad'] : null;
-if ($tiempoTranscurrido && ($tiempoTranscurrido > TIEMPO_INACTIVIDAD)) {
-  session_unset();
-  session_destroy();
-}
-$logueado = isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
-mostrarHeader("pagina-funcion", $logueado);
-
-$editar = isset($_GET["id"]) ? $_GET["id"] : false;
-?>
+if ($tiempoTranscurrido && ($tiempoTranscurrido >
+TIEMPO_INACTIVIDAD)) { session_unset(); session_destroy(); } $logueado =
+isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
+mostrarHeader("pagina-funcion", $logueado); $editar = isset($_GET["id"]) ?
+$_GET["id"] : false; ?>
 
 <div class="container my-5 main-cont">
   <div id="alert-place"></div>
   <div class="card">
     <div class="card-header py-3">
       <h2 class="text-center">
-        <?php echo $editar ? "Editar" : "Crear" ?> Ficha de Receta
+        <?php echo $editar ? "Editar" : "Crear" ?>
+        Ficha de Receta
       </h2>
     </div>
     <div class="card-body">
@@ -78,14 +75,9 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
           </div>
           <div class="form-group col-md-4">
             <label for="fecha_vigencia">Fecha de Vigencia</label>
-            <input
-              type="date"
-              class="form-control"
-              id="fecha_vigencia"
-              name="fecha_vigencia"
-              value=<?php echo date("Y-m-d") ?>
-              required
-            />
+            <input type="date" class="form-control" id="fecha_vigencia"
+            name="fecha_vigencia" value=<?php echo date("Y-m-d") ?>
+            required />
           </div>
         </div>
         <div class="row mb-3">
@@ -111,8 +103,7 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
             cols="30"
             rows="5"
             required
-          ></textarea
-          >
+          ></textarea>
         </div>
 
         <div class="card mb-3">
@@ -130,7 +121,10 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
             </button>
 
             <div class="table-responsive">
-              <table class="table table-bordered table-hover" id="tabla-insumos">
+              <table
+                class="table table-bordered table-hover"
+                id="tabla-insumos"
+              >
                 <thead class="thead-dark">
                   <tr class="text-center">
                     <th>Insumo</th>
@@ -142,7 +136,9 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
                 </thead>
                 <tbody>
                   <tr>
-                    <td colspan="3" class="text-right fw-bold fs-5">COSTO INSUMOS:</td>
+                    <td colspan="3" class="text-right fw-bold fs-5">
+                      COSTO INSUMOS:
+                    </td>
                     <td id="total" class="text-end fw-bold fs-5">0.00</td>
                     <td></td>
                   </tr>
@@ -209,14 +205,9 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
 
           <div class="form-group mb-3">
             <label for="unidad">Unidad</label>
-            <input
-              type="text"
-              class="form-control"
-              id="unidad"
-              name="unidad"
-              required
-              disabled
-            />
+            <select class="form-select" id="unidad" name="unidad" required>
+              <option value="">Seleccione una unidad</option>
+            </select>
           </div>
 
           <div class="form-group mb-3">
@@ -311,7 +302,11 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       codigo.value = data.codigo;
     } catch (error) {
       console.error(error);
-      mostrarAlert("error", "Error al cargar el código de la receta", "consultar");
+      mostrarAlert(
+        "error",
+        "Error al cargar el código de la receta",
+        "consultar"
+      );
     }
   }
 
@@ -393,7 +388,10 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       const response = await fetch(apiProductosUrl);
       let data = await response.json();
 
-      data = data.filter((producto) => producto.id_tipo_de_producto == 10 && producto.tipo != 'RST');
+      data = data.filter(
+        (producto) =>
+          producto.id_tipo_de_producto == 10 && producto.tipo != "RST"
+      );
 
       const insumoSelect = document.getElementById("insumo");
       insumoSelect.innerHTML = "";
@@ -436,8 +434,15 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       limpiarFormulario();
       agregarInsumoButton.disabled = true;
       return;
-    }
 
+    }
+    
+    // eliminar las opciones de unidad excepto la primera
+    const unidadSelect = document.getElementById("unidad");
+    while (unidadSelect.options.length > 1) {
+      unidadSelect.remove(1);
+    }
+    
     const insumoSeleccionado = insumosCargados.find(
       (insumo) => insumo.id_producto == insumoSelect.value
     );
@@ -447,7 +452,24 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
     const costoUnitarioInput = document.getElementById("costo-unitario");
     const cantidadInput = document.getElementById("cantidad");
 
-    unidadInput.value = insumoSeleccionado.tipo_de_unidad;
+    // agregar las opciones de unidad
+    const optionTipoUnidad1 = document.createElement("option");
+    optionTipoUnidad1.value = insumoSeleccionado.tipo_de_unidad;
+    optionTipoUnidad1.textContent = insumoSeleccionado.tipo_de_unidad;
+    unidadInput.appendChild(optionTipoUnidad1);
+
+    if (insumoSeleccionado.tipo_de_unidad_de_fracciones) {
+      const optionTipoUnidad2 = document.createElement("option");
+      optionTipoUnidad2.value = insumoSeleccionado.tipo_de_unidad_de_fracciones;
+      optionTipoUnidad2.textContent =
+        insumoSeleccionado.tipo_de_unidad_de_fracciones;
+      unidadInput.appendChild(optionTipoUnidad2);
+
+      unidadInput.value = insumoSeleccionado.tipo_de_unidad_de_fracciones;
+    } else {
+      unidadInput.value = insumoSeleccionado.tipo_de_unidad;
+    }
+
     costoUnitarioInput.value = insumoSeleccionado.costo_unitario;
     costoInput.value =
       +insumoSeleccionado.costo_unitario * +cantidadInput.value;
@@ -490,7 +512,11 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       });
     } catch (error) {
       console.error(error);
-      mostrarAlert("error", "Error al cargar las clasificaciones de ventas", "consultar");
+      mostrarAlert(
+        "error",
+        "Error al cargar las clasificaciones de ventas",
+        "consultar"
+      );
     }
   }
 
@@ -563,7 +589,11 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       });
     } catch (error) {
       console.error(error);
-      mostrarAlert("error", "Error al cargar las centrales de costos", "consultar");
+      mostrarAlert(
+        "error",
+        "Error al cargar las centrales de costos",
+        "consultar"
+      );
     }
   }
 
@@ -630,10 +660,10 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
       const response = await fetch(url, options);
       const data = await response.json();
       console.log(data);
-      
-      window.location.href = `./../listado-catalogo/?ok&mensaje=Receta ${editar ? "actualizada" : "creada"} correctamente&op=${
-        editar ? "editar" : "crear"
-      }`;
+
+      window.location.href = `./../listado-catalogo/?ok&mensaje=Receta ${
+        editar ? "actualizada" : "creada"
+      } correctamente&op=${editar ? "editar" : "crear"}`;
     } catch (error) {
       console.error(error);
       mostrarAlert("error", "Error al crear el producto", "crear");
@@ -718,7 +748,7 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
     celdaUnidad.classList.add("text-center");
     celdaCosto.classList.add("text-end");
     celdaEliminar.classList.add("text-center");
-    
+
     const productoInsumo = insumosCargados.find(
       (producto) => producto.id_producto == insumo.id_insumo
     );
@@ -769,7 +799,7 @@ $editar = isset($_GET["id"]) ? $_GET["id"] : false;
     document.getElementById("costo-unitario").value = "";
     document.getElementById("costo").value = "";
     document.getElementById("cantidad").value = "1";
-    
+
     document.getElementById("agregar-insumo").disabled = true;
   }
 

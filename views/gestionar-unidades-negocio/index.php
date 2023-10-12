@@ -15,7 +15,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       <h2 class="text-center">Gestionar Unidades de negocio</h2>
     </div>
     <div class="card-body">
-      <div class="table-container">
+      <div class="table-responsive">
         <table
           id="tabla-unidades-negocio"
           class="table table-bordered table-hover"

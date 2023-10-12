@@ -48,7 +48,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       <h5>Cuentas por pagar</h5>
 
-      <div class="table-container">
+      <div class="table-responsive">
         <table id="tabla-comprobantes" class="table table-bordered table-hover">
           <thead>
             <tr>
@@ -191,6 +191,26 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             <tbody></tbody>
           </table>
         </div>
+
+        <h5>Recibos de pago</h5>
+
+        <div class="table-responsive">
+          <table
+            class="table table-bordered table-hover"
+            id="tabla-recibos"
+          >
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Origen de Pago</th>
+                <th>Forma de Pago</th>
+                <th>Nro de Voucher</th>
+                <th>Monto</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
       <div class="modal-footer">
         <button
@@ -292,10 +312,17 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
           <div class="row mt-3">
             <div class="col-md-4">
+              <label for="fecha">Fecha</label>
+              <input type="date" class="form-control" id="fecha" value="<?php echo date("Y-m-d") ?>"
+              />
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-3">
               <label for="origen-pago">Origen de Pago</label>
               <select class="form-select" id="origen-pago"></select>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label for="medio-pago">Forma de Pago</label>
               <select class="form-select" id="medio-pago">
                 <option value="EFE">Efectivo</option>
@@ -306,16 +333,16 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                 <option value="TRA">Transferencia</option>
               </select>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label for="nro_voucher">Nro de Voucher</label>
-              <input type="text" class="form-control" id="nro_voucher" disabled />
-            </div>
-            <div class="col-md-4">
-              <label for="fecha">Fecha</label>
-              <input type="date" class="form-control" id="fecha" value="<?php echo date("Y-m-d") ?>"
+              <input
+                type="text"
+                class="form-control"
+                id="nro_voucher"
+                disabled
               />
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label for="monto">Monto</label>
               <input type="number" class="form-control" id="monto" />
             </div>
@@ -357,6 +384,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   const apiRecibosUrl = "<?php echo URL_API_NUEVA ?>/recibos-pago";
 
   let tablaComprobantesBody = null;
+  let tablaRecibosBody = null;
 
   let modalBorrarCompra = null;
   let modalVerComprobante = null;
@@ -371,6 +399,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
     tablaComprobantesBody = document
       .getElementById("tabla-comprobantes")
+      .querySelector("tbody");
+    tablaRecibosBody = document
+      .getElementById("tabla-recibos")
       .querySelector("tbody");
 
     modalBorrarCompra = new bootstrap.Modal(
@@ -563,6 +594,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         row.dataset.nroComprobante = comprobante.nro_comprobante;
         row.dataset.docCliente = comprobante.ruc;
         row.dataset.cliente = comprobante.proveedor;
+
+        row.dataset.subtotal = comprobante.subtotal;
+        row.dataset.igv = comprobante.igv;
+        row.dataset.total = comprobante.total;
         row.dataset.granTotal = comprobante.gran_total;
 
         row.dataset.tipoGasto = comprobante.nombre_gasto;
@@ -613,8 +648,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
         const pagar = row.insertCell();
         pagar.classList.add("text-center");
-        pagar.innerHTML = comprobante.por_pagar == 0 ? "" :
-        `<a href="#" onclick="mostrarModalRecibo(event, ${comprobante.id_comprobante})" class="btn btn-primary btn-sm">PAGAR</a>`;
+        pagar.innerHTML =
+          comprobante.por_pagar == 0
+            ? ""
+            : `<a href="#" onclick="mostrarModalRecibo(event, ${comprobante.id_comprobante})" class="btn btn-primary btn-sm">PAGAR</a>`;
 
         // al hacer click en la fila se muestra el modal comprobante
         row.addEventListener("click", (event) => {
@@ -641,7 +678,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
   async function mostrarModalVerComprobante(data) {
     const idComprobante = data.id_comprobante;
-    const total = data.granTotal;
+
+    const subtotal = data.subtotal;
+    const igv = data.igv;
+    const total = data.total;
+    const granTotal = data.granTotal;
 
     const verFechaComprobante = document.getElementById(
       "ver-fecha-comprobante"
@@ -679,8 +720,20 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       });
 
       tbody.insertRow().innerHTML = `
+         <td colspan="3" class="fw-bold text-end">SUBTOTAL</td>
+         <td class="fw-bold">${subtotal}</td>
+       `;
+      tbody.insertRow().innerHTML = `
+         <td colspan="3" class="fw-bold text-end">IGV</td>
+         <td class="fw-bold">${igv}</td>
+       `;
+      tbody.insertRow().innerHTML = `
          <td colspan="3" class="fw-bold text-end">TOTAL</td>
          <td class="fw-bold">${total}</td>
+       `;
+      tbody.insertRow().innerHTML = `
+         <td colspan="3" class="fw-bold text-end">GRAN TOTAL</td>
+         <td class="fw-bold">${granTotal}</td>
        `;
 
       modalVerComprobante.show();
@@ -689,6 +742,34 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       if (document.querySelectorAll(".modal-backdrop")[1]) {
         document.querySelectorAll(".modal-backdrop")[1].style.zIndex = 1055;
       }
+    } catch (error) {
+      console.error(error);
+      mostrarAlert(
+        "error",
+        "Error al cargar los datos del comprobante",
+        "consultar"
+      );
+    }
+
+    try {
+      const url = `${apiRecibosUrl}?id_comprobante=${idComprobante}`;
+
+      const response = await fetch(url);
+      const recibos = await response.json();
+
+      tablaRecibosBody.innerHTML = "";
+
+      recibos.forEach((recibo) => {
+        const row = tablaRecibosBody.insertRow();
+
+        row.innerHTML = `
+           <td>${formatearFecha(recibo.fecha)}</td>
+           <td>${recibo.nro_de_caja}</td>
+           <td>${recibo.medio_pago}</td>
+           <td>${recibo.nro_voucher ?? "--"}</td>
+           <td>${recibo.total}</td>
+         `;
+      });
     } catch (error) {
       console.error(error);
       mostrarAlert(
