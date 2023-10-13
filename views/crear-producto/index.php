@@ -267,7 +267,6 @@ $_GET["id"] : false; ?>
 
       document.getElementById("nombre_producto").value = data.nombre_producto;
       document.getElementById("codigo").value = data.codigo;
-      document.getElementById("tipo_unidad").value = data.tipo_de_unidad;
       document.getElementById("clasificacion_ventas").value = data.id_grupo;
       document.getElementById("central_costos").value =
         data.id_central_de_costos;
@@ -281,8 +280,12 @@ $_GET["id"] : false; ?>
         data.stock_min_temporada_alta;
       document.getElementById("stock_max_temporada_alta").value =
         data.stock_max_temporada_alta;
-      document.getElementById("cantidad_unidades").value =
+      document.getElementById("tipo_de_unidad").value = data.tipo_de_unidad;
+      document.getElementById("cantidad_de_fracciones").value =
         data.cantidad_de_fracciones;
+      document.getElementById("tipo_de_unidad_de_fracciones").value =
+        data.tipo_de_unidad_de_fracciones;
+
     } catch (error) {
       console.error(error);
       mostrarAlert("error", "Error al cargar el producto", "consultar");

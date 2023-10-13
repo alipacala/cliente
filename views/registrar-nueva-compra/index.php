@@ -511,31 +511,50 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               />
             </div>
           </div>
+          <div class="form-group col-md-4">
+            <label for="tipo_de_unidad">Tipo de Unidad</label>
+            <select
+              class="form-select"
+              id="tipo_de_unidad"
+              name="tipo_de_unidad"
+              required
+            >
+              <option value="UN" selected>UNIDAD</option>
+              <option value="KG">KILO</option>
+              <option value="GR">GRAMO</option>
+              <option value="LT">LITRO</option>
+              <option value="ML">MILILITRO</option>
+              <option value="OZ">ONZA</option>
+            </select>
+          </div>
           <div class="row mb-3">
             <div class="form-group col-md-4">
-              <label for="cantidad_unidades">Cantidad de Unidades</label>
+              <label for="cantidad_de_fracciones">Cantidad de Unidades de Fracciones</label>
               <input
                 type="text"
                 class="form-control"
-                id="cantidad_unidades"
-                name="cantidad_unidades"
+                id="cantidad_de_fracciones"
+                name="cantidad_de_fracciones"
               />
             </div>
             <div class="form-group col-md-4">
-              <label for="tipo_unidad">Tipo de Unidad</label>
-              <select
-                class="form-select"
-                id="tipo_unidad"
-                name="tipo_unidad"
-                required
-              >
-                <option value="UNIDAD" selected>UNIDAD</option>
-                <option value="KILO">KILO</option>
-                <option value="GRAMO">GRAMO</option>
-                <option value="LITRO">LITRO</option>
-                <option value="ONZA">ONZA</option>
-              </select>
-            </div>
+            <label for="tipo_de_unidad_de_fracciones"
+              >Tipo de Unidad de Fracciones</label
+            >
+            <select
+              class="form-select"
+              id="tipo_de_unidad_de_fracciones"
+              name="tipo_de_unidad_de_fracciones"
+              required
+            >
+              <option value="UN" selected>UNIDAD</option>
+              <option value="KG">KILO</option>
+              <option value="GR">GRAMO</option>
+              <option value="LT">LITRO</option>
+              <option value="ML">MILILITRO</option>
+              <option value="OZ">ONZA</option>
+            </select>
+          </div>
             <div class="form-group col-md-4">
               <label for="proveedor_asignado">Proveedor Asignado</label>
               <input
@@ -933,7 +952,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     const producto = {
       nombre_producto: document.getElementById("nombre_producto").value,
       codigo: document.getElementById("codigo").value,
-      tipo_de_unidad: document.getElementById("tipo_unidad").value,
+      tipo_de_unidad: document.getElementById("tipo_de_unidad").value,
       id_grupo: document.getElementById("clasificacion_ventas").value,
       id_central_de_costos: document.getElementById("central_costos").value,
       id_tipo_de_producto: document.getElementById("tipo_producto").value,
@@ -950,8 +969,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       stock_max_temporada_alta: document.getElementById(
         "stock_max_temporada_alta"
       ).value,
-      cantidad_de_fracciones:
-        document.getElementById("cantidad_unidades").value,
+      cantidad_de_fracciones: document.getElementById("cantidad_de_fracciones")
+        .value,
+      tipo_de_unidad_de_fracciones: document.getElementById(
+        "tipo_de_unidad_de_fracciones"
+      ).value,
     };
 
     const url = apiProductosUrl + "/insumo-terminado";
@@ -1008,13 +1030,14 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     document.getElementById("fecha_vigencia").value = new Date()
       .toISOString()
       .split("T")[0];
-    document.getElementById("cantidad_unidades").value = "";
-    document.getElementById("tipo_unidad").value = "";
     document.getElementById("proveedor_asignado").value = "";
     document.getElementById("stock_min_temporada_baja").value = "";
     document.getElementById("stock_max_temporada_baja").value = "";
     document.getElementById("stock_min_temporada_alta").value = "";
     document.getElementById("stock_max_temporada_alta").value = "";
+    document.getElementById("tipo_de_unidad").value = "";
+    document.getElementById("cantidad_de_fracciones").value = "";
+    document.getElementById("tipo_de_unidad_de_fracciones").value = "";
   }
   // #endregion
 
@@ -1632,7 +1655,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   function limpiarFormularioDetalle() {
     document.getElementById("producto").value = "";
     document.getElementById("cantidad").value = "1";
-    document.getElementById("tipo_unidad").value = "";
+    document.getElementById("tipo_unidad_detalle").value = "";
     document.getElementById("precio_unitario_sin_igv").value = "0";
     document.getElementById("precio_unitario_con_igv").value = "0";
     document.getElementById("subtotal").value = "0";
