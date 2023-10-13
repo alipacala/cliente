@@ -427,7 +427,6 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
 
     const idAcompanante = document.getElementById("cliente").value;
     const idUsuario = "<?php echo $idUsuario ?>";
-    const idProducto = productoSeleccionado.id_producto;
 
     const url = `${apiDocumentosMovimientosUrl}/detalles`;
 

@@ -29,3 +29,23 @@ body {
 #nombre-producto[data-page="estado-cuenta-cliente"] {
   width: 30% !important;
 }
+
+/* variable del color secundario */
+:root {
+  --color-secundario: #abebff;
+}
+
+/* darle el color secundario a las cabezeras de las tablas */
+thead {
+  background-color: var(--color-secundario) !important;
+}
+tr, th {
+  background-color: inherit !important;
+}
+
+.grupo {
+  background-color: #f7f7f7 !important;
+}
+.grupo td {
+  background-color: inherit !important;
+}
