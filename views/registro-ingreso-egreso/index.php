@@ -26,43 +26,59 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               required
             >
               <option value="">Seleccione un tipo de movimiento</option>
-              <option value="1">Ingreso</option>
-              <option value="2">Egreso</option>
+              <option value="IN">Ingreso</option>
+              <option value="SA">Egreso</option>
             </select>
           </div>
           <div class="form-group col-md-3">
-            <label for="tipo_comprobante">Tipo de documento</label>
+            <label for="tipo_documento">Tipo de documento</label>
             <select
               class="form-select"
-              id="tipo_comprobante"
-              name="tipo_comprobante"
+              id="tipo_documento"
+              name="tipo_documento"
               required
-              onchange="alCambiarTipoComprobante(event)"
+              onchange="alCambiarTipoDocumento(event)"
             >
               <option value="">Seleccione un tipo de comprobante</option>
-              <option value="00">Orden de pedido</option>
-              <option value="01" selected>Factura</option>
-              <option value="03">Boleta</option>
-              <option value="05">Recibo por honorarios</option>
+              <option value="GR">Guía de remisión</option>
+              <option value="GI">Guía interna</option>
             </select>
           </div>
           <div class="form-group col-md-3">
-            <label for="nro_comprobante">Nro de Documento</label>
+            <label for="nro_documento">Nro de Documento</label>
             <input
               type="text"
               class="form-control"
-              id="nro_comprobante"
-              name="nro_comprobante"
-              value="F001-09201838"
-              required
+              id="nro_documento"
+              name="nro_documento"
+              disabled
             />
           </div>
-        </div>
-        <div class="row mb-3">
           <div class="form-group col-md-3">
             <label for="fecha">Fecha</label>
             <input type="date" class="form-control" id="fecha" name="fecha"
             value="<?php echo date("Y-m-d") ?>" required />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="form-group col-md-3">
+            <label for="nro_documento_proveedor">Nro Documento Proveedor</label>
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                id="nro_documento_proveedor"
+                name="nro_documento_proveedor"
+                disabled
+              />
+              <div class="input-group-text">
+                <span
+                  class="spinner-border spinner-border-sm invisible"
+                  id="spinner"
+                  role="status"
+                ></span>
+              </div>
+            </div>
           </div>
           <div class="form-group col-md-3">
             <label for="nombre_proveedor">Nombre Razón Social Proveedor</label>
@@ -70,8 +86,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               class="form-control"
               id="nombre_proveedor"
               name="nombre_proveedor"
-              value="LIPA CALABILLA, ABRAHAM"
-              required
+              disabled
             />
           </div>
           <div class="form-group col-md-3">
@@ -81,7 +96,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               class="form-control"
               id="nro_orden_compra"
               name="nro_orden_compra"
-              value="OP001-09201838"
               required
             />
           </div>
@@ -94,13 +108,30 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         </div>
         <div class="row mb-3">
           <div class="form-group col-md-3">
+            <label for="origen">Origen</label>
+            <select
+              class="form-select"
+              id="origen"
+              name="origen"
+              required
+            ></select>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="destino">Destino</label>
+            <select
+              class="form-select"
+              id="destino"
+              name="destino"
+              required
+            ></select>
+          </div>
+          <div class="form-group col-md-3">
             <label for="motivo">Motivo</label>
             <input
               type="text"
               class="form-control"
               id="motivo"
               name="motivo"
-              value="motivo..."
               required
             />
           </div>
@@ -111,7 +142,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               class="form-control"
               id="observaciones"
               name="observaciones"
-              value="observaciones..."
               required
             />
           </div>
@@ -119,7 +149,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
         <div class="card mb-3">
           <div class="card-header">
-            <h4>Detalles de compra</h4>
+            <h4>Productos / Insumos</h4>
           </div>
           <div class="card-body">
             <button
@@ -129,7 +159,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               data-bs-toggle="modal"
               data-bs-target="#modal-detalle"
             >
-              Agregar Detalle
+              Agregar Producto / Insumo
             </button>
 
             <div class="table-responsive">
@@ -149,87 +179,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                 </thead>
                 <tbody></tbody>
               </table>
-            </div>
-
-            <div class="row w-50 ms-auto">
-              <div class="col-md-6 form-check mb-3 d-flex align-items-center">
-                <input
-                  class="form-check-input me-2"
-                  type="checkbox"
-                  id="afecto_percepcion"
-                  onchange="alCambiarAfectoPercepcion(event)"
-                />
-                <label class="form-check-label" for="afecto_percepcion">
-                  Afecto a percepción
-                </label>
-              </div>
-              <span class="col-form-label col-md-3 mb-3">Subtotal</span>
-              <div class="col-md-3 mb-3">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="subtotal_comprobante"
-                  name="subtotal_comprobante"
-                  disabled
-                />
-              </div>
-              <div class="col-form-label col-md-3 mb-3">
-                <span class="fw-bold" id="percepcion">2</span>% Percepción
-              </div>
-              <div class="col-md-3 mb-3">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="percepcion_comprobante"
-                  name="percepcion_comprobante"
-                  disabled
-                />
-              </div>
-              <div class="col-form-label col-md-3 mb-3">
-                IGV <span class="fw-bold" id="igv">18</span>%
-              </div>
-              <div class="col-md-3 mb-3">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="igv_comprobante"
-                  name="igv_comprobante"
-                  disabled
-                />
-              </div>
-              <span class="col-form-label col-md-3 mb-3">Forma de pago </span>
-              <div class="col-md-3 mb-3">
-                <select
-                  class="form-select"
-                  id="forma_pago"
-                  name="forma_pago"
-                  required
-                >
-                  <option value="CT">CONTADO</option>
-                  <option value="CR">CRÉDITO</option>
-                </select>
-              </div>
-              <span class="col-form-label col-md-3 mb-3">TOTAL</span>
-              <div class="col-md-3 mb-3">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="total_comprobante"
-                  name="total"
-                  disabled
-                />
-              </div>
-              <div class="col-md-6 mb-3"></div>
-              <span class="col-form-label col-md-3 mb-3">GRAN TOTAL</span>
-              <div class="col-md-3 mb-3">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="gran_total_comprobante"
-                  name="gran_total"
-                  disabled
-                />
-              </div>
             </div>
           </div>
         </div>
@@ -259,7 +208,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modal-detalle-label">Agregar Detalle</h5>
+        <h5 class="modal-title" id="modal-detalle-label">Agregar Producto</h5>
         <button
           type="button"
           class="btn-close"
@@ -270,36 +219,14 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       </div>
       <div class="modal-body">
         <form id="form-crear-insumo">
-          <div class="row mb-3">
-            <div class="form-group col-md-8">
-              <label for="producto">Producto</label>
-              <select
-                class="form-select"
-                id="producto"
-                name="producto"
-                required
-              ></select>
-            </div>
-            <div class="form-group col-md-4">
-              <button
-                type="button"
-                class="btn btn-success"
-                id="btn-registrar-nuevo-producto"
-              >
-                <i class="fas fa-plus"></i> Nuevo producto
-              </button>
-            </div>
-          </div>
-
-          <div class="form-group mb-3">
-            <label for="descripcion">Descripción</label>
-            <input
-              type="text"
-              class="form-control"
-              id="descripcion"
-              name="descripcion"
-              onchange="alCambiarDescripcion(event)"
-            />
+          <div class="form-group col-md-8">
+            <label for="producto">Producto</label>
+            <select
+              class="form-select"
+              id="producto"
+              name="producto"
+              required
+            ></select>
           </div>
 
           <div class="form-group mb-3">
@@ -316,35 +243,29 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           </div>
 
           <div class="form-group mb-3">
-            <label for="tipo_unidad_detalle">T. Unidad</label>
-            <input
-              type="text"
-              class="form-control"
+            <label for="tipo_unidad_detalle">Tipo de Unidad</label>
+            <select
+              class="form-select"
               id="tipo_unidad_detalle"
               name="tipo_unidad_detalle"
               required
-            />
+            >
+              <option value="UN" selected>UNIDAD</option>
+              <option value="KG">KILO</option>
+              <option value="GR">GRAMO</option>
+              <option value="LT">LITRO</option>
+              <option value="ML">MILILITRO</option>
+              <option value="OZ">ONZA</option>
+            </select>
           </div>
 
           <div class="form-group mb-3">
-            <label for="precio_unitario_sin_igv">P. Unitario sin IGV</label>
+            <label for="precio_unitario">P. Unitario</label>
             <input
               type="text"
               class="form-control"
-              id="precio_unitario_sin_igv"
-              name="precio_unitario_sin_igv"
-              onchange="alCambiarPrecioUnitario(event)"
-              required
-            />
-          </div>
-
-          <div class="form-group mb-3">
-            <label for="precio_unitario_con_igv">P. Unitario con IGV</label>
-            <input
-              type="text"
-              class="form-control"
-              id="precio_unitario_con_igv"
-              name="precio_unitario_con_igv"
+              id="precio_unitario"
+              name="precio_unitario"
               onchange="alCambiarPrecioUnitario(event)"
               required
             />
@@ -357,8 +278,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               class="form-control"
               id="subtotal"
               name="subtotal"
-              onchange="alCambiarSubtotal(event)"
-              required
+              disabled
             />
           </div>
         </form>
@@ -386,200 +306,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   </div>
 </div>
 
-<div
-  class="modal modal-xl fade"
-  id="modal-producto"
-  tabindex="-1"
-  aria-labelledby="modal-producto-label"
-  style="display: none"
-  aria-hidden="true"
->
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modal-producto-label">
-          Ficha de Producto o Insumo
-        </h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-          id="cerrar-modal-producto"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <form id="form-crear-producto">
-          <div class="row mb-3">
-            <div class="form-group col-md-4">
-              <label for="nombre_producto">Nombre del Producto</label>
-              <input
-                type="text"
-                class="form-control"
-                id="nombre_producto"
-                name="nombre_producto"
-                required
-              />
-            </div>
-
-            <div class="form-group col-md-4">
-              <label for="codigo">Código</label>
-              <input
-                type="text"
-                class="form-control"
-                id="codigo"
-                name="codigo"
-                required
-              />
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <div class="form-group col-md-4">
-              <label for="clasificacion_ventas"
-                >Clasificación en Catálogo de Ventas</label
-              >
-              <select
-                class="form-select"
-                id="clasificacion_ventas"
-                name="clasificacion_ventas"
-              ></select>
-            </div>
-            <div class="form-group col-md-4">
-              <label for="central_costos">Central de Costos</label>
-              <select
-                class="form-select"
-                id="central_costos"
-                name="central_costos"
-                required
-              ></select>
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <div class="form-group col-md-4">
-              <label for="tipo_producto">Tipo de Producto</label>
-              <select
-                class="form-select"
-                id="tipo_producto"
-                name="tipo_producto"
-              ></select>
-            </div>
-            <div class="form-group col-md-4">
-              <label for="fecha_vigencia">Fecha de Vigencia del Producto</label>
-              <input type="date" class="form-control" id="fecha_vigencia"
-              name="fecha_vigencia" value="<?php echo date("Y-m-d") ?>" required
-              />
-            </div>
-          </div>
-          <div class="row mb-3">
-            <div class="form-group col-md-4">
-              <label for="cantidad_unidades">Cantidad de Unidades</label>
-              <input
-                type="text"
-                class="form-control"
-                id="cantidad_unidades"
-                name="cantidad_unidades"
-              />
-            </div>
-            <div class="form-group col-md-4">
-              <label for="tipo_unidad">Tipo de Unidad</label>
-              <select
-                class="form-select"
-                id="tipo_unidad"
-                name="tipo_unidad"
-                required
-              >
-                <option value="UNIDAD" selected>UNIDAD</option>
-                <option value="KILO">KILO</option>
-                <option value="GRAMO">GRAMO</option>
-                <option value="LITRO">LITRO</option>
-                <option value="ONZA">ONZA</option>
-              </select>
-            </div>
-            <div class="form-group col-md-4">
-              <label for="proveedor_asignado">Proveedor Asignado</label>
-              <input
-                type="text"
-                class="form-control"
-                id="proveedor_asignado"
-                name="proveedor_asignado"
-              />
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <div class="form-group col-md-4">
-              <label for="stock_min_temporada_baja"
-                >Stock Mínimo Temp. Baja</label
-              >
-              <input
-                type="number"
-                class="form-control"
-                id="stock_min_temporada_baja"
-                name="stock_min_temporada_baja"
-                required
-              />
-            </div>
-            <div class="form-group col-md-4">
-              <label for="stock_min_temporada_alta"
-                >Stock Mínimo Temp. ALTA</label
-              >
-              <input
-                type="number"
-                class="form-control"
-                id="stock_min_temporada_alta"
-                name="stock_min_temporada_alta"
-                required
-              />
-            </div>
-          </div>
-          <div class="row mb-3">
-            <div class="form-group col-md-4">
-              <label for="stock_max_temporada_baja"
-                >Stock Máximo Temp. Baja</label
-              >
-              <input
-                type="number"
-                class="form-control"
-                id="stock_max_temporada_baja"
-                name="stock_max_temporada_baja"
-                required
-              />
-            </div>
-            <div class="form-group col-md-4">
-              <label for="stock_max_temporada_alta"
-                >Stock Máximo Temp. ALTA</label
-              >
-              <input
-                type="number"
-                class="form-control"
-                id="stock_max_temporada_alta"
-                name="stock_max_temporada_alta"
-                required
-              />
-            </div>
-          </div>
-          <input
-            type="submit"
-            class="btn btn-primary"
-            id="crear-producto"
-            value="Guardar Ficha"
-          />
-          <button
-            type="button"
-            class="btn btn-outline-secondary"
-            id="cancelar-crear-producto"
-            data-bs-dismiss="modal"
-          >
-            Cancelar
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script>
   const apiProductosUrl = "<?php echo URL_API_NUEVA ?>/productos";
   const apiConfigUrl = "<?php echo URL_API_NUEVA ?>/config";
@@ -591,8 +317,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   const apiUsuariosUrl = "<?php echo URL_API_NUEVA ?>/usuarios";
   const apiUnidadesNegocioUrl = "<?php echo URL_API_NUEVA ?>/unidades-negocio";
   const apiSunatUrl = "<?php echo URL_API_NUEVA ?>/sunat";
-  const apiComprobantesVentasUrl =
-    "<?php echo URL_API_NUEVA ?>/comprobantes-ventas";
+  const apiDocumentosMovimientoUrl =
+    "<?php echo URL_API_NUEVA ?>/documentos-movimiento";
 
   let tiposGasto;
   let usuarios;
@@ -606,7 +332,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   let tablaDetallesBody = null;
 
   let modalCrearDetalle = null;
-  let modalCrearProducto = null;
 
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
@@ -614,8 +339,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   async function wrapper() {
     mostrarAlertaSiHayMensaje();
 
-    await cargarTiposGasto();
-    await cargarUsuarios();
     await cargarUnidadesNegocio();
 
     alCambiarNroDoc();
@@ -629,77 +352,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     modalCrearDetalle = new bootstrap.Modal(
       document.getElementById("modal-detalle")
     );
-    modalCrearProducto = new bootstrap.Modal(
-      document.getElementById("modal-producto")
-    );
 
-    prepararFormularioCrearProducto();
-    prepararBotonRegistrarNuevoProducto();
-    prepararFormularioReceta();
+    prepararFormularioComprobante();
   }
 
   let iterador = 1;
-
-  async function cargarTiposGasto() {
-    try {
-      const response = await fetch(apiTiposGastoUrl);
-      const data = await response.json();
-
-      tiposGasto = data;
-
-      const tipoGastoSelect = document.getElementById("tipo_gasto");
-      tipoGastoSelect.innerHTML = "";
-
-      const defaultOption = document.createElement("option");
-      defaultOption.value = "";
-      defaultOption.text = "Seleccione un tipo de gasto";
-      tipoGastoSelect.appendChild(defaultOption);
-
-      data.forEach((tipoGasto) => {
-        const option = document.createElement("option");
-        option.value = tipoGasto.id_tipo_de_gasto;
-        option.textContent = tipoGasto.nombre_gasto;
-        tipoGastoSelect.appendChild(option);
-      });
-    } catch (error) {
-      console.error(error);
-      mostrarAlert("error", "Error al cargar los tipos de gasto", "consultar");
-    }
-  }
-
-  async function cargarUsuarios() {
-    const url = apiUsuariosUrl + "?activos";
-
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-
-      usuarios = data;
-
-      const autorizadoPorSelect = document.getElementById("autorizado_por");
-      autorizadoPorSelect.innerHTML = "";
-
-      const defaultOption = document.createElement("option");
-      defaultOption.value = "";
-      defaultOption.text = "Seleccione un usuario";
-      autorizadoPorSelect.appendChild(defaultOption);
-
-      data.forEach((usuario) => {
-        const option = document.createElement("option");
-        option.value = usuario.id_usuario;
-        option.textContent =
-          !usuario.apellidos && !usuario.nombres
-            ? "ADMIN"
-            : !usuario.nombres
-            ? usuario.apellidos
-            : usuario.apellidos + ", " + usuario.nombres;
-        autorizadoPorSelect.appendChild(option);
-      });
-    } catch (error) {
-      console.error(error);
-      mostrarAlert("error", "Error al cargar los usuarios", "consultar");
-    }
-  }
 
   async function cargarUnidadesNegocio() {
     try {
@@ -708,19 +365,27 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       unidadesNegocio = data;
 
-      const almacenadoEnSelect = document.getElementById("almacenado_en");
-      almacenadoEnSelect.innerHTML = "";
+      const origenSelect = document.getElementById("origen");
+      const destinoSelect = document.getElementById("destino");
+      origenSelect.innerHTML = "";
+      destinoSelect.innerHTML = "";
 
-      const defaultOption = document.createElement("option");
-      defaultOption.value = "";
-      defaultOption.text = "Seleccione una unidad de negocio";
-      almacenadoEnSelect.appendChild(defaultOption);
+      const defaultOption1 = document.createElement("option");
+      defaultOption1.value = "";
+      defaultOption1.text = "Seleccione una unidad de negocio";
+      const defaultOption2 = defaultOption1.cloneNode(true);
+
+      origenSelect.appendChild(defaultOption1);
+      destinoSelect.appendChild(defaultOption2);
 
       data.forEach((unidadNegocio) => {
-        const option = document.createElement("option");
-        option.value = unidadNegocio.id_unidad_de_negocio;
-        option.textContent = unidadNegocio.nombre_unidad_de_negocio;
-        almacenadoEnSelect.appendChild(option);
+        const option1 = document.createElement("option");
+        option1.value = unidadNegocio.id_unidad_de_negocio;
+        option1.textContent = unidadNegocio.nombre_unidad_de_negocio;
+        const option2 = option1.cloneNode(true);
+
+        origenSelect.appendChild(option1);
+        destinoSelect.appendChild(option2);
       });
     } catch (error) {
       console.error(error);
@@ -732,357 +397,30 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     }
   }
 
-  // #region Funciones Formulario de creación de nuevo producto
+  async function cargarCodigoPedido() {
+    const url = apiConfigUrl + "/25/codigo"; // 25 es el id de las guias internas
 
-  async function cargarCodigoProducto() {
     try {
-      const url = apiConfigUrl + "/6/codigo"; // 6 es el id de los productos
       const response = await fetch(url);
       const data = await response.json();
 
-      const codigo = document.getElementById("codigo");
-      codigo.value = data.codigo;
-    } catch (error) {
-      mostrarAlert(
-        "error",
-        "Error al cargar el código del producto",
-        "consultar"
-      );
-    }
-  }
-
-  async function cargarClasificacionVentas() {
-    try {
-      const response = await fetch(apiGruposDeLaCartaUrl);
-      const data = await response.json();
-
-      const clasificacionVentasSelect = document.getElementById(
-        "clasificacion_ventas"
-      );
-      clasificacionVentasSelect.innerHTML = "";
-
-      const defaultOption = document.createElement("option");
-      defaultOption.value = "";
-      defaultOption.text = "Seleccione una clasificación";
-      clasificacionVentasSelect.appendChild(defaultOption);
-
-      let grupos = data;
-      grupos = ordenarGrupos(grupos);
-
-      grupos.forEach((clasificacionVentas) => {
-        const option = crearOpcionClasificacionVentas(clasificacionVentas);
-        clasificacionVentasSelect.appendChild(option);
-      });
+      return data.codigo;
     } catch (error) {
       console.error(error);
-      mostrarAlert(
-        "error",
-        "Error al cargar las clasificaciones de ventas",
-        "consultar"
-      );
+      mostrarAlert("error", "Error al cargar el código del pedido", "crear");
     }
   }
-
-  function ordenarGrupos(grupos) {
-    // ordenar los grupos por nro_orden
-    grupos.sort((a, b) => {
-      if (+a.nro_orden > +b.nro_orden) {
-        return 1;
-      } else if (+a.nro_orden < +b.nro_orden) {
-        return -1;
-      } else {
-        return 0;
-      }
-    });
-
-    // mapear a un array de grupos con un campo array de subgrupos
-    grupos = grupos
-      .filter((grupo) => grupo.codigo_grupo == grupo.codigo_subgrupo)
-      .map((grupo) => {
-        grupo.subgrupos = grupos.filter(
-          (subgrupo) =>
-            subgrupo.codigo_grupo == grupo.codigo_grupo &&
-            subgrupo.codigo_subgrupo != subgrupo.codigo_grupo
-        );
-        return grupo;
-      });
-
-    // flat array de grupos y subgrupos
-    return grupos.flatMap((grupo) => {
-      return [grupo, ...grupo.subgrupos];
-    });
-  }
-
-  function crearOpcionClasificacionVentas(clasificacionVentas) {
-    const option = document.createElement("option");
-    option.value = clasificacionVentas.id_grupo;
-
-    if (
-      clasificacionVentas.codigo_grupo == clasificacionVentas.codigo_subgrupo
-    ) {
-      option.textContent = clasificacionVentas.nombre_grupo;
-      option.classList.add("fw-bold");
-    } else {
-      option.style.color = "#6c757d";
-      option.innerHTML =
-        "&nbsp;&nbsp;&nbsp;&nbsp;" + clasificacionVentas.nombre_grupo;
-    }
-
-    return option;
-  }
-
-  async function cargarCentralCostos() {
-    try {
-      const response = await fetch(apiCentralDeCostosUrl);
-      const data = await response.json();
-
-      const centralCostosSelect = document.getElementById("central_costos");
-
-      centralCostosSelect.innerHTML = "";
-
-      const defaultOption = document.createElement("option");
-      defaultOption.value = "";
-      defaultOption.text = "Seleccione una central de costos";
-      centralCostosSelect.appendChild(defaultOption);
-
-      data.forEach((centralCostos) => {
-        const option = document.createElement("option");
-        option.value = centralCostos.id_central_de_costos;
-        option.textContent = centralCostos.nombre_del_costo;
-        centralCostosSelect.appendChild(option);
-      });
-    } catch (error) {
-      console.error(error);
-      mostrarAlert(
-        "error",
-        "Error al cargar las centrales de costos",
-        "consultar"
-      );
-    }
-  }
-
-  async function cargarTiposDeProducto() {
-    try {
-      const response = await fetch(apiTipoDeProductoUrl);
-      const data = await response.json();
-      const tipoDeProductoSelect = document.getElementById("tipo_producto");
-
-      tipoDeProductoSelect.innerHTML = "";
-
-      const defaultOption = document.createElement("option");
-      defaultOption.value = "";
-      defaultOption.text = "Seleccione un tipo de producto";
-      tipoDeProductoSelect.appendChild(defaultOption);
-
-      data.forEach((tipoDeProducto) => {
-        const option = document.createElement("option");
-        option.value = tipoDeProducto.id_tipo_producto;
-        option.textContent = tipoDeProducto.nombre_tipo_de_producto;
-        tipoDeProductoSelect.appendChild(option);
-      });
-    } catch (error) {
-      console.error(error);
-      mostrarAlert(
-        "error",
-        "Error al cargar las centrales de costos",
-        "consultar"
-      );
-    }
-  }
-
-  async function crearProducto() {
-    const producto = {
-      nombre_producto: document.getElementById("nombre_producto").value,
-      codigo: document.getElementById("codigo").value,
-      tipo_de_unidad: document.getElementById("tipo_unidad").value,
-      id_grupo: document.getElementById("clasificacion_ventas").value,
-      id_central_de_costos: document.getElementById("central_costos").value,
-      id_tipo_de_producto: document.getElementById("tipo_producto").value,
-      fecha_de_vigencia: document.getElementById("fecha_vigencia").value,
-      stock_min_temporada_baja: document.getElementById(
-        "stock_min_temporada_baja"
-      ).value,
-      stock_max_temporada_baja: document.getElementById(
-        "stock_max_temporada_baja"
-      ).value,
-      stock_min_temporada_alta: document.getElementById(
-        "stock_min_temporada_alta"
-      ).value,
-      stock_max_temporada_alta: document.getElementById(
-        "stock_max_temporada_alta"
-      ).value,
-      cantidad_de_fracciones:
-        document.getElementById("cantidad_unidades").value,
-    };
-
-    const url = apiProductosUrl + "/insumo-terminado";
-
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(producto),
-    };
-
-    try {
-      const response = await fetch(url, options);
-      const data = await response.json();
-      console.log(data);
-
-      insumosCargados.push(data.resultado);
-
-      // agregar la opción al select de productos como primera opción (después de la opción por defecto)
-      const productoSelect = document.getElementById("producto");
-      const option = document.createElement("option");
-      option.value = data.resultado.id_producto;
-      option.textContent = data.resultado.nombre_producto;
-      productoSelect.insertBefore(option, productoSelect.options[1]);
-
-      // seleccionar la opción recién creada
-      productoSelect.value = data.resultado.id_producto;
-      // lanzar el evento change para que se carguen los datos del producto
-      productoSelect.dispatchEvent(new Event("change"));
-
-      modalCrearProducto.hide();
-      alert("Producto creado correctamente");
-    } catch (error) {
-      console.error(error);
-      alert("Error al crear el producto");
-    }
-  }
-
-  function prepararFormularioCrearProducto() {
-    const form = document.getElementById("form-crear-producto");
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
-      crearProducto();
-    });
-  }
-
-  function limpiarFormularioProducto() {
-    document.getElementById("nombre_producto").value = "";
-    document.getElementById("codigo").value = "";
-    document.getElementById("clasificacion_ventas").value = "";
-    document.getElementById("central_costos").value = "";
-    document.getElementById("tipo_producto").value = "";
-    document.getElementById("fecha_vigencia").value = new Date()
-      .toISOString()
-      .split("T")[0];
-    document.getElementById("cantidad_unidades").value = "";
-    document.getElementById("tipo_unidad").value = "";
-    document.getElementById("proveedor_asignado").value = "";
-    document.getElementById("stock_min_temporada_baja").value = "";
-    document.getElementById("stock_max_temporada_baja").value = "";
-    document.getElementById("stock_min_temporada_alta").value = "";
-    document.getElementById("stock_max_temporada_alta").value = "";
-  }
-  // #endregion
-
-  // #region Funciones de actualización de cantidades y montos
-
-  function alCambiarPrecioUnitario(event) {
-    const el = event.target;
-    const tipoComprobante = document.getElementById("tipo_comprobante");
-    const precioUnitarioConIgv = document.getElementById(
-      "precio_unitario_con_igv"
-    );
-    const precioUnitarioSinIgv = document.getElementById(
-      "precio_unitario_sin_igv"
-    );
-
-    if (tipoComprobante.value == "01") {
-      // factura
-      if (el.id == "precio_unitario_sin_igv") {
-        precioUnitarioConIgv.value = (el.value * 1.18).toFixed(6);
-      } else {
-        precioUnitarioSinIgv.value = (el.value / 1.18).toFixed(6);
-      }
-    } else {
-      precioUnitarioConIgv.value = el.value;
-      precioUnitarioSinIgv.value = el.value;
-    }
-
-    // calcular subtotal
-    const cantidad = document.getElementById("cantidad").value;
-    const subtotal = document.getElementById("subtotal");
-
-    const precioUnitario = precioUnitarioSinIgv.value;
-
-    subtotal.value = (precioUnitario * cantidad).toFixed(6);
-  }
-
-  function alCambiarSubtotal(event) {
-    const el = event.target;
-    const precioUnitarioSinIgv = document.getElementById(
-      "precio_unitario_sin_igv"
-    );
-    const precioUnitarioConIgv = document.getElementById(
-      "precio_unitario_con_igv"
-    );
-    const tipoComprobante = document.getElementById("tipo_comprobante");
-
-    const cantidad = document.getElementById("cantidad");
-
-    const subtotal = el.value;
-    const precioUnitario = subtotal / cantidad.value;
-
-    precioUnitarioSinIgv.value = precioUnitario.toFixed(6);
-
-    if (tipoComprobante.value == "01") {
-      // factura
-      precioUnitarioConIgv.value = (precioUnitario * 1.18).toFixed(6);
-    } else {
-      precioUnitarioConIgv.value = precioUnitario.toFixed(6);
-    }
-  }
-
-  function alCambiarCantidad(event) {
-    const el = event.target;
-    const cantidad = el.value;
-    const precioUnitarioSinIgv = document.getElementById(
-      "precio_unitario_sin_igv"
-    );
-    const precioUnitarioConIgv = document.getElementById(
-      "precio_unitario_con_igv"
-    );
-    const tipoComprobante = document.getElementById("tipo_comprobante");
-    const subtotalInput = document.getElementById("subtotal");
-
-    const subtotal = subtotalInput.value;
-    const precioUnitario = subtotal / cantidad;
-
-    precioUnitarioSinIgv.value = precioUnitario.toFixed(6);
-    if (tipoComprobante.value == "01") {
-      // factura
-      precioUnitarioConIgv.value = (precioUnitario * 1.18).toFixed(6);
-    } else {
-      precioUnitarioConIgv.value = precioUnitario.toFixed(6);
-    }
-    subtotalInput.value = (precioUnitario * cantidad).toFixed(6);
-  }
-
-  // #endregion
 
   async function alCambiarNroDoc() {
-    const nroDocumento = document.getElementById("nro_documento_cliente");
+    const nroDocumento = document.getElementById("nro_documento_proveedor");
 
     nroDocumento.addEventListener("change", async (event) => {
-      const tipoDocumento = document.getElementById(
-        "tipo_documento_cliente"
-      ).value;
       const nroDocumentoValor = event.target.value;
-
-      if (!nroDocumentoValor || tipoDocumento == 0) {
+      if (!nroDocumentoValor) {
         return;
       }
 
-      const tiposDocumento = {
-        1: "DNI",
-        6: "RUC",
-      };
-
-      const url = `${apiSunatUrl}?tipo=${tiposDocumento[tipoDocumento]}&nro=${nroDocumentoValor}`;
+      const url = `${apiSunatUrl}?tipo=RUC&nro=${nroDocumentoValor}`;
 
       const spinner = document.getElementById("spinner");
       spinner.classList.add("visible");
@@ -1097,8 +435,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         spinner.classList.add("invisible");
 
         const nombre = document.getElementById("nombre_proveedor");
-        const direccion = document.getElementById("direccion_cliente");
-        const lugar = document.getElementById("ciudad");
 
         nombre.value = personaNaturalJuridica.nombre;
 
@@ -1120,23 +456,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     });
   }
 
-  function prepararBotonRegistrarNuevoProducto() {
-    const btnRegistrarNuevoProducto = document.getElementById(
-      "btn-registrar-nuevo-producto"
-    );
-    btnRegistrarNuevoProducto.addEventListener("click", async () => {
-      await cargarClasificacionVentas();
-      await cargarCentralCostos();
-      await cargarTiposDeProducto();
-
-      limpiarFormularioProducto();
-
-      await cargarCodigoProducto();
-
-      modalCrearProducto.show();
-    });
-  }
-
   async function cargarProductos() {
     try {
       const response = await fetch(apiProductosUrl);
@@ -1151,8 +470,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       productosSelect.innerHTML = "";
 
       const option = document.createElement("option");
-      option.value = "0";
-      option.textContent = "Otro insumo - Ingrese descripción";
+      option.value = "";
+      option.textContent = "Seleccione un producto";
       productosSelect.appendChild(option);
 
       data.forEach((insumo) => {
@@ -1182,29 +501,30 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     }
   }
 
-  function alCambiarDescripcion(event) {
-    const agregarInsumoButton = document.getElementById("agregar-producto");
-    const descripcion = event.target.value;
+  function alCambiarCantidad(event) {
+    const cantidad = event.target.value;
+    const precioUnitario = document.getElementById("precio_unitario").value;
+    const subtotal = document.getElementById("subtotal");
 
-    if (descripcion) {
-      agregarInsumoButton.disabled = false;
-    } else {
-      agregarInsumoButton.disabled = true;
-    }
+    subtotal.value = cantidad * precioUnitario;
+  }
+
+  function alCambiarPrecioUnitario(event) {
+    const precioUnitario = event.target.value;
+    const cantidad = document.getElementById("cantidad").value;
+    const subtotal = document.getElementById("subtotal");
+
+    subtotal.value = cantidad * precioUnitario;
   }
 
   function alCambiarInsumo() {
     const productoSelect = document.getElementById("producto");
     const agregarInsumoButton = document.getElementById("agregar-producto");
-    const tipoComprobante = document.getElementById("tipo_comprobante");
 
-    if (productoSelect.value != 0) {
+    if (productoSelect.value) {
       agregarInsumoButton.disabled = false;
-      descripcion.disabled = true;
-      descripcion.value = "";
     } else {
       agregarInsumoButton.disabled = true;
-      descripcion.disabled = false;
       return;
     }
 
@@ -1221,137 +541,14 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     const tipoUnidadDetalleInput = document.getElementById(
       "tipo_unidad_detalle"
     );
-    const costoUnitarioSinIGVInput = document.getElementById(
-      "precio_unitario_sin_igv"
-    );
-    const costoUnitarioConIGVInput = document.getElementById(
-      "precio_unitario_con_igv"
-    );
+    const costoUnitarioInput = document.getElementById("precio_unitario");
     const subtotalInput = document.getElementById("subtotal");
 
     tipoUnidadDetalleInput.value = productoSeleccionado.tipo_de_unidad;
-    costoUnitarioSinIGVInput.value = productoSeleccionado.costo_unitario;
-
-    if (tipoComprobante.value == "01") {
-      costoUnitarioConIGVInput.value = (
-        productoSeleccionado.costo_unitario * 1.18
-      ).toFixed(6);
-    } else {
-      costoUnitarioConIGVInput.value = productoSeleccionado.costo_unitario;
-    }
+    costoUnitarioInput.value = productoSeleccionado.costo_unitario;
 
     subtotalInput.value =
       +productoSeleccionado.costo_unitario * +cantidadInput.value;
-  }
-
-  async function cargarClasificacionVentas() {
-    try {
-      const response = await fetch(apiGruposDeLaCartaUrl);
-      const data = await response.json();
-
-      const clasificacionVentasSelect = document.getElementById(
-        "clasificacion_ventas"
-      );
-
-      clasificacionVentasSelect.innerHTML = "";
-
-      const defaultOption = document.createElement("option");
-      defaultOption.value = "";
-      defaultOption.text = "Seleccione una clasificación";
-      clasificacionVentasSelect.appendChild(defaultOption);
-
-      let grupos = data;
-      grupos = ordenarGrupos(grupos);
-
-      grupos.forEach((clasificacionVentas) => {
-        const option = crearOpcionClasificacionVentas(clasificacionVentas);
-        clasificacionVentasSelect.appendChild(option);
-      });
-    } catch (error) {
-      console.error(error);
-      mostrarAlert(
-        "error",
-        "Error al cargar las clasificaciones de ventas",
-        "consultar"
-      );
-    }
-  }
-
-  function ordenarGrupos(grupos) {
-    // ordenar los grupos por nro_orden
-    grupos.sort((a, b) => {
-      if (+a.nro_orden > +b.nro_orden) {
-        return 1;
-      } else if (+a.nro_orden < +b.nro_orden) {
-        return -1;
-      } else {
-        return 0;
-      }
-    });
-
-    // mapear a un array de grupos con un campo array de subgrupos
-    grupos = grupos
-      .filter((grupo) => grupo.codigo_grupo == grupo.codigo_subgrupo)
-      .map((grupo) => {
-        grupo.subgrupos = grupos.filter(
-          (subgrupo) =>
-            subgrupo.codigo_grupo == grupo.codigo_grupo &&
-            subgrupo.codigo_subgrupo != subgrupo.codigo_grupo
-        );
-        return grupo;
-      });
-
-    // flat array de grupos y subgrupos
-    return grupos.flatMap((grupo) => {
-      return [grupo, ...grupo.subgrupos];
-    });
-  }
-
-  function crearOpcionClasificacionVentas(clasificacionVentas) {
-    const option = document.createElement("option");
-    option.value = clasificacionVentas.id_grupo;
-
-    if (
-      clasificacionVentas.codigo_grupo == clasificacionVentas.codigo_subgrupo
-    ) {
-      option.textContent = clasificacionVentas.nombre_grupo;
-      option.classList.add("fw-bold");
-    } else {
-      option.style.color = "#6c757d";
-      option.innerHTML =
-        "&nbsp;&nbsp;&nbsp;&nbsp;" + clasificacionVentas.nombre_grupo;
-    }
-
-    return option;
-  }
-
-  async function cargarCentralesCostos() {
-    try {
-      const response = await fetch(apiCentralesDeCostosUrl);
-      const data = await response.json();
-
-      const centralCostosSelect = document.getElementById("central_costos");
-      centralCostosSelect.innerHTML = "";
-
-      const defaultOption = document.createElement("option");
-      defaultOption.value = "";
-      defaultOption.text = "Seleccione una central de costos";
-      centralCostosSelect.appendChild(defaultOption);
-
-      data.forEach((centralCostos) => {
-        const option = document.createElement("option");
-        option.value = centralCostos.id_central_de_costos;
-        option.textContent = centralCostos.nombre_del_costo;
-        centralCostosSelect.appendChild(option);
-      });
-    } catch (error) {
-      console.error(error);
-      mostrarAlert(
-        "error",
-        "Error al cargar las centrales de costos",
-        "consultar"
-      );
-    }
   }
 
   function actualizarTabla() {
@@ -1362,46 +559,53 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     });
   }
 
-  async function registrarComprobanteCompra() {
-    const comprobante = {
-      nombre_cliente: document.getElementById("nombre_proveedor").value,
-      lugar_cliente: document.getElementById("ciudad").value,
-      direccion_cliente: document.getElementById("direccion_cliente").value,
+  async function registrarDocumentoMovimiento() {
+    const documentoMovimiento = {
+      tipo_movimiento: document.getElementById("tipo_movimiento").value,
+      tipo_documento: document.getElementById("tipo_documento").value,
 
-      tipo_comprobante: document.getElementById("tipo_comprobante").value,
-      nro_comprobante: document.getElementById("nro_comprobante").value,
-      fecha_documento: document.getElementById("fecha").value,
-      tipo_documento_cliente: document.getElementById("tipo_documento_cliente")
-        .value,
-      nro_documento_cliente: document.getElementById("nro_documento_cliente")
-        .value,
-      nro_orden_pedido: document.getElementById("nro_orden_pedido").value,
+      fecha_recepcion: document.getElementById("fecha_recepcion").value,
 
-      id_usuario_responsable: document.getElementById("autorizado_por").value,
-      id_tipo_de_gasto: document.getElementById("tipo_gasto").value,
-      id_unidad_de_negocio: document.getElementById("almacenado_en").value,
-      afecto_percepcion: document.getElementById("afecto_percepcion").checked,
-      forma_de_pago: document.getElementById("forma_pago").value,
+      id_unidad_de_negocio: document.getElementById("origen").value,
+      motivo: document.getElementById("motivo").value,
+      observaciones: document.getElementById("observaciones").value,
+
+      id_usuario: '<?php echo $_SESSION["usuario"]["id_usuario"] ?>',
     };
 
-    comprobante.detalles = detallesDeTabla.map((detalle) => {
+    if (documentoMovimiento.tipo_documento == "GR") {
+      documentoMovimiento.nro_documento =
+        document.getElementById("nro_documento").value;
+      documentoMovimiento.fecha_documento =
+        document.getElementById("fecha").value;
+      documentoMovimiento.nro_documento_proveedor = document.getElementById(
+        "nro_documento_proveedor"
+      ).value;
+      documentoMovimiento.nombre_proveedor =
+        document.getElementById("nombre_proveedor").value;
+      documentoMovimiento.nro_orden_compra =
+        document.getElementById("nro_orden_compra").value;
+    } else if (documentoMovimiento.tipo_documento == "GI") {
+      documentoMovimiento.destino = document.getElementById("destino").value;
+    }
+
+    documentoMovimiento.detalles = detallesDeTabla.map((detalle) => {
       return {
         id_producto: detalle.id_insumo,
-        descripcion: detalle.nombre_insumo,
         tipo_de_unidad: detalle.tipo_de_unidad,
         cantidad: detalle.cantidad,
         precio_unitario: detalle.costo_unitario,
       };
     });
 
-    const url = apiComprobantesVentasUrl + "/compra";
+    const url = apiDocumentosMovimientoUrl + "/ingreso-egreso";
 
     const options = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(comprobante),
+      body: JSON.stringify(documentoMovimiento),
     };
 
     try {
@@ -1430,11 +634,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     }
   }
 
-  function prepararFormularioReceta() {
+  function prepararFormularioComprobante() {
     const form = document.getElementById("form-registrar-comprobante");
     form.addEventListener("submit", (event) => {
       event.preventDefault();
-      registrarComprobanteCompra();
+      registrarDocumentoMovimiento();
     });
   }
 
@@ -1451,13 +655,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
     const detalle = {
       id_insumo: selectProducto.value,
-      nombre_insumo:
-        selectProducto.selectedIndex == 0
-          ? descripcion.value
-          : selectProducto.options[selectProducto.selectedIndex].text,
+      nombre_insumo: selectProducto.options[selectProducto.selectedIndex].text,
       cantidad: document.getElementById("cantidad").value,
       tipo_de_unidad: document.getElementById("tipo_unidad_detalle").value,
-      costo_unitario: document.getElementById("precio_unitario_sin_igv").value,
+      costo_unitario: document.getElementById("precio_unitario").value,
       costo: document.getElementById("subtotal").value,
       idFila: iterador++,
     };
@@ -1472,63 +673,61 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   }
 
   function calcularCostoTotal() {
-    const subtotal = detallesDeTabla.reduce(
+    const total = detallesDeTabla.reduce(
       (acumulador, insumo) => +(acumulador + +insumo.costo).toFixed(2),
       0
     );
-    const tipoComprobante = document.getElementById("tipo_comprobante");
-    const afectoPercepcion = document.getElementById("afecto_percepcion");
 
-    const igv =
-      tipoComprobante.value == "01" ? (subtotal * 0.18).toFixed(2) : 0;
-    const percepcion = afectoPercepcion.checked
-      ? (subtotal * 0.02).toFixed(2)
-      : 0;
-    const total = +subtotal + +igv;
-    const granTotal = +total + +percepcion;
+    // agregar fila de total
+    const filaTotal = tablaDetallesBody.insertRow();
 
-    document.getElementById("subtotal_comprobante").value =
-      formatearCantidad(subtotal);
-    document.getElementById("igv_comprobante").value = formatearCantidad(igv);
-    document.getElementById("percepcion_comprobante").value =
-      formatearCantidad(percepcion);
-    document.getElementById("total_comprobante").value =
-      formatearCantidad(total);
-    document.getElementById("gran_total_comprobante").value =
-      formatearCantidad(granTotal);
+    const celdaTotal = filaTotal.insertCell(0);
+    celdaTotal.colSpan = 4;
+    celdaTotal.classList.add("text-end");
+    celdaTotal.textContent = "TOTAL";
+
+    const celdaTotalValor = filaTotal.insertCell(1);
+    celdaTotalValor.classList.add("text-end");
+    celdaTotalValor.textContent = formatearCantidad(total);
   }
 
   function alCambiarAfectoPercepcion(event) {
     calcularCostoTotal();
   }
 
-  async function alCambiarTipoComprobante(event) {
+  async function alCambiarTipoDocumento(event) {
     const tipoComprobante = event.target.value;
-    const nroComprobante = document.getElementById("nro_comprobante");
+    const nroComprobante = document.getElementById("nro_documento");
+    const nroDocumentoProveedor = document.getElementById(
+      "nro_documento_proveedor"
+    );
+    const nombreProveedor = document.getElementById("nombre_proveedor");
+    const destino = document.getElementById("destino");
 
-    if (tipoComprobante == "00") {
-      // cargar el codigo de pedido
-      nroComprobante.value = await cargarCodigoPedido();
-      nroComprobante.disabled = true;
-    } else {
+    if (tipoComprobante == "GR") {
       nroComprobante.value = "";
       nroComprobante.disabled = false;
-    }
 
-    calcularCostoTotal();
-  }
+      nroDocumentoProveedor.disabled = false;
+      nombreProveedor.disabled = false;
+      destino.disabled = false;
+    } else if (tipoComprobante == "GI") {
+      nroComprobante.value = await cargarCodigoPedido();
+      nroComprobante.disabled = true;
 
-  async function cargarCodigoPedido() {
-    const url = apiConfigUrl + "/20/codigo"; // 20 es el id de los pedidos
+      nroDocumentoProveedor.value = "";
+      nroDocumentoProveedor.disabled = true;
 
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
+      nombreProveedor.value = "";
+      nombreProveedor.disabled = true;
 
-      return data.codigo;
-    } catch (error) {
-      console.error(error);
-      mostrarAlert("error", "Error al cargar el código del pedido", "crear");
+      destino.disabled = true;
+    } else {
+      nroComprobante.value = "";
+      nroComprobante.disabled = true;
+      nroDocumentoProveedor.disabled = true;
+      nombreProveedor.disabled = true;
+      destino.disabled = true;
     }
   }
 
@@ -1593,9 +792,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   function limpiarFormularioDetalle() {
     document.getElementById("producto").value = "";
     document.getElementById("cantidad").value = "1";
-    document.getElementById("tipo_unidad").value = "";
-    document.getElementById("precio_unitario_sin_igv").value = "0";
-    document.getElementById("precio_unitario_con_igv").value = "0";
+    document.getElementById("tipo_unidad_detalle").value = "";
+    document.getElementById("precio_unitario").value = "0";
     document.getElementById("subtotal").value = "0";
 
     document.getElementById("agregar-producto").disabled = true;

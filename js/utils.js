@@ -24,11 +24,18 @@ function mostrarAlert(tipo, mensaje, operacion) {
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>`;
 
-  // cerrar el alert tras 2 segundos con un fadeout
-  const alert = bootstrap.Alert.getOrCreateInstance(".alert");
+  // cerrar el alert tras 4 segundos con un fadeout
   setTimeout(() => {
-    alert.close();
-  }, 3000);
+    cerrarAlerts();
+  }, 4000);
+}
+
+function cerrarAlerts() {
+  const alerts = document.querySelectorAll(".alert");
+  const btAlerts = [...alerts].map((alert) =>
+    bootstrap.Alert.getOrCreateInstance(alert)
+  );
+  btAlerts.forEach((alert) => alert.close());
 }
 
 /**
@@ -53,13 +60,17 @@ function formatearCantidad(numero) {
 function formatearFecha(fechaString, conAño = false) {
   if (!fechaString) return "";
   const fecha = new Date(fechaString);
-  const fechaLocal = new Date(fecha.getTime() + fecha.getTimezoneOffset() * 60000);
+  const fechaLocal = new Date(
+    fecha.getTime() + fecha.getTimezoneOffset() * 60000
+  );
 
-  return `${fechaLocal.getDate().toString().padStart(2, "0")}/${(
-    fechaLocal.getMonth() + 1
-  )
-    .toString()
-    .padStart(2, "0")}` + (conAño ? `/${fechaLocal.getFullYear()}` : "");
+  return (
+    `${fechaLocal.getDate().toString().padStart(2, "0")}/${(
+      fechaLocal.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}` + (conAño ? `/${fechaLocal.getFullYear()}` : "")
+  );
 }
 
 /**
@@ -72,7 +83,10 @@ function formatearHora(fechaString) {
   const hora = new Date(fechaString);
   const horaLocal = new Date(hora.getTime() + hora.getTimezoneOffset() * 60000);
 
-  return `${horaLocal.getHours().toString().padStart(2, "0")}:${horaLocal.getMinutes().toString().padStart(2, "0")}`;
+  return `${horaLocal.getHours().toString().padStart(2, "0")}:${horaLocal
+    .getMinutes()
+    .toString()
+    .padStart(2, "0")}`;
 }
 
 /**

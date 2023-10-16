@@ -195,10 +195,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         <h5>Recibos de pago</h5>
 
         <div class="table-responsive">
-          <table
-            class="table table-bordered table-hover"
-            id="tabla-recibos"
-          >
+          <table class="table table-bordered table-hover" id="tabla-recibos">
             <thead>
               <tr>
                 <th>Fecha</th>
@@ -247,66 +244,68 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       </div>
       <div class="modal-body">
         <form id="form-crear-pago">
-          <div class="row">
-            <div class="col-md-3">
-              <label for="tipo_doc">Tipo Doc:</label>
-              <input class="form-control" id="tipo_doc" disabled />
-            </div>
-            <div class="col-md-3">
-              <label for="nro_comprobante">Nro de comprobante:</label>
-              <input class="form-control" id="nro_comprobante" disabled />
-            </div>
-            <div class="col-md-4 ms-auto mb-3">
-              <label for="total" class="fw-bold fs-5">TOTAL:</label>
-              <input
-                type="number"
-                class="form-control fw-bold fs-5"
-                id="total"
-                disabled
-              />
-            </div>
-          </div>
 
-          <div class="row">
-            <span class="col-form-label col-md-4 mb-3">Doc Identidad</span>
-            <div class="col-md-8 mb-3">
-              <input
-                type="text"
-                class="form-control"
-                id="doc_identidad"
-                name="doc_identidad"
-                disabled
-              />
+          <div class="card p-4 bg-success-subtle">
+            <div class="row">
+              <div class="col-md-3">
+                <label for="tipo_doc">Tipo Doc:</label>
+                <input class="form-control" id="tipo_doc" disabled />
+              </div>
+              <div class="col-md-3">
+                <label for="nro_comprobante">Nro de comprobante:</label>
+                <input class="form-control" id="nro_comprobante" disabled />
+              </div>
+              <div class="col-md-4 ms-auto mb-3">
+                <label for="total" class="fw-bold fs-5">TOTAL:</label>
+                <input
+                  type="number"
+                  class="form-control fw-bold fs-5"
+                  id="total"
+                  disabled
+                />
+              </div>
             </div>
-            <span class="col-form-label col-md-4 mb-3">Proveedor</span>
-            <div class="col-md-8 mb-3">
-              <input
-                type="text"
-                class="form-control"
-                id="proveedor"
-                name="proveedor"
-                disabled
-              />
-            </div>
-            <span class="col-form-label col-md-4 mb-3">Tipo de gasto</span>
-            <div class="col-md-8 mb-3">
-              <input
-                type="text"
-                class="form-control"
-                id="tipo_gasto"
-                name="tipo_gasto"
-                disabled
-              />
-            </div>
-            <span class="col-form-label col-md-4 mb-3">Items</span>
-            <div class="col-md-8 mb-3">
-              <button
-                type="button"
-                class="btn btn-outline-primary"
-                id="btn-ver-detalles"
-              >
-                Ver detalles
-              </button>
+            <div class="row">
+              <span class="col-form-label col-md-4 mb-3">Doc Identidad</span>
+              <div class="col-md-8 mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="doc_identidad"
+                  name="doc_identidad"
+                  disabled
+                />
+              </div>
+              <span class="col-form-label col-md-4 mb-3">Proveedor</span>
+              <div class="col-md-8 mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="proveedor"
+                  name="proveedor"
+                  disabled
+                />
+              </div>
+              <span class="col-form-label col-md-4 mb-3">Tipo de gasto</span>
+              <div class="col-md-8 mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="tipo_gasto"
+                  name="tipo_gasto"
+                  disabled
+                />
+              </div>
+              <span class="col-form-label col-md-4">Items</span>
+              <div class="col-md-8">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary"
+                  id="btn-ver-detalles"
+                >
+                  Ver detalles
+                </button>
+              </div>
             </div>
           </div>
 

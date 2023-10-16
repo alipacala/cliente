@@ -49,9 +49,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             <tr>
               <th class="text-center">Tipo de insumo / Producto</th>
               <th class="text-center">P. Costo</th>
+              <th class="text-center">Costo total</th>
               <th class="text-center">Stock</th>
               <th class="text-center">T. Unidad</th>
-              <th class="text-center">Costo total</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -89,7 +89,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         ></button>
       </div>
       <div class="modal-body">
-        <div class="row mb-4">
+        <div class="row">
           <div class="col-md-3">
             <label for="nombre_producto">Nombre del Producto:</label>
             <input
@@ -99,7 +99,25 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               disabled
             />
           </div>
+
+          <div class="col-auto ms-auto">
+            <table class="table table-bordered table-hover mt-4">
+              <thead>
+                <tr>
+                  <th class="text-center">Stock</th>
+                  <th class="text-center">T. Unidad</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-center" id="stock_producto"></td>
+                  <td id="tipo_unidad_producto"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+
         <div class="row mb-4">
           <div class="col-auto d-flex align-items-center">
             <span>Rango de Fechas del:</span>
@@ -158,7 +176,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   const apiProductosUrl = "<?php echo URL_API_NUEVA ?>/productos";
   const apiTiposProductosUrl = "<?php echo URL_API_NUEVA ?>/tipos-productos";
   const apiReportesUrl = "<?php echo URL_API_NUEVA ?>/reportes";
-  const apiDocumentosDetallesUrl = "<?php echo URL_API_NUEVA ?>/documentos-detalles";
+  const apiDocumentosDetallesUrl =
+    "<?php echo URL_API_NUEVA ?>/documentos-detalles";
 
   let tablaProductosBody = null;
   let tablaKardexBody = null;
@@ -215,6 +234,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     const nombre = document.getElementById("buscar").value;
     const url = `${apiProductosUrl}?stock&nombre_producto=${nombre}`;
     buscarProductos(url);
+
+    document.getElementById("tipo-producto").value = "";
   }
 
   function buscarComprobantesPorTipo(event) {
@@ -226,11 +247,22 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     const tipo = event.target.value;
     const url = `${apiProductosUrl}?stock&tipo_producto=${tipo}`;
     buscarProductos(url);
+
+    document.getElementById("buscar").value = "";
   }
 
   function imprimirRegistroVentas(event) {
     event.preventDefault();
-    const url = `${apiReportesUrl}?tipo=registro-ventas&${prepararUrlParams()}`;
+
+    const nombre = document.getElementById("buscar").value;
+    const tipo = document.getElementById("tipo-producto").value;
+    const params = nombre
+      ? `nombre_producto=${nombre}`
+      : tipo
+      ? `tipo_producto=${tipo}`
+      : "";
+
+    const url = `${apiReportesUrl}?tipo=consulta-productos-insumos&${params}`;
     open(url, "_blank");
   }
 
@@ -246,30 +278,29 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     };
 
     rows.forEach((row) => {
-      console.log(row.cells[2].textContent);
-
       totales.stock += parseFloat(row.cells[2].textContent.replace(/,/g, ""));
       totales.costoTotal += parseFloat(
-        row.cells[4].textContent.replace(/,/g, "")
+        row.cells[3].textContent.replace(/,/g, "")
       );
     });
 
     const celdaVacia1 = rowTotales.insertCell();
 
     const textoTotal = rowTotales.insertCell();
+    textoTotal.classList.add("text-end");
     textoTotal.innerHTML = "<span class='fw-bold'>TOTAL:</span>";
 
     const stock = rowTotales.insertCell();
     stock.classList.add("text-end");
     stock.innerHTML = `<span class='fw-bold'>${totales.stock}</span>`;
 
-    const celdaVacia2 = rowTotales.insertCell();
-
     const total = rowTotales.insertCell();
     total.classList.add("text-end");
     total.innerHTML = `<span class='fw-bold'>${formatearCantidad(
       totales.costoTotal
     )}</span>`;
+
+    const celdaVacia2 = rowTotales.insertCell();
   }
 
   async function buscarProductos(url) {
@@ -292,6 +323,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           const row = tablaProductosBody.insertRow();
           row.dataset.idProducto = producto.id_producto;
           row.dataset.nombreProducto = producto.nombre_producto;
+          row.dataset.tipoUnidad = producto.tipo_de_unidad;
+          row.dataset.stock = producto.stock;
 
           const nombre = row.insertCell();
           nombre.textContent = producto.nombre_producto;
@@ -300,6 +333,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           costo.classList.add("text-end");
           costo.textContent = formatearCantidad(producto.costo_unitario);
 
+          const costoTotal = row.insertCell();
+          costoTotal.classList.add("text-end");
+          costoTotal.textContent = formatearCantidad(producto.costo_total);
+
           const stock = row.insertCell();
           stock.classList.add("text-end");
           stock.textContent = (+producto.stock).toFixed(0);
@@ -307,10 +344,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           const tipoUnidad = row.insertCell();
           tipoUnidad.classList.add("text-center");
           tipoUnidad.textContent = producto.tipo_de_unidad;
-
-          const costoTotal = row.insertCell();
-          costoTotal.classList.add("text-end");
-          costoTotal.textContent = formatearCantidad(producto.costo_total);
 
           row.addEventListener("dblclick", () => {
             mostrarKardex(row.dataset);
@@ -332,6 +365,12 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
     productoSeleccionado = data.idProducto;
 
+    const stockProducto = document.getElementById("stock_producto");
+    stockProducto.textContent = (+data.stock).toFixed(0);
+
+    const tipoUnidadProducto = document.getElementById("tipo_unidad_producto");
+    tipoUnidadProducto.textContent = data.tipoUnidad;
+
     const fechaInicio = document.getElementById("fecha-inicio");
     const fechaFin = document.getElementById("fecha-fin");
 
@@ -342,17 +381,16 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     modalKardex.show();
   }
 
-  async function buscarKardexPorFechas()
-  {
+  async function buscarKardexPorFechas() {
     const fechaInicio = document.getElementById("fecha-inicio").value;
     const fechaFin = document.getElementById("fecha-fin").value;
 
     const url = `${apiDocumentosDetallesUrl}?kardex&id_producto=${productoSeleccionado}&fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`;
-    
+
     try {
       const response = await fetch(url);
       const kardex = await response.json();
-      
+
       tablaKardexBody.innerHTML = "";
 
       const acumuladoPrev = kardex[0];
@@ -374,14 +412,16 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       salidaAcumuladoPrev.textContent = (+acumuladoPrev.salida).toFixed(0);
 
       const existenciaAcumuladoPrev = rowAcumuladoPrev.insertCell();
-      existenciaAcumuladoPrev.textContent = (+acumuladoPrev.existencias).toFixed(0);
+      existenciaAcumuladoPrev.textContent =
+        (+acumuladoPrev.existencias).toFixed(0);
 
       const tipoUnidadAcumuladoPrev = rowAcumuladoPrev.insertCell();
       tipoUnidadAcumuladoPrev.textContent = acumuladoPrev.tipo_de_unidad;
 
       const costoUnitarioAcumuladoPrev = rowAcumuladoPrev.insertCell();
       costoUnitarioAcumuladoPrev.classList.add("text-end");
-      costoUnitarioAcumuladoPrev.textContent = (+acumuladoPrev.precio_unitario).toFixed(2);
+      costoUnitarioAcumuladoPrev.textContent =
+        (+acumuladoPrev.precio_unitario).toFixed(2);
 
       // eliminar el primer elemento del array
       kardex.shift();
@@ -396,7 +436,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         nroDoc.textContent = detalle.nro_doc;
 
         const nombre = row.insertCell();
-        nombre.textContent = !detalle.apellidos ? "" : detalle.apellidos + (detalle.nombres ? `, ${detalle.nombres}` : "");
+        nombre.textContent = !detalle.apellidos
+          ? ""
+          : detalle.apellidos + (detalle.nombres ? `, ${detalle.nombres}` : "");
 
         const ingreso = row.insertCell();
         ingreso.classList.add("text-center");
@@ -418,8 +460,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         costoUnitario.classList.add("text-end");
         costoUnitario.textContent = (+detalle.precio_unitario).toFixed(2);
       });
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error);
       mostrarAlert("error", "No se pudo cargar el kardex", "consultar");
     }
