@@ -7,6 +7,7 @@ switch (ENV) {
   case 'cloud':
     define("URL_API_NUEVA", "http://localhost/apitest");
     define("URL_API_CARLITOS", "http://localhost/php-api-carlitos");
+    define("URL", "http://localhost/cliente/views");
     break;
 
   case 'server':

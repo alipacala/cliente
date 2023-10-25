@@ -12,22 +12,22 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   <div id="alert-place"></div>
   <div class="card">
     <div class="card-header py-3">
-      <h2 class="text-center">Registro de ingresos / Registro de egresos</h2>
+      <h2 class="text-center">Registro de ingresos / egresos</h2>
     </div>
     <div class="card-body">
-      <form id="form-registrar-comprobante">
+      <form id="form-registrar-documento">
         <div class="row mb-3">
           <div class="form-group col-md-3">
-            <label for="tipo_movimiento">Movimiento de</label>
+            <label for="tipo_movimiento" class="fw-bold">MOVIMIENTO DE</label>
             <select
-              class="form-select"
+              class="form-select fw-bold"
               id="tipo_movimiento"
               name="tipo_movimiento"
               required
             >
-              <option value="">Seleccione un tipo de movimiento</option>
-              <option value="IN">Ingreso</option>
-              <option value="SA">Egreso</option>
+              <option value="">SELECCIONE IN O SA</option>
+              <option value="IN">INGRESO</option>
+              <option value="SA">EGRESO</option>
             </select>
           </div>
           <div class="form-group col-md-3">
@@ -53,11 +53,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               name="nro_documento"
               disabled
             />
-          </div>
-          <div class="form-group col-md-3">
-            <label for="fecha">Fecha</label>
-            <input type="date" class="form-control" id="fecha" name="fecha"
-            value="<?php echo date("Y-m-d") ?>" required />
           </div>
         </div>
         <div class="row mb-3">
@@ -108,21 +103,15 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         </div>
         <div class="row mb-3">
           <div class="form-group col-md-3">
-            <label for="origen">Origen</label>
-            <select
-              class="form-select"
-              id="origen"
-              name="origen"
-              required
-            ></select>
+            <label for="unidad">Destino</label>
+            <select class="form-select" id="unidad" name="unidad"></select>
           </div>
           <div class="form-group col-md-3">
-            <label for="destino">Destino</label>
+            <label for="id_unidad_de_negocio_secundaria">Origen</label>
             <select
               class="form-select"
-              id="destino"
-              name="destino"
-              required
+              id="id_unidad_de_negocio_secundaria"
+              name="id_unidad_de_negocio_secundaria"
             ></select>
           </div>
           <div class="form-group col-md-3">
@@ -318,7 +307,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   const apiUnidadesNegocioUrl = "<?php echo URL_API_NUEVA ?>/unidades-negocio";
   const apiSunatUrl = "<?php echo URL_API_NUEVA ?>/sunat";
   const apiDocumentosMovimientoUrl =
-    "<?php echo URL_API_NUEVA ?>/documentos-movimiento";
+    "<?php echo URL_API_NUEVA ?>/documentos-movimientos";
 
   let tiposGasto;
   let usuarios;
@@ -365,18 +354,18 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       unidadesNegocio = data;
 
-      const origenSelect = document.getElementById("origen");
-      const destinoSelect = document.getElementById("destino");
-      origenSelect.innerHTML = "";
-      destinoSelect.innerHTML = "";
+      const unidadSelect = document.getElementById("unidad");
+      const secundariaSelect = document.getElementById("id_unidad_de_negocio_secundaria");
+      unidadSelect.innerHTML = "";
+      secundariaSelect.innerHTML = "";
 
       const defaultOption1 = document.createElement("option");
       defaultOption1.value = "";
       defaultOption1.text = "Seleccione una unidad de negocio";
       const defaultOption2 = defaultOption1.cloneNode(true);
 
-      origenSelect.appendChild(defaultOption1);
-      destinoSelect.appendChild(defaultOption2);
+      unidadSelect.appendChild(defaultOption1);
+      secundariaSelect.appendChild(defaultOption2);
 
       data.forEach((unidadNegocio) => {
         const option1 = document.createElement("option");
@@ -384,8 +373,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         option1.textContent = unidadNegocio.nombre_unidad_de_negocio;
         const option2 = option1.cloneNode(true);
 
-        origenSelect.appendChild(option1);
-        destinoSelect.appendChild(option2);
+        unidadSelect.appendChild(option1);
+        secundariaSelect.appendChild(option2);
       });
     } catch (error) {
       console.error(error);
@@ -435,16 +424,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         spinner.classList.add("invisible");
 
         const nombre = document.getElementById("nombre_proveedor");
-
         nombre.value = personaNaturalJuridica.nombre;
-
-        if (!limpiarGuiones(personaNaturalJuridica.direccion) == "") {
-          direccion.value = limpiarGuiones(personaNaturalJuridica.direccion);
-        }
-
-        if (!limpiarGuiones(personaNaturalJuridica.lugar) == "") {
-          lugar.value = limpiarGuiones(personaNaturalJuridica.lugar);
-        }
+        
       } catch (error) {
         console.error(error);
         mostrarAlert(
@@ -461,10 +442,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       const response = await fetch(apiProductosUrl);
       let data = await response.json();
 
-      data = data.filter(
-        (producto) =>
-          producto.id_tipo_de_producto == 10 && producto.tipo != "RST"
-      );
+      data = data.filter((producto) => producto.tipo == "PRD");
 
       const productosSelect = document.getElementById("producto");
       productosSelect.innerHTML = "";
@@ -566,7 +544,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       fecha_recepcion: document.getElementById("fecha_recepcion").value,
 
-      id_unidad_de_negocio: document.getElementById("origen").value,
+      nro_orden_compra: document.getElementById("nro_orden_compra").value,
+
+      id_unidad_de_negocio: document.getElementById("unidad").value,
+      id_unidad_de_negocio_secundaria: document.getElementById("id_unidad_de_negocio_secundaria").value,
+
       motivo: document.getElementById("motivo").value,
       observaciones: document.getElementById("observaciones").value,
 
@@ -576,17 +558,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     if (documentoMovimiento.tipo_documento == "GR") {
       documentoMovimiento.nro_documento =
         document.getElementById("nro_documento").value;
-      documentoMovimiento.fecha_documento =
-        document.getElementById("fecha").value;
       documentoMovimiento.nro_documento_proveedor = document.getElementById(
         "nro_documento_proveedor"
       ).value;
       documentoMovimiento.nombre_proveedor =
         document.getElementById("nombre_proveedor").value;
-      documentoMovimiento.nro_orden_compra =
-        document.getElementById("nro_orden_compra").value;
-    } else if (documentoMovimiento.tipo_documento == "GI") {
-      documentoMovimiento.destino = document.getElementById("destino").value;
     }
 
     documentoMovimiento.detalles = detallesDeTabla.map((detalle) => {
@@ -614,28 +590,20 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       if (!response.ok) {
         const data = await response.json();
         console.log(data);
-        mostrarAlert(
-          "error",
-          "Error al registrar el Comprobante de compra",
-          "crear"
-        );
+        mostrarAlert("error", "Error al registrar el Movimiento", "crear");
         return;
       }
 
       window.location.href =
-        "./../relacion-cuentas-por-pagar/?ok&mensaje=Comprobante de compra registrada correctamente&op=crear";
+        "./../listado-movimientos/?ok&mensaje=Movimiento registrado correctamente&op=crear";
     } catch (error) {
       console.error(error);
-      mostrarAlert(
-        "error",
-        "Error al registrar el Comprobante de compra",
-        "crear"
-      );
+      mostrarAlert("error", "Error al registrar el Movimiento", "crear");
     }
   }
 
   function prepararFormularioComprobante() {
-    const form = document.getElementById("form-registrar-comprobante");
+    const form = document.getElementById("form-registrar-documento");
     form.addEventListener("submit", (event) => {
       event.preventDefault();
       registrarDocumentoMovimiento();
@@ -696,22 +664,21 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   }
 
   async function alCambiarTipoDocumento(event) {
-    const tipoComprobante = event.target.value;
+    const tipoDocumento = event.target.value;
     const nroComprobante = document.getElementById("nro_documento");
     const nroDocumentoProveedor = document.getElementById(
       "nro_documento_proveedor"
     );
     const nombreProveedor = document.getElementById("nombre_proveedor");
-    const destino = document.getElementById("destino");
+    const secundaria = document.getElementById("id_unidad_de_negocio_secundaria");
+    const tipoMovimiento = document.getElementById("tipo_movimiento");
 
-    if (tipoComprobante == "GR") {
+    if (tipoDocumento == "GR") {
       nroComprobante.value = "";
       nroComprobante.disabled = false;
-
       nroDocumentoProveedor.disabled = false;
       nombreProveedor.disabled = false;
-      destino.disabled = false;
-    } else if (tipoComprobante == "GI") {
+    } else if (tipoDocumento == "GI") {
       nroComprobante.value = await cargarCodigoPedido();
       nroComprobante.disabled = true;
 
@@ -720,14 +687,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       nombreProveedor.value = "";
       nombreProveedor.disabled = true;
-
-      destino.disabled = true;
     } else {
       nroComprobante.value = "";
       nroComprobante.disabled = true;
       nroDocumentoProveedor.disabled = true;
       nombreProveedor.disabled = true;
-      destino.disabled = true;
     }
   }
 

@@ -278,9 +278,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     };
 
     rows.forEach((row) => {
-      totales.stock += parseFloat(row.cells[2].textContent.replace(/,/g, ""));
-      totales.costoTotal += parseFloat(
-        row.cells[3].textContent.replace(/,/g, "")
+      totales.costoTotal += parseFloat(row.cells[2].textContent.replace(/,/g, "") == "-" ? 0 : +row.cells[2].textContent.replace(/,/g, ""));
+      totales.stock += parseFloat(
+        row.cells[3].textContent.replace(/,/g, "") == "-" ? 0 : +row.cells[3].textContent.replace(/,/g, "")
       );
     });
 
@@ -290,15 +290,17 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     textoTotal.classList.add("text-end");
     textoTotal.innerHTML = "<span class='fw-bold'>TOTAL:</span>";
 
-    const stock = rowTotales.insertCell();
-    stock.classList.add("text-end");
-    stock.innerHTML = `<span class='fw-bold'>${totales.stock}</span>`;
-
+    console.log(totales);
+    
     const total = rowTotales.insertCell();
     total.classList.add("text-end");
     total.innerHTML = `<span class='fw-bold'>${formatearCantidad(
       totales.costoTotal
     )}</span>`;
+
+    const stock = rowTotales.insertCell();
+    stock.classList.add("text-end");
+    stock.innerHTML = `<span class='fw-bold'>${formatearCantidad(totales.stock)}</span>`;
 
     const celdaVacia2 = rowTotales.insertCell();
   }
@@ -331,15 +333,15 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
           const costo = row.insertCell();
           costo.classList.add("text-end");
-          costo.textContent = formatearCantidad(producto.costo_unitario);
+          costo.textContent = formatearCantidad(producto.costo_unitario) == 0 ? "-" : formatearCantidad(producto.costo_unitario);
 
           const costoTotal = row.insertCell();
           costoTotal.classList.add("text-end");
-          costoTotal.textContent = formatearCantidad(producto.costo_total);
+          costoTotal.textContent = formatearCantidad(producto.costo_total) == 0 ? "-" : formatearCantidad(producto.costo_total);
 
           const stock = row.insertCell();
           stock.classList.add("text-end");
-          stock.textContent = (+producto.stock).toFixed(0);
+          stock.textContent = (+producto.stock).toFixed(0) == 0 ? "-" : (+producto.stock).toFixed(2);
 
           const tipoUnidad = row.insertCell();
           tipoUnidad.classList.add("text-center");
@@ -378,6 +380,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       "<?php echo date('Y-m-d', strtotime('-1 week', strtotime(date('Y-m-d')))) ?>";
     fechaFin.value = "<?php echo date('Y-m-d') ?>";
 
+    buscarKardexPorFechas();
+
     modalKardex.show();
   }
 
@@ -406,14 +410,14 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       celdaVacia1.colSpan = 2;
 
       const ingresoAcumuladoPrev = rowAcumuladoPrev.insertCell();
-      ingresoAcumuladoPrev.textContent = (+acumuladoPrev.ingreso).toFixed(0);
+      ingresoAcumuladoPrev.textContent = (+acumuladoPrev.ingreso).toFixed(0) == 0 ? "-" : (+acumuladoPrev.ingreso).toFixed(0);
 
       const salidaAcumuladoPrev = rowAcumuladoPrev.insertCell();
-      salidaAcumuladoPrev.textContent = (+acumuladoPrev.salida).toFixed(0);
+      salidaAcumuladoPrev.textContent = (+acumuladoPrev.salida).toFixed(0) == 0 ? "-" : (+acumuladoPrev.salida).toFixed(0);
 
       const existenciaAcumuladoPrev = rowAcumuladoPrev.insertCell();
       existenciaAcumuladoPrev.textContent =
-        (+acumuladoPrev.existencias).toFixed(0);
+        (+acumuladoPrev.existencias).toFixed(0) == 0 ? "-" : (+acumuladoPrev.existencias).toFixed(0);
 
       const tipoUnidadAcumuladoPrev = rowAcumuladoPrev.insertCell();
       tipoUnidadAcumuladoPrev.textContent = acumuladoPrev.tipo_de_unidad;
@@ -421,7 +425,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       const costoUnitarioAcumuladoPrev = rowAcumuladoPrev.insertCell();
       costoUnitarioAcumuladoPrev.classList.add("text-end");
       costoUnitarioAcumuladoPrev.textContent =
-        (+acumuladoPrev.precio_unitario).toFixed(2);
+        (+acumuladoPrev.precio_unitario).toFixed(2) == 0 ? "-" : (+acumuladoPrev.precio_unitario).toFixed(2);
 
       // eliminar el primer elemento del array
       kardex.shift();
@@ -442,15 +446,15 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
         const ingreso = row.insertCell();
         ingreso.classList.add("text-center");
-        ingreso.textContent = (+detalle.ingreso).toFixed(0);
+        ingreso.textContent = (+detalle.ingreso).toFixed(0) == 0 ? "-" : (+detalle.ingreso).toFixed(0);
 
         const salida = row.insertCell();
         salida.classList.add("text-center");
-        salida.textContent = (+detalle.salida).toFixed(0);
+        salida.textContent = (+detalle.salida).toFixed(0) == 0 ? "-" : (+detalle.salida).toFixed(0);
 
         const existencia = row.insertCell();
         existencia.classList.add("text-center");
-        existencia.textContent = (+detalle.existencias).toFixed(0);
+        existencia.textContent = (+detalle.existencias).toFixed(0) == 0 ? "-" : (+detalle.existencias).toFixed(0);
 
         const tipoUnidad = row.insertCell();
         tipoUnidad.classList.add("text-center");
@@ -458,7 +462,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
         const costoUnitario = row.insertCell();
         costoUnitario.classList.add("text-end");
-        costoUnitario.textContent = (+detalle.precio_unitario).toFixed(2);
+        costoUnitario.textContent = (+detalle.precio_unitario).toFixed(2) == 0 ? "-" : (+detalle.precio_unitario).toFixed(2);
       });
     } catch (error) {
       console.error(error);

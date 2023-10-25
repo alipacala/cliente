@@ -111,6 +111,9 @@ function mostrarHeader($pagina, $logueado)
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/consultar-productos">Consultar productos / insumos</a></li>
                   <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/registro-ingreso-egreso">Registro de ingreso / egreso</a></li>
+                  <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/listado-movimientos">Listado de movimientos</a></li>
+                  <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/inventario-simple">Inventario simple</a></li>
+                  <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/inventario-valorado">Inventario valorado</a></li>
                 </ul>
               </li>
               <li class="nav-item dropdown">

@@ -1205,8 +1205,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       let data = await response.json();
 
       data = data.filter(
-        (producto) =>
-          producto.id_tipo_de_producto == 10 && producto.tipo != "RST"
+        (producto) => producto.tipo == 'PRD'
       );
 
       const productosSelect = document.getElementById("producto");
