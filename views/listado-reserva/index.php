@@ -8,7 +8,6 @@ TIEMPO_INACTIVIDAD)) { session_unset(); session_destroy(); } $logueado =
 isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
 mostrarHeader("pagina-funcion", $logueado); ?>
 
-<!-- Modal -->
 <div
   class="modal fade"
   id="exampleModal"
@@ -198,7 +197,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     </div>
   </div>
 </div>
-<!-- Modal -->
+
 <div
   class="modal fade"
   id="ModalChekin"
@@ -472,7 +471,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                       }
                     </td>
                     <td>${item.nro_registro_maestro}</td>
-                    <td><button type="button" class="btn btn-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ObtenerReserva('${
+                    ${item.nro_registro_maestro ? "<td></td>" : `<td><button type="button" class="btn btn-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ObtenerReserva('${
                       item.nro_reserva
                     }|${item.fecha_llegada}|${item.fecha_salida}|${
               item.nombre
@@ -487,7 +486,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               item.fecha_salida
             },${item.nro_personas}')" ${
               item.estado_pago == 1 ? "disabled" : ""
-            }>CHEKIN</button></td>
+            }>CHEKIN</button></td>`}
                     `;
           }
         });
@@ -536,7 +535,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                       }
                     </td>
                     <td>${item.nro_registro_maestro}</td>
-                    <td><button type="button" class="btn btn-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ObtenerReserva('${
+                    ${item.nro_registro_maestro ? "<td></td>" : `<td><button type="button" class="btn btn-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ObtenerReserva('${
                       item.nro_reserva
                     }|${item.fecha_llegada}|${item.fecha_salida}|${
             item.nombre
@@ -551,7 +550,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             item.fecha_salida
           },${item.nro_personas}')"${
             item.estado_pago == 1 ? "disabled" : ""
-          }>CHEKIN</button></td>
+          }>CHEKIN</button></td>`}
                     `;
         });
       })

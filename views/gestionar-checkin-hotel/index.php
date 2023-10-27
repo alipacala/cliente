@@ -8,83 +8,6 @@ TIEMPO_INACTIVIDAD)) { session_unset(); session_destroy(); } $logueado =
 isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
 mostrarHeader("pagina-funcion", $logueado); ?>
 
-<div
-  class="modal fade"
-  id="myModal"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <label for="id_grupo_modulo"
-          ><strong>Agregar Acompañantes</strong></label
-        >
-        <br /><br />
-        <div class="row g-3">
-          <div class="col-md-6">
-            <label for="validationCustom02" class="form-label"
-              >Apellidos:</label
-            >
-            <input type="text" class="form-control" id="apellido" required />
-          </div>
-          <div class="col-md-6">
-            <label for="validationCustom02" class="form-label">Nombres:</label>
-            <input type="text" class="form-control" id="nombre" required />
-          </div>
-          <div class="col-md-4">
-            <label for="validationCustom04" class="form-label">Edad:</label>
-            <input type="text" class="form-control" id="edad2" required />
-          </div>
-          <div class="col-md-4">
-            <label for="validationCustom03" class="form-label"
-              >Parentesco:</label
-            >
-            <select class="form-select" id="parentesco">
-              <option value="0">--Seleccione--</option>
-              <option value="Padre/Madre">Padre/Madre</option>
-              <option value="Hijo/a">Hijo/a</option>
-              <option value="Primo/a">Primo/a</option>
-              <option value="Tio/a">Tio/a</option>
-              <option value="Hermano/a">Hermano/a</option>
-              <option value="Sobrino/a">Sobrino/a</option>
-              <option value="Abuelo/a">Abuelo/a</option>
-              <option value="Nieto/a">Nieto/a</option>
-              <option value="Esposo/a">Esposo/a</option>
-              <option value="Amigo/a">Amigo/a</option>
-              <option value="Novio/a">Novio/a</option>
-              <option value="Enamorado/a">Enamorado/a</option>
-              <option value="Otros">Otros</option>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label for="validationCustom03" class="form-label">Sexo:</label>
-            <select class="form-select" id="sexo2">
-              <option value="0">--Seleccione--</option>
-              <option value="M">Masculino</option>
-              <option value="F">Femenino</option>
-              <option value="O">Otros</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Cerrar
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          onclick="agregarRegistro()"
-        >
-          Agregar
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="container my-5 main-cont">
   <div class="card w-100 mb-3">
     <div class="card-body">
@@ -325,7 +248,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         <h4>Acompañantes</h4>
         <hr />
         <br />
-        <div class="col-md-4">
+        <div class="col-md-3">
           <label for="activo">Nro Adultos:</label>
           <input
             type="number"
@@ -336,7 +259,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             required
           />
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <label for="activo">Nro Niños</label>
           <input
             type="number"
@@ -346,7 +269,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             value="0"
           />
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <label for="activo">Nro Infantes</label>
           <input
             type="number"
@@ -356,19 +279,25 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             value="0"
           />
         </div>
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#myModal"
-        >
-          <strong>+</strong>Agregar Acompañante</button
-        ><br /><br />
         <div class="row">
-          <div class="col-sm-12 mb-3 mb-sm-0">
+          <div class="col-sm-12 mb-3 mb-sm-0 mt-3">
             <div class="card">
               <div class="card-body">
-                <h5 class="card-title">LISTA DE ACOMPAÑANTES</h5>
+                <div class="row mb-3">
+                  <div class="col-md-9">
+                    <h5 class="card-title">LISTA DE ACOMPAÑANTES</h5>
+                  </div>
+                  <div class="col-md-3 ms-auto">
+                    <button
+                      type="button"
+                      class="btn btn-primary w-100"
+                      data-bs-toggle="modal"
+                      data-bs-target="#myModal"
+                    >
+                      <i class="fas fa-plus"></i> Agregar Acompañante
+                    </button>
+                  </div>
+                </div>
                 <table class="table" id="tabla-acompanantes">
                   <thead>
                     <tr>
@@ -480,6 +409,83 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   </div>
 </div>
 
+<div
+  class="modal fade"
+  id="myModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <label for="id_grupo_modulo"
+          ><strong>Agregar Acompañantes</strong></label
+        >
+        <br /><br />
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="validationCustom02" class="form-label"
+              >Apellidos:</label
+            >
+            <input type="text" class="form-control" id="apellido" required />
+          </div>
+          <div class="col-md-6">
+            <label for="validationCustom02" class="form-label">Nombres:</label>
+            <input type="text" class="form-control" id="nombre" required />
+          </div>
+          <div class="col-md-4">
+            <label for="validationCustom04" class="form-label">Edad:</label>
+            <input type="text" class="form-control" id="edad2" required />
+          </div>
+          <div class="col-md-4">
+            <label for="validationCustom03" class="form-label"
+              >Parentesco:</label
+            >
+            <select class="form-select" id="parentesco">
+              <option value="0">--Seleccione--</option>
+              <option value="Padre/Madre">Padre/Madre</option>
+              <option value="Hijo/a">Hijo/a</option>
+              <option value="Primo/a">Primo/a</option>
+              <option value="Tio/a">Tio/a</option>
+              <option value="Hermano/a">Hermano/a</option>
+              <option value="Sobrino/a">Sobrino/a</option>
+              <option value="Abuelo/a">Abuelo/a</option>
+              <option value="Nieto/a">Nieto/a</option>
+              <option value="Esposo/a">Esposo/a</option>
+              <option value="Amigo/a">Amigo/a</option>
+              <option value="Novio/a">Novio/a</option>
+              <option value="Enamorado/a">Enamorado/a</option>
+              <option value="Otros">Otros</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="validationCustom03" class="form-label">Sexo:</label>
+            <select class="form-select" id="sexo2">
+              <option value="0">--Seleccione--</option>
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+              <option value="O">Otros</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="agregarRegistro()"
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   const apiAcompanantesUrl = "<?php echo URL_API_NUEVA ?>/acompanantes";
   const apiCheckingsUrl = "<?php echo URL_API_NUEVA ?>/checkings";
@@ -532,16 +538,65 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   // #endregion
 
   async function wrapper() {
-    const checkinId = new URLSearchParams(window.location.search).get(
-      "id_checkin"
-    );
+    await cargarHabitaciones();
+
+    const params = new URLSearchParams(window.location.search);
+    const checkinId = params.get("id_checkin");
+    const nroHabitacion = params.get("nro_habitacion");
+
     const idCheckin = document.getElementById("id_checkin");
     idCheckin.value = checkinId;
+    const habitacion = document.getElementById("habitacion");
+    habitacion.value = nroHabitacion;
+
+    // lanzar evento change para cargar los datos
+    habitacion.dispatchEvent(new Event("change"));
 
     guardarReferencias();
 
     await cargarDatos();
     await cargarAcompanantes();
+  }
+
+  function obtenerAcompanantesDeTabla() {
+    const tablaAcompanantes =
+      document.getElementById("tabla-acompanantes").tBodies[0];
+    const rows = tablaAcompanantes.querySelectorAll("tr");
+    const acompanantes = [];
+    rows.forEach((row) => {
+      acompanantes.push({
+        id_acompanante: row.dataset.id ?? null,
+        nro_de_orden_unico: row.dataset.nro_de_orden_unico ?? null,
+        apellidos_y_nombres: row.cells[0].textContent,
+        edad: row.cells[1].textContent,
+        sexo: row.cells[2].textContent,
+        parentesco: row.cells[3].textContent,
+      });
+    });
+    return acompanantes;
+  }
+
+  async function cargarHabitaciones() {
+    const url = "<?php echo URL_API_CARLITOS ?>/api-reservas.php";
+    const options = {
+      method: "INNER",
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+
+      const selectElement = document.getElementById("habitacion");
+
+      data.forEach((item) => {
+        const option = document.createElement("option");
+        option.value = item.nro_habitacion;
+        option.textContent = item.nro_habitacion;
+        selectElement.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
 
   function guardarReferencias() {
@@ -559,8 +614,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       const response = await fetch(url);
       const data = await response.json();
 
-      const selectedOption =
-        formChecking.habitacion.options[formChecking.habitacion.selectedIndex];
+      console.log(data);
+
       var selectElementtipohabitacion = document.getElementById("tipo");
       const selectedOptiontipoproducto =
         selectElementtipohabitacion.options[
@@ -577,7 +632,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       document.getElementById("apellidos").value = data[0].apellidos;
       document.getElementById("tipo_documento").value = data[0].tipo_documento;
       document.getElementById("ciudad").value = data[0].lugar_procedencia;
-      document.getElementById("celular").value = data[0].telefono;
+      document.getElementById("celular").value = data[0].celular;
       document.getElementById("sexo").value = data[0].sexo;
       document.getElementById("fecha_in").value = data[0].fecha_in;
       document.getElementById("fecha_out").value = data[0].fecha_out;
@@ -611,10 +666,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       selectedOptionprecios.textContent = data[0].tipo_precio;
       selectedOptiontipoproducto.textContent = data[0].nombre_producto;
-
-      // Iterar sobre las opciones y deseleccionarlas todas
-      selectedOption.textContent = data[0].nro_habitacion;
-      //console.log(data);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -626,22 +677,31 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
     try {
       const response = await fetch(url);
-      const data = await response.json();
+      let data = await response.json();
       console.log(data);
       // actualizar la tabla de acompanantes
       const tablaAcompanantes =
         document.getElementById("tabla-acompanantes").tBodies[0];
       tablaAcompanantes.innerHTML = "";
 
+      // eliminar el titular de la lista de acompanantes
+      data = data.filter((acompanante) => acompanante.nro_de_orden_unico != 0);
+
       data.forEach((acompanante) => {
         const row = tablaAcompanantes.insertRow();
+        row.dataset.id = acompanante.id_acompanante;
+        row.dataset.nro_de_orden_unico = acompanante.nro_de_orden_unico;
         row.innerHTML = `
           <td>${acompanante.apellidos_y_nombres}</td>
           <td>${acompanante.edad}</td>
           <td>${acompanante.sexo}</td>
-          <td>${acompanante.parentesco ? acompanante.parentesco : "TITULAR"}</td>
+          <td>${
+            acompanante.parentesco ? acompanante.parentesco : "TITULAR"
+          }</td>
           <td>
-            <button class="btn btn-danger" onclick="eliminarAcompanante(event, ${acompanante.id_acompanante})">
+            <button class="btn btn-danger" onclick="eliminarAcompanante(event, ${
+              acompanante.id_acompanante
+            })">
               Eliminar
             </button>
           </td>
@@ -755,16 +815,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   const precioVentaInput = document.getElementById("monto");
   const selectElement = document.getElementById("habitacion");
   const selectPrecios = document.getElementById("selectPrecios");
-  fetch("<?php echo URL_API_CARLITOS ?>/api-reservas.php", {
-    method: "INNER",
-  })
-    .then((response) => response.json())
-    .then((productosData) => {
-      llenarSelect(productosData);
-    })
-    .catch((error) =>
-      console.error("Error al obtener los datos del API:", error)
-    );
+
   // Función para llenar el select con los datos del objeto
   function llenarSelect(data) {
     var selectElement = document.getElementById("habitacion");
@@ -861,7 +912,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   let registros = [];
   let contador = 0;
   function agregarRegistro() {
-    if (contador === 0) {
+    /* if (contador === 0) {
       // Obtener valores de los campos de entrada fuera de la función
       var apellidos2 = document.getElementById("apellidos").value;
       var nombres2 = document.getElementById("nombres").value;
@@ -882,30 +933,42 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       registros.push(registroFuera);
 
       // Actualizar la tabla
-      actualizarTabla();
-    }
+      // actualizarTabla();
+    } */
 
     // Obtener valores de los campos de entrada
-    var apellidos = document.getElementById("apellido").value;
-    var nombres = document.getElementById("nombre").value;
-    var edad = document.getElementById("edad2").value;
-    var parentesco = document.getElementById("parentesco").value;
-    var sexo = document.getElementById("sexo2").value;
-    var nombre_completo = apellidos + ", " + nombres;
+    var apellidos2 = document.getElementById("apellido").value;
+    var nombres2 = document.getElementById("nombre").value;
+    var edad2 = document.getElementById("edad2").value;
+    var parentesco2 = document.getElementById("parentesco").value;
+    var sexo2 = document.getElementById("sexo2").value;
+    var nombre_completo2 = apellidos2 + ", " + nombres2;
 
-    // Crear un objeto para representar el registro
-    var nuevoRegistro = {
-      nombre: nombre_completo,
-      edad: edad,
-      sexo: sexo,
-      parentesco: parentesco,
+    // Crear un objeto para representar el registro de afuera
+    var registroFuera = {
+      nombre: nombre_completo2,
+      edad: edad2,
+      sexo: sexo2,
+      parentesco: parentesco2,
     };
 
     // Agregar el nuevo registro al array
-    registros.push(nuevoRegistro);
+    registros.push(registroFuera);
+
+    // agregar al acompanante a la tabla de acompanantes
+    var tableBody = document.getElementById("table-body");
+    var newRow = document.createElement("tr");
+    newRow.innerHTML = `
+        <td>${registroFuera.nombre}</td>
+        <td>${registroFuera.edad}</td>
+        <td>${registroFuera.sexo}</td>
+        <td>${registroFuera.parentesco}</td>
+        <td><button class="btn btn-danger" onclick="eliminarFila(this)">Eliminar</button></td>
+    `;
+    tableBody.appendChild(newRow);
 
     // Actualizar la tabla
-    actualizarTabla();
+    // actualizarTabla();
     contador += 1;
     // Limpiar campos de entrada después de agregar la fila
     document.getElementById("apellido").value = "";
@@ -958,7 +1021,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   document.addEventListener("DOMContentLoaded", function () {
     document
       .getElementById("form-checking")
-      .addEventListener("submit", function (event) {
+      .addEventListener("submit", async function (event) {
         event.preventDefault();
         const habitacionInput = document.getElementById("habitacion");
         const selectedOption =
@@ -1073,7 +1136,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         //almacenar id_checkin en una variable
         var id_checkin = document.getElementById("id_checkin").value;
 
-        /* const payload = {};
+        const payload = {};
 
         // preparar datos de persona
         payload.persona = {
@@ -1104,7 +1167,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           fecha_out: formData.fecha_out,
           hora_out: formData.hora_out,
           nro_adultos: formData.nro_adultos,
-          nro_nino: formData.nro_nino,
+          nro_ninos: formData.nro_nino,
           nro_infantes: formData.nro_infantes,
           forma_pago: formData.forma_pago,
           tipo_comprobante: formData.tipo_comprobante,
@@ -1118,24 +1181,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
         payload.precio_unitario = formData.valor;
 
-        payload.acompanantes = formData.acompanantes; */
+        payload.acompanantes = obtenerAcompanantesDeTabla();
 
-        // borrar el acompañante 0
-        formData.acompanantes.shift();
-
-        // agrega un acompañante 0 con los datos del formulario
-        formData.acompanantes.unshift({
-          nombre: `${document.getElementById("apellidos").value}, ${
-            document.getElementById("nombres").value
-          }`,
-          edad: document.getElementById("edad").value,
-          sexo: document.getElementById("sexo").value,
-          parentesco: null,
-        });
-
-        generar_objetofechas();
-
-        //Make a fetch POST request to your PHP API endpoint
         if (id_checkin === "" || id_checkin.trim() === "") {
           fetch("<?php echo URL_API_CARLITOS ?>/api-huespedes.php", {
             method: "POST",
@@ -1152,20 +1199,24 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               console.error(error);
             });
         } else {
-          fetch("<?php echo URL_API_CARLITOS ?>/api-huespedes.php", {
-            method: "PUT",
+          const url = `${apiCheckingsUrl}/${id_checkin}/normal`;
+          const options = {
+            method: "PATCH",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(formData),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              console.log(data);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
+            body: JSON.stringify(payload),
+          };
+
+          try {
+            const response = await fetch(url, options);
+            const data = await response.json();
+            console.log(data);
+
+            open("../listado-rooming", "_self");
+          } catch (error) {
+            console.error("Error:", error);
+          }
         }
       });
   });

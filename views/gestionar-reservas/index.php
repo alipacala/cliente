@@ -126,7 +126,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       <div class="row">
         <div class="col-md-4">
           <label for="fecha_ingreso" class="form-label">Fecha Ingreso:</label>
-          <input type="date" class="form-control" id="fecha_ingreso" readonly />
+          <input type="date" class="form-control" id="fecha_ingreso" />
         </div>
         <div class="col-md-4">
           <label for="fecha_salida" class="form-label">Fecha Salida:</label>

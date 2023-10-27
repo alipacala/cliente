@@ -181,9 +181,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       productosCargados = data;
 
       // filtrar productos de venta y de consumo
-      productosCargados = productosCargados.filter((producto) =>
+      /* productosCargados = productosCargados.filter((producto) =>
         [12, 13].includes(producto.id_tipo_de_producto)
-      );
+      ); */
 
       // ordenar los productos por nombre
       productosCargados.sort((a, b) => {
