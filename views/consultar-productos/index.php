@@ -162,6 +162,13 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       <div class="modal-footer">
         <button
           type="button"
+          class="btn btn-outline-secondary me-auto"
+          onclick="imprimirKardex()"
+        >
+          <i class="fas fa-print"></i> Imprimir
+        </button>
+        <button
+          type="button"
           class="btn btn-outline-secondary"
           data-bs-dismiss="modal"
         >
@@ -249,6 +256,14 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     buscarProductos(url);
 
     document.getElementById("buscar").value = "";
+  }
+
+  function imprimirKardex() {
+    const fechaInicio = document.getElementById("fecha-inicio").value;
+    const fechaFin = document.getElementById("fecha-fin").value;
+
+    const url = `${apiReportesUrl}?tipo=kardex&id_producto=${productoSeleccionado}&fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`;
+    open(url, "_blank");
   }
 
   function imprimirRegistroVentas(event) {
