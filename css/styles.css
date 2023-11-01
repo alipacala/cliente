@@ -49,3 +49,22 @@ tr, th {
 .grupo td {
   background-color: inherit !important;
 }
+
+/* iconos de los botones, cambiar el tamaño con breakpoints de bootstrap */
+
+#flecha4 {
+  width: 200px;
+  height: 400px;
+}
+
+@media (max-width: 768px) {
+  #flecha4 {
+    width: 150px;
+  }
+}
+
+@media (max-width: 576px) {
+  #flecha4 {
+    width: 100px;
+  }
+}

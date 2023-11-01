@@ -78,7 +78,9 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
                   </thead>
                   <tbody>
                     <tr>
-                      <td colspan="2" class="text-center text-muted">Debe seleccionar un grupo</td>
+                      <td colspan="2" class="text-center text-muted">
+                        Debe seleccionar un grupo
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -91,8 +93,8 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
     <div class="card-footer">
       <button
         class="btn btn-success"
+        id="btn-guardar-comanda"
         data-bs-toggle="modal"
-        data-bs-target="#modal-comanda"
       >
         Aceptar
       </button>
@@ -268,6 +270,56 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
   </div>
 </div>
 
+<div
+  class="modal fade"
+  id="modal-comanda-buscar"
+  tabindex="-1"
+  aria-labelledby="modal-comanda-buscar-label"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-comanda-buscar-label">
+          Asignación de Comanda
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="cliente-buscar" class="form-label">Cliente</label>
+            <input
+              class="form-control"
+              list="cliente-buscar-list"
+              id="cliente-buscar"
+              placeholder="Buscar cliente..."
+            />
+            <datalist id="cliente-buscar-list"> </datalist>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="guardarComanda()"
+        >
+          Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   const apiGruposUrl = "<?php echo URL_API_NUEVA ?>/grupos-carta";
   const apiProductosUrl = "<?php echo URL_API_NUEVA ?>/productos";
@@ -280,14 +332,45 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
   let grupos = [];
   let productos = [];
   let terapistas = [];
+  let acompanantes = [];
+
   let productoSeleccionado = null;
   let cantidadSeleccionada = null;
 
   let iterador = 1;
   let detalles = [];
 
+  let desdeEstadoCuenta = false;
+
   async function wrapper() {
     mostrarAlertaSiHayMensaje();
+
+    const params = new URLSearchParams(window.location.search);
+    const nroRegistroMaestro = params.get("nro_registro_maestro");
+    desdeEstadoCuenta = nroRegistroMaestro != null;
+
+    if (!desdeEstadoCuenta) {
+      const datalist = document.getElementById("cliente-buscar-list");
+      const inputBuscar = document.getElementById("cliente-buscar");
+
+      try {
+        const response = await fetch(apiAcompanantesUrl);
+        const data = await response.json();
+
+        acompanantes = data;
+
+        acompanantes.forEach((acompanante) => {
+          const option = document.createElement("option");
+          option.value = `${acompanante.apellidos_y_nombres} - ${acompanante.nro_registro_maestro} - ${acompanante.id_acompanante}`;
+          datalist.appendChild(option);
+        });
+      } catch (error) {
+        console.error(error);
+        mostrarAlert("error", "Error al cargar los acompañantes", "consultar");
+      }
+    }
+
+    await prepararBotonAceptar();
 
     mostrarCodigoComanda();
     await cargarDatosGruposYProductos();
@@ -311,6 +394,14 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
       event.preventDefault();
       guardarComanda();
     });
+  }
+
+  function prepararBotonAceptar() {
+    const btnAceptar = document.getElementById("btn-guardar-comanda");
+    btnAceptar.setAttribute(
+      "data-bs-target",
+      desdeEstadoCuenta ? "#modal-comanda" : "#modal-comanda-buscar"
+    );
   }
 
   function prepararBotonSalir() {
@@ -370,7 +461,9 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
       tdProducto.textContent = detalle.producto;
       tdCantidad.textContent = detalle.cantidad;
       tdPrecioVenta.textContent = formatearCantidad(detalle.precio_unitario);
-      tdPrecioTotal.textContent = formatearCantidad(detalle.precio_unitario * detalle.cantidad);
+      tdPrecioTotal.textContent = formatearCantidad(
+        detalle.precio_unitario * detalle.cantidad
+      );
       tdEliminar.innerHTML = `<button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>`;
 
       const btnEliminar = tdEliminar.querySelector("button");
@@ -422,11 +515,21 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
   }
 
   async function guardarComanda() {
-    const params = new URLSearchParams(window.location.search);
-    const nroRegistroMaestro = params.get("nro_registro_maestro");
-
-    const idAcompanante = document.getElementById("cliente").value;
+    let nroRegistroMaestro = null;
+    let idAcompanante = null;
     const idUsuario = "<?php echo $idUsuario ?>";
+
+    if (desdeEstadoCuenta) {
+      const params = new URLSearchParams(window.location.search);
+      nroRegistroMaestro = params.get("nro_registro_maestro");
+      idAcompanante = document.getElementById("cliente").value;
+    } else {
+      const clienteBuscarList = document.getElementById("cliente-buscar-list");
+      const inputBuscar = document.getElementById("cliente-buscar");
+
+      nroRegistroMaestro = inputBuscar.value.split(" - ")[1];
+      idAcompanante = inputBuscar.value.split(" - ")[2];
+    }
 
     const url = `${apiDocumentosMovimientosUrl}/detalles`;
 
@@ -456,7 +559,7 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
       const data = await response.json();
 
       if (data.resultado) {
-        window.location.href = `./../estado-cuenta-cliente?nro_registro_maestro=${nroRegistroMaestro}&ok&mensaje=Comanda guardada correctamente&op=crear`;
+        window.location.href = desdeEstadoCuenta ? `./../estado-cuenta-cliente?nro_registro_maestro=${nroRegistroMaestro}&ok&mensaje=Comanda guardada correctamente&op=crear` : "../";
       }
     } catch (error) {
       console.error(error);

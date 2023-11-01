@@ -153,6 +153,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                 <th>EXIST</th>
                 <th>T. UND</th>
                 <th>P. COSTO</th>
+                <th>P. TOTAL</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -293,9 +294,15 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     };
 
     rows.forEach((row) => {
-      totales.costoTotal += parseFloat(row.cells[2].textContent.replace(/,/g, "") == "-" ? 0 : +row.cells[2].textContent.replace(/,/g, ""));
+      totales.costoTotal += parseFloat(
+        row.cells[2].textContent.replace(/,/g, "") == "-"
+          ? 0
+          : +row.cells[2].textContent.replace(/,/g, "")
+      );
       totales.stock += parseFloat(
-        row.cells[3].textContent.replace(/,/g, "") == "-" ? 0 : +row.cells[3].textContent.replace(/,/g, "")
+        row.cells[3].textContent.replace(/,/g, "") == "-"
+          ? 0
+          : +row.cells[3].textContent.replace(/,/g, "")
       );
     });
 
@@ -306,7 +313,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     textoTotal.innerHTML = "<span class='fw-bold'>TOTAL:</span>";
 
     console.log(totales);
-    
+
     const total = rowTotales.insertCell();
     total.classList.add("text-end");
     total.innerHTML = `<span class='fw-bold'>${formatearCantidad(
@@ -315,7 +322,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
     const stock = rowTotales.insertCell();
     stock.classList.add("text-end");
-    stock.innerHTML = `<span class='fw-bold'>${formatearCantidad(totales.stock)}</span>`;
+    stock.innerHTML = `<span class='fw-bold'>${formatearCantidad(
+      totales.stock
+    )}</span>`;
 
     const celdaVacia2 = rowTotales.insertCell();
   }
@@ -348,15 +357,24 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
           const costo = row.insertCell();
           costo.classList.add("text-end");
-          costo.textContent = formatearCantidad(producto.costo_unitario) == 0 ? "-" : formatearCantidad(producto.costo_unitario);
+          costo.textContent =
+            formatearCantidad(producto.costo_unitario) == 0
+              ? "-"
+              : formatearCantidad(producto.costo_unitario);
 
           const costoTotal = row.insertCell();
           costoTotal.classList.add("text-end");
-          costoTotal.textContent = formatearCantidad(producto.costo_total) == 0 ? "-" : formatearCantidad(producto.costo_total);
+          costoTotal.textContent =
+            formatearCantidad(producto.costo_total) == 0
+              ? "-"
+              : formatearCantidad(producto.costo_total);
 
           const stock = row.insertCell();
           stock.classList.add("text-end");
-          stock.textContent = (+producto.stock).toFixed(0) == 0 ? "-" : (+producto.stock).toFixed(2);
+          stock.textContent =
+            (+producto.stock).toFixed(0) == 0
+              ? "-"
+              : (+producto.stock).toFixed(2);
 
           const tipoUnidad = row.insertCell();
           tipoUnidad.classList.add("text-center");
@@ -383,7 +401,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     productoSeleccionado = data.idProducto;
 
     const stockProducto = document.getElementById("stock_producto");
-    stockProducto.textContent = (+data.stock).toFixed(0);
+    stockProducto.textContent = formatearCantidad(data.stock);
 
     const tipoUnidadProducto = document.getElementById("tipo_unidad_producto");
     tipoUnidadProducto.textContent = data.tipoUnidad;
@@ -425,14 +443,22 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       celdaVacia1.colSpan = 2;
 
       const ingresoAcumuladoPrev = rowAcumuladoPrev.insertCell();
-      ingresoAcumuladoPrev.textContent = (+acumuladoPrev.ingreso).toFixed(0) == 0 ? "-" : (+acumuladoPrev.ingreso).toFixed(0);
+      ingresoAcumuladoPrev.textContent =
+        (+acumuladoPrev.ingreso).toFixed(0) == 0
+          ? "-"
+          : (+acumuladoPrev.ingreso).toFixed(0);
 
       const salidaAcumuladoPrev = rowAcumuladoPrev.insertCell();
-      salidaAcumuladoPrev.textContent = (+acumuladoPrev.salida).toFixed(0) == 0 ? "-" : (+acumuladoPrev.salida).toFixed(0);
+      salidaAcumuladoPrev.textContent =
+        (+acumuladoPrev.salida).toFixed(0) == 0
+          ? "-"
+          : (+acumuladoPrev.salida).toFixed(0);
 
       const existenciaAcumuladoPrev = rowAcumuladoPrev.insertCell();
       existenciaAcumuladoPrev.textContent =
-        (+acumuladoPrev.existencias).toFixed(0) == 0 ? "-" : (+acumuladoPrev.existencias).toFixed(0);
+        (+acumuladoPrev.existencias).toFixed(0) == 0
+          ? "-"
+          : (+acumuladoPrev.existencias).toFixed(0);
 
       const tipoUnidadAcumuladoPrev = rowAcumuladoPrev.insertCell();
       tipoUnidadAcumuladoPrev.textContent = acumuladoPrev.tipo_de_unidad;
@@ -440,7 +466,15 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       const costoUnitarioAcumuladoPrev = rowAcumuladoPrev.insertCell();
       costoUnitarioAcumuladoPrev.classList.add("text-end");
       costoUnitarioAcumuladoPrev.textContent =
-        (+acumuladoPrev.precio_unitario).toFixed(2) == 0 ? "-" : (+acumuladoPrev.precio_unitario).toFixed(2);
+        (+acumuladoPrev.precio_unitario).toFixed(2) == 0
+          ? "-"
+          : (+acumuladoPrev.precio_unitario).toFixed(2);
+
+      const montoTotalAcumuladoPrev = rowAcumuladoPrev.insertCell();
+      montoTotalAcumuladoPrev.classList.add("text-end");
+      montoTotalAcumuladoPrev.textContent = formatearCantidad(
+        acumuladoPrev.monto_total
+      );
 
       // eliminar el primer elemento del array
       kardex.shift();
@@ -461,15 +495,15 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
         const ingreso = row.insertCell();
         ingreso.classList.add("text-center");
-        ingreso.textContent = (+detalle.ingreso).toFixed(0) == 0 ? "-" : (+detalle.ingreso).toFixed(0);
+        ingreso.textContent = formatearCantidad(detalle.ingreso);
 
         const salida = row.insertCell();
         salida.classList.add("text-center");
-        salida.textContent = (+detalle.salida).toFixed(0) == 0 ? "-" : (+detalle.salida).toFixed(0);
+        salida.textContent = formatearCantidad(detalle.salida);
 
         const existencia = row.insertCell();
         existencia.classList.add("text-center");
-        existencia.textContent = (+detalle.existencias).toFixed(0) == 0 ? "-" : (+detalle.existencias).toFixed(0);
+        existencia.textContent = formatearCantidad(detalle.existencias);
 
         const tipoUnidad = row.insertCell();
         tipoUnidad.classList.add("text-center");
@@ -477,7 +511,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
         const costoUnitario = row.insertCell();
         costoUnitario.classList.add("text-end");
-        costoUnitario.textContent = (+detalle.precio_unitario).toFixed(2) == 0 ? "-" : (+detalle.precio_unitario).toFixed(2);
+        costoUnitario.textContent = formatearCantidad(detalle.precio_unitario);
+
+        const montoTotal = row.insertCell();
+        montoTotal.classList.add("text-end");
+        montoTotal.textContent = formatearCantidad(detalle.monto_total);
       });
     } catch (error) {
       console.error(error);

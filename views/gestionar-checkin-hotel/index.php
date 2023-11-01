@@ -1194,9 +1194,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             .then((response) => response.json())
             .then((data) => {
               console.log(data);
+              open("../listado-rooming", "_self");
             })
             .catch((error) => {
               console.error(error);
+              open("../listado-rooming", "_self");
             });
         } else {
           const url = `${apiCheckingsUrl}/${id_checkin}/normal`;
@@ -1212,10 +1214,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             const response = await fetch(url, options);
             const data = await response.json();
             console.log(data);
-
             open("../listado-rooming", "_self");
           } catch (error) {
             console.error("Error:", error);
+            open("../listado-rooming", "_self");
           }
         }
       });

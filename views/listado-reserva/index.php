@@ -298,8 +298,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     var fechaActual = new Date().toISOString().slice(0, 10);
     inputDate.value = fechaActual;
   }
-</script>
-<script>
   let habitaciones = []; // Array para almacenar los datos de las habitaciones
   let habitacionesEliminadas = [];
   let id;
@@ -368,8 +366,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         console.log(message);
       });
   }
-</script>
-<script>
   // Manejar el envío del formulario para agregar un nuevo usuario
   const formularioChekin = document.getElementById("formulario-Chekin");
   formularioChekin.addEventListener("submit", function (event) {
@@ -399,8 +395,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       .catch((error) => console.error("Error:", error));
     window.location.reload();
   }
-</script>
-<script>
   // Manejar el envío del formulario para agregar un nuevo usuario
   const formularioRE = document.getElementById("formulario-reservaE");
   formularioRE.addEventListener("submit", function (event) {
@@ -433,8 +427,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       .catch((error) => console.error("Error:", error));
     window.location.reload();
   }
-</script>
-<script>
   function buscarPorFecha() {
     const fechaBusqueda = document.getElementById("fecha_busqueda").value;
     const url = "<?php echo URL_API_CARLITOS ?>/api-reservas.php"; // Reemplaza con la URL de tu API
@@ -495,8 +487,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         console.error("Error al obtener datos de la API:", error)
       );
   }
-</script>
-<script>
   // Función para obtener y listar los datos en la tabla
   function listarDatosEnTabla() {
     const url = "<?php echo URL_API_CARLITOS ?>/api-reservas.php"; // Reemplaza 'tu_url_de_la_api' con la URL de tu API
@@ -561,8 +551,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
   // Llamar a la función para listar los datos cuando la página cargue
   window.addEventListener("load", listarDatosEnTabla);
-</script>
-<script>
+
   function ObtenerReserva(Reservas) {
     var Reserva = Reservas.split("|");
     buscarReservas(Reserva[0]);

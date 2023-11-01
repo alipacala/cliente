@@ -96,6 +96,7 @@ function mostrarHeader($pagina, $logueado)
                       producto de servicio</a></li>
                   <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/crear-producto-paquete">Crear producto
                       de paquete / combo</a></li>
+                  <li><a class="dropdown-item" href="<?php echo $pre ?>/cliente/views/petitorio">Petitorio</a></li>
                 </ul>
               </li>
               <li class="nav-item dropdown">
