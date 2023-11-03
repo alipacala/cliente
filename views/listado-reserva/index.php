@@ -159,11 +159,13 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   <div class="card">
     <div class="card-body">
       <h3 class="mb-4">Lista de Reservas:</h3>
-      <div class="table-responsive">
-        <div class="col-md-4">
+      <div class="row">
+        <div class="col-auto">
           <label for="validationCustom02" class="form-label"
             >Buscar por fecha:</label
           >
+        </div>
+        <div class="col-auto">
           <div class="input-group mb-3">
             <input type="date" class="form-control" id="fecha_busqueda" />
             <button
@@ -175,6 +177,14 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             </button>
           </div>
         </div>
+
+        <div class="col-auto">
+          <a href="./../gestionar-reservas/" class="btn btn-primary w-100">
+            <i class="fas fa-add"></i> Nueva reserva
+          </a>
+        </div>
+      </div>
+      <div class="table-responsive">
         <table id="pagos" class="table">
           <thead>
             <tr>
@@ -463,22 +473,26 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                       }
                     </td>
                     <td>${item.nro_registro_maestro}</td>
-                    ${item.nro_registro_maestro ? "<td></td>" : `<td><button type="button" class="btn btn-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ObtenerReserva('${
-                      item.nro_reserva
-                    }|${item.fecha_llegada}|${item.fecha_salida}|${
-              item.nombre
-            }|${item.nro_noches}|${item.nro_personas}|${item.nro_habitacion}|${
-              item.lugar_procedencia
-            }|${item.observaciones_hospedaje}|${
-              item.observaciones_pago
-            }')">EDITAR</button>
+                    ${
+                      item.nro_registro_maestro
+                        ? "<td></td>"
+                        : `<td><button type="button" class="btn btn-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ObtenerReserva('${
+                            item.nro_reserva
+                          }|${item.fecha_llegada}|${item.fecha_salida}|${
+                            item.nombre
+                          }|${item.nro_noches}|${item.nro_personas}|${
+                            item.nro_habitacion
+                          }|${item.lugar_procedencia}|${
+                            item.observaciones_hospedaje
+                          }|${item.observaciones_pago}')">EDITAR</button>
                     <button type="button" id="" class="btn btn-info" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#ModalChekin" onclick="ObtenerID('${
                       item.nro_reserva
                     },${item.nombre},${item.fecha_llegada},${
-              item.fecha_salida
-            },${item.nro_personas}')" ${
-              item.estado_pago == 1 ? "disabled" : ""
-            }>CHEKIN</button></td>`}
+                            item.fecha_salida
+                          },${item.nro_personas}')" ${
+                            item.estado_pago == 1 ? "disabled" : ""
+                          }>CHEKIN</button></td>`
+                    }
                     `;
           }
         });
@@ -525,22 +539,26 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                       }
                     </td>
                     <td>${item.nro_registro_maestro}</td>
-                    ${item.nro_registro_maestro ? "<td></td>" : `<td><button type="button" class="btn btn-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ObtenerReserva('${
-                      item.nro_reserva
-                    }|${item.fecha_llegada}|${item.fecha_salida}|${
-            item.nombre
-          }|${item.nro_noches}|${item.nro_personas}|${item.nro_habitacion}|${
-            item.lugar_procedencia
-          }|${item.observaciones_hospedaje}|${
-            item.observaciones_pago
-          }')">EDITAR</button>
+                    ${
+                      item.nro_registro_maestro
+                        ? "<td></td>"
+                        : `<td><button type="button" class="btn btn-warning" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="ObtenerReserva('${
+                            item.nro_reserva
+                          }|${item.fecha_llegada}|${item.fecha_salida}|${
+                            item.nombre
+                          }|${item.nro_noches}|${item.nro_personas}|${
+                            item.nro_habitacion
+                          }|${item.lugar_procedencia}|${
+                            item.observaciones_hospedaje
+                          }|${item.observaciones_pago}')">EDITAR</button>
                     <button type="button" class="btn btn-info" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#ModalChekin" onclick="ObtenerID('${
                       item.nro_reserva
                     },${item.nombre},${item.fecha_llegada},${
-            item.fecha_salida
-          },${item.nro_personas}')"${
-            item.estado_pago == 1 ? "disabled" : ""
-          }>CHEKIN</button></td>`}
+                            item.fecha_salida
+                          },${item.nro_personas}')"${
+                            item.estado_pago == 1 ? "disabled" : ""
+                          }>CHEKIN</button></td>`
+                    }
                     `;
         });
       })

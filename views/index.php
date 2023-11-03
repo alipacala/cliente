@@ -22,10 +22,10 @@ $logueado); ?>
           <div class="col">
             <h5 class="text-start p-3 bg-info rounded-3">HOTEL</h5>
             <div class="row">
-              <div class="col-8">
+              <div class="col-7">
                 <div class="row">
-                  <div class="col-6 p-0">
-                    <a href="./gestionar-reservas/" class="text-decoration-none">
+                  <div class="col-8 p-0">
+                    <a href="./listado-reserva" class="text-decoration-none">
                       <div class="card mb-2">
                         <div class="card-body">
                           <div>
@@ -43,15 +43,15 @@ $logueado); ?>
                       </div>
                     </a>
                   </div>
-                  <div class="col-6 p-0">
+                  <div class="col-2 p-0">
                     <img
                       src="../img/menu-principal/flecha1.png"
-                      width="110px"
-                      height="160px"
+                      width="100px"
+                      height="150px"
                       alt="reservas"
                     />
                   </div>
-                  <div class="col-6 p-0">
+                  <div class="col-8 p-0">
                     <a href="./gestionar-checkin-hotel/" class="text-decoration-none">
                       <div class="card mb-2">
                         <div class="card-body">
@@ -70,17 +70,17 @@ $logueado); ?>
                       </div>
                     </a>
                   </div>
-                  <div class="col-6 p-0">
+                  <div class="col-2 p-0">
                     <img
                       src="../img/menu-principal/flecha2.png"
-                      width="110px"
-                      height="160px"
+                      width="100px"
+                      height="150px"
                       alt="reservas"
                     />
                   </div>
                 </div>
               </div>
-              <div class="col-4 d-flex align-items-center p-0">
+              <div class="col-5 d-flex align-items-center p-0">
                 <div class="col">
                   <a href="./listado-rooming/" class="text-decoration-none">
                     <div class="card mb-2">
@@ -109,7 +109,7 @@ $logueado); ?>
             <div class="row">
               <div class="col">
                 <div class="row">
-                  <div class="col-4 p-0">
+                  <div class="col-5 p-0">
                     <a href="./registrar-cliente-spa/" class="text-decoration-none">
                       <div class="card mb-2">
                         <div class="card-body">
@@ -128,15 +128,15 @@ $logueado); ?>
                       </div>
                     </a>
                   </div>
-                  <div class="col-4 p-0">
+                  <div class="col-2 p-0">
                     <img
                       src="../img/menu-principal/flecha3.png"
-                      width="110px"
-                      height="160px"
+                      width="100px"
+                      height="150px"
                       alt="reservas"
                     />
                   </div>
-                  <div class="col-4 p-0">
+                  <div class="col-5 p-0">
                     <!-- TODO: agregar el link cuando se pueda -->
                     <a href="#" class="text-decoration-none">
                       <div class="card mb-2">
@@ -215,7 +215,7 @@ $logueado); ?>
         <div class="col-6 col-lg-4">
           <div
             class="float-start position-relative"
-            style="top: 17.5%; left: 0"
+            style="top: 25.5%; left: 0"
           >
             <img
               src="../img/menu-principal/flecha4.png"
@@ -259,7 +259,7 @@ $logueado); ?>
             </div>
             <div class="col-12 text-start">
               <a
-                href="./registrar-nueva-compra/"
+                href="./relacion-cuentas-por-pagar"
                 class="btn btn-outline-secondary mb-2 w-100 text-start"
                 >REG. COMPRAS</a
               >
