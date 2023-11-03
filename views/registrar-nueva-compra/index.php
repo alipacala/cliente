@@ -28,7 +28,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             >
               <option value="">Seleccione un tipo de comprobante</option>
               <option value="00">Orden de pedido</option>
-              <option value="01" selected>Factura</option>
+              <option value="01">Factura</option>
               <option value="03">Boleta</option>
               <option value="05">Recibo por honorarios</option>
             </select>
@@ -40,7 +40,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               class="form-control"
               id="nro_comprobante"
               name="nro_comprobante"
-              value="F001-09201838"
               required
             />
           </div>
@@ -56,7 +55,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               class="form-control"
               id="nro_orden_pedido"
               name="nro_orden_pedido"
-              value="OP001-09201838"
               required
             />
           </div>
@@ -73,7 +71,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               required
             >
               <option value="0">Sin Documento</option>
-              <option value="1" selected>DNI</option>
+              <option value="1">DNI</option>
               <option value="6">RUC</option>
             </select>
           </div>
@@ -83,7 +81,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               <input
                 type="text"
                 class="form-control nro_documento_cliente"
-                value="76368626"
                 id="nro_documento_cliente"
               />
               <div class="input-group-text">
@@ -101,7 +98,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               class="form-control"
               id="nombre_proveedor"
               name="nombre_proveedor"
-              value="LIPA CALABILLA, ABRAHAM"
               required
             />
           </div>
@@ -122,7 +118,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               class="form-control"
               id="direccion_cliente"
               name="direccion_cliente"
-              value="AV. LOS FRUTALES 123"
               required
             />
           </div>
@@ -131,7 +126,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             <input
               class="form-control"
               id="ciudad"
-              value="TACNA"
               name="ciudad"
               required
             />

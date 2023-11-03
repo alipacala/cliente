@@ -22,7 +22,7 @@ $logueado); ?>
           <div class="col">
             <h5 class="text-start p-3 bg-info rounded-3">HOTEL</h5>
             <div class="row">
-              <div class="col-7">
+              <div class="col-7"> 
                 <div class="row">
                   <div class="col-9 p-0">
                     <a href="./listado-reserva" class="text-decoration-none">
