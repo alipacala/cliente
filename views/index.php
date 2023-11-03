@@ -7,8 +7,8 @@ if ($tiempoTranscurrido && ($tiempoTranscurrido >
 TIEMPO_INACTIVIDAD)) { session_unset(); session_destroy(); } $logueado =
 isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false; mostrarHeader("",
 $logueado); ?>
-<div class="my-5 mx-xl-5 main-cont">
-  <div class="bg-body-tertiary rounded-3">
+<div class="mx-xl-5 main-cont">
+  <div class="rounded-3">
     <div class="container text-center">
       <h1 class="display-5 fw-bold">Menú Principal</h1>
       <?php if ($logueado) { ?>
