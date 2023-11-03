@@ -7,9 +7,9 @@ if ($tiempoTranscurrido && ($tiempoTranscurrido >
 TIEMPO_INACTIVIDAD)) { session_unset(); session_destroy(); } $logueado =
 isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false; mostrarHeader("",
 $logueado); ?>
-<div class="my-5 mx-0 mx-xl-5 main-cont">
+<div class="my-5 mx-xl-5 main-cont">
   <div class="bg-body-tertiary rounded-3">
-    <div class="container-fluid py-0 text-center">
+    <div class="container text-center">
       <h1 class="display-5 fw-bold">Menú Principal</h1>
       <?php if ($logueado) { ?>
       <p class="col-md-8 fs-4 mx-auto">
@@ -212,10 +212,10 @@ $logueado); ?>
           </div>
         </div>
 
-        <div class="col-6 col-lg-2">
+        <div class="col-6 col-lg-2 p-0">
           <div
             class="float-start position-relative"
-            style="top: 25.5%; left: 0"
+            style="top: 26.5%; left: 0"
           >
             <img
               src="../img/menu-principal/flecha4.png"
