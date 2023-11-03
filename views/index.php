@@ -24,7 +24,7 @@ $logueado); ?>
             <div class="row">
               <div class="col-7">
                 <div class="row">
-                  <div class="col-8 p-0">
+                  <div class="col-9 p-0">
                     <a href="./listado-reserva" class="text-decoration-none">
                       <div class="card mb-2">
                         <div class="card-body">
@@ -43,15 +43,15 @@ $logueado); ?>
                       </div>
                     </a>
                   </div>
-                  <div class="col-2 p-0">
+                  <div class="col-3 p-0">
                     <img
                       src="../img/menu-principal/flecha1.png"
-                      width="90px"
+                      width="100%"
                       height="180px"
                       alt="reservas"
                     />
                   </div>
-                  <div class="col-8 p-0">
+                  <div class="col-9 p-0">
                     <a href="./gestionar-checkin-hotel/" class="text-decoration-none">
                       <div class="card mb-2">
                         <div class="card-body">
@@ -70,10 +70,10 @@ $logueado); ?>
                       </div>
                     </a>
                   </div>
-                  <div class="col-2 p-0">
+                  <div class="col-3 p-0">
                     <img
                       src="../img/menu-principal/flecha2.png"
-                      width="90px"
+                      width="100%"
                       height="180px"
                       alt="reservas"
                     />
@@ -131,7 +131,7 @@ $logueado); ?>
                   <div class="col-2 p-0">
                     <img
                       src="../img/menu-principal/flecha3.png"
-                      width="75px"
+                      width="100%"
                       height="180px"
                       alt="reservas"
                     />
