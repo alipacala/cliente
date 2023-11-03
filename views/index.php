@@ -17,7 +17,7 @@ $logueado); ?>
       </p>
 
       <div class="row">
-        <div class="col-6 col-lg-4">
+        <div class="col-6 col-lg-5">
           
           <div class="col">
             <h5 class="text-start p-3 bg-info rounded-3">HOTEL</h5>
@@ -212,7 +212,7 @@ $logueado); ?>
           </div>
         </div>
 
-        <div class="col-6 col-lg-4">
+        <div class="col-6 col-lg-2">
           <div
             class="float-start position-relative"
             style="top: 25.5%; left: 0"
@@ -224,7 +224,7 @@ $logueado); ?>
           </div>
 
           <div
-            class="col-4 p-0 float-start position-relative"
+            class="col-6 p-0 float-start position-relative"
             style="top: 30%; left: 0"
           >
             <a href="./relacion-clientes-hotel-spa/" class="text-decoration-none">
@@ -247,7 +247,7 @@ $logueado); ?>
           </div>
         </div>
 
-        <div class="col-6 col-lg-4">
+        <div class="col-6 col-lg-5">
           <h5 class="text-start p-3 bg-info rounded-3">CAJA</h5>
           <div class="row">
             <div class="col-12 text-start">
