@@ -46,8 +46,8 @@ $logueado); ?>
                   <div class="col-2 p-0">
                     <img
                       src="../img/menu-principal/flecha1.png"
-                      width="100px"
-                      height="150px"
+                      width="90px"
+                      height="180px"
                       alt="reservas"
                     />
                   </div>
@@ -73,8 +73,8 @@ $logueado); ?>
                   <div class="col-2 p-0">
                     <img
                       src="../img/menu-principal/flecha2.png"
-                      width="100px"
-                      height="150px"
+                      width="90px"
+                      height="180px"
                       alt="reservas"
                     />
                   </div>
@@ -131,8 +131,8 @@ $logueado); ?>
                   <div class="col-2 p-0">
                     <img
                       src="../img/menu-principal/flecha3.png"
-                      width="100px"
-                      height="150px"
+                      width="75px"
+                      height="180px"
                       alt="reservas"
                     />
                   </div>
