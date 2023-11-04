@@ -20,7 +20,7 @@ $logueado); ?>
         <div class="col-6 col-lg-5">
           
           <div class="col">
-            <h5 class="text-start px-3 py-1 bg-info rounded-3">HOTEL</h5>
+            <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">HOTEL</h5>
             <div class="row">
               <div class="col-7"> 
                 <div class="row">
@@ -38,7 +38,7 @@ $logueado); ?>
                           </div>
                         </div>
                         <div class="card-footer">
-                          <p class="card-text">RESERVAS</p>
+                          <p class="card-text fw-bold">RESERVAS</p>
                         </div>
                       </div>
                     </a>
@@ -65,7 +65,7 @@ $logueado); ?>
                           </div>
                         </div>
                         <div class="card-footer">
-                          <p class="card-text">CHECK-IN</p>
+                          <p class="card-text fw-bold">CHECK-IN</p>
                         </div>
                       </div>
                     </a>
@@ -95,7 +95,7 @@ $logueado); ?>
                         </div>
                       </div>
                       <div class="card-footer">
-                        <p class="card-text">ROOMING</p>
+                        <p class="card-text fw-bold">ROOMING</p>
                       </div>
                     </div>
                   </a>
@@ -105,7 +105,7 @@ $logueado); ?>
           </div>
 
           <div class="col">
-            <h5 class="text-start px-3 py-1 bg-info rounded-3">SPA</h5>
+            <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">SPA</h5>
             <div class="row">
               <div class="col">
                 <div class="row">
@@ -123,7 +123,7 @@ $logueado); ?>
                           </div>
                         </div>
                         <div class="card-footer">
-                          <p class="card-text">CLIENTE SPA</p>
+                          <p class="card-text fw-bold">CLIENTE SPA</p>
                         </div>
                       </div>
                     </a>
@@ -151,7 +151,7 @@ $logueado); ?>
                           </div>
                         </div>
                         <div class="card-footer">
-                          <p class="card-text">PROG. TERAPEUTAS</p>
+                          <p class="card-text fw-bold">PROG. TERAPEUTAS</p>
                         </div>
                       </div>
                     </a>
@@ -162,7 +162,7 @@ $logueado); ?>
           </div>
 
           <div class="col">
-            <h5 class="text-start px-3 py-1 bg-info rounded-3">CAFETERÍA</h5>
+            <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">CAFETERÍA</h5>
             <div class="row">
               <div class="col">
                 <div class="row">
@@ -180,7 +180,7 @@ $logueado); ?>
                           </div>
                         </div>
                         <div class="card-footer">
-                          <p class="card-text">REG. PEDIDO</p>
+                          <p class="card-text fw-bold">REG. PEDIDO</p>
                         </div>
                       </div>
                     </a>
@@ -191,7 +191,7 @@ $logueado); ?>
           </div>
 
           <div class="col">
-            <h5 class="text-start px-3 py-1 bg-info rounded-3">ALERTAS</h5>
+            <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">ALERTAS</h5>
             <div class="row">
               <div class="col-12 text-start">
                 <!-- TODO: faltan agregar los links -->
@@ -240,7 +240,7 @@ $logueado); ?>
                   </div>
                 </div>
                 <div class="card-footer">
-                  <p class="card-text">CUENTA DEL CLIENTE</p>
+                  <p class="card-text fw-bold">CUENTA DEL CLIENTE</p>
                 </div>
               </div>
             </a>
@@ -248,7 +248,7 @@ $logueado); ?>
         </div>
 
         <div class="col-6 col-lg-5">
-          <h5 class="text-start px-3 py-1 bg-info rounded-3">CAJA</h5>
+          <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">CAJA</h5>
           <div class="row">
             <div class="col-12 text-start">
               <a
@@ -279,7 +279,7 @@ $logueado); ?>
               >
             </div>
           </div>
-          <h5 class="text-start px-3 py-1 bg-info rounded-3">CATÁLOGO</h5>
+          <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">CATÁLOGO</h5>
           <div class="row">
             <div class="col-12 text-start">
               <a
@@ -296,7 +296,7 @@ $logueado); ?>
               >
             </div>
           </div>
-          <h5 class="text-start px-3 py-1 bg-info rounded-3">LOGÍSTICA</h5>
+          <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">LOGÍSTICA</h5>
           <div class="row">
             <div class="col-12 text-start">
               <a
@@ -327,7 +327,7 @@ $logueado); ?>
               >
             </div>
           </div>
-          <h5 class="text-start px-3 py-1 bg-info rounded-3">UTLIDADES</h5>
+          <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">UTLIDADES</h5>
           <div class="row">
             <div class="col-12 text-start">
               <a
