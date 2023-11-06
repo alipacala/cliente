@@ -33,6 +33,7 @@ body {
 /* variable del color secundario */
 :root {
   --color-secundario: #abebff;
+  --color-terciario: #EFFEFF;
 }
 
 /* darle el color secundario a las cabezeras de las tablas */
@@ -48,6 +49,11 @@ tr, th {
 }
 .grupo td {
   background-color: inherit !important;
+}
+
+/* darle el color secundario a los botones */
+.form-control, .form-select {
+  background-color: var(--color-terciario) !important;
 }
 
 /* iconos de los botones, cambiar el tamaño con breakpoints de bootstrap */
