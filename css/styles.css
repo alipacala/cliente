@@ -56,6 +56,28 @@ tr, th {
   background-color: var(--color-terciario) !important;
 }
 
+/* color de las filas ocupadas y reservadas */
+.ocupado {
+  background-color: #dadafd !important;
+}
+.ocupado td {
+  background-color: inherit !important;
+}
+
+.reservado {
+  background-color: #ffe4b2 !important;
+}
+.reservado td {
+  background-color: inherit !important;
+}
+
+.de_salida {
+  background-color: #b6ffb6 !important;
+}
+.de_salida td {
+  background-color: inherit !important;
+}
+
 /* iconos de los botones, cambiar el tamaño con breakpoints de bootstrap */
 
 #flecha4 {
@@ -73,4 +95,13 @@ tr, th {
   #flecha4 {
     width: 100px;
   }
+}
+
+.container-menu-principal .btn {
+  border: 1px solid transparent !important;
+}
+.container-menu-principal .btn:hover {
+  border: 1px solid #6c757d !important;
+  background-color: transparent !important;
+  color: #6c757d !important;
 }

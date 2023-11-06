@@ -22,6 +22,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               type="date"
               class="form-control"
               id="fecha_busqueda"
+              onchange="buscarPorFecha()"
               value="<?php echo date('Y-m-d'); ?>"
             />
 
@@ -264,6 +265,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         row.dataset.nombre_cliente = item.nombre;
         row.dataset.fecha_out = item.fecha_out;
 
+        row.classList.add(item.de_salida ? "de_salida" : item.ocupado ? "ocupado" : item.reservado ? "reservado" : "libre");
+
         row.innerHTML = `
           <td>${item.nombre_producto || ""}</td>
           <td>${item.nro_habitacion || ""}</td>
@@ -276,7 +279,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           <td>
             ${
               fechaSeleccionadaEsFuturaUHoy && item.nro_registro_maestro
-                ? `<a href="../gestionar-checkin-hotel?id_checkin=${item.id_checkin}&nro_habitacion=${item.nro_habitacion}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a><button id="cambiar-habitacion" class="btn btn-outline-secondary" onclick="prepararCambiarHabitacion(event)">CAMBIAR HAB</button>`
+                ? `<a href="../gestionar-checkin-hotel?id_checkin=${item.id_checkin}&nro_habitacion=${item.nro_habitacion}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a><button id="cambiar-habitacion" class="btn btn-secondary" onclick="prepararCambiarHabitacion(event)">CAMBIAR HAB</button>`
                 : ""
             }
           </td>

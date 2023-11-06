@@ -9,7 +9,7 @@ isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false; mostrarHeader("",
 $logueado); ?>
 <div class="mx-xl-5 main-cont">
   <div class="rounded-3">
-    <div class="container text-center">
+    <div class="container text-center container-menu-principal">
       <h1 class="display-5 fw-bold">Menú Principal</h1>
       <?php if ($logueado) { ?>
       <p class="col-md-8 fs-4 mx-auto">
@@ -303,6 +303,13 @@ $logueado); ?>
                 href="./consultar-productos/"
                 class="btn btn-outline-secondary mb-2 w-100 text-start"
                 >PRODUCTOS E INSUMOS / KARDEX</a
+              >
+            </div>
+            <div class="col-12 text-start">
+              <a
+                href="./registro-ingreso-egreso/"
+                class="btn btn-outline-secondary mb-2 w-100 text-start"
+                >REGISTRO DE INGRESO / EGRESO</a
               >
             </div>
             <div class="col-12 text-start">

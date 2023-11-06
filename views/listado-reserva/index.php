@@ -452,6 +452,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         tabla.innerHTML = ""; // Limpiar la tabla antes de agregar nuevos datos
 
         data.forEach((item) => {
+
           if (item.fecha_llegada >= fechaBusqueda) {
             const row = tabla.insertRow();
             row.innerHTML = `
@@ -472,7 +473,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                           : '<span class="badge rounded-pill text-bg-info">Adelanto</span>'
                       }
                     </td>
-                    <td>${item.nro_registro_maestro}</td>
+                    <td>${item.nro_registro_maestro == null ? "" : item.nro_registro_maestro}</td>
                     ${
                       item.nro_registro_maestro
                         ? "<td></td>"
@@ -538,7 +539,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                           : '<span class="badge rounded-pill text-bg-info">Adelanto</span>'
                       }
                     </td>
-                    <td>${item.nro_registro_maestro}</td>
+                    <td>${item.nro_registro_maestro == null ? "" : item.nro_registro_maestro}</td>
                     ${
                       item.nro_registro_maestro
                         ? "<td></td>"
