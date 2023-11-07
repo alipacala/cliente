@@ -284,7 +284,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             <button
               type="submit"
               class="btn btn-primary"
-              onclick="RealizarCheckin()"
             >
               Si
             </button>
