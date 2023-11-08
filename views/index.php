@@ -137,8 +137,7 @@ $logueado); ?>
                     />
                   </div>
                   <div class="col-5 p-0">
-                    <!-- TODO: agregar el link cuando se pueda -->
-                    <a href="#" class="text-decoration-none">
+                    <a href="./programacion-servicios" class="text-decoration-none">
                       <div class="card mb-2">
                         <div class="card-body">
                           <div>
