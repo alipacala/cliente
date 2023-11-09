@@ -191,6 +191,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           class="btn btn-primary w-100"
           id="btn-aceptar-servicio"
           data-bs-dismiss="modal"
+          onclick="cambiarServicio()"
         >
           Aceptar
         </button>
@@ -250,7 +251,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       data.forEach((acompanante) => {
         const option = document.createElement("option");
-        option.value = acompanante.nro_registro;
+        option.value = acompanante.id_acompanante;
         option.textContent = acompanante.apellidos_y_nombres;
         selectAcompanante.appendChild(option);
       });
@@ -307,9 +308,12 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       servicios.forEach((servicio) => {
         const row = tbody.insertRow();
 
+        console.log(servicio);
+
         row.dataset.id = servicio.id_documentos_detalle;
         row.dataset.nro_registro_maestro = servicio.nro_registro_maestro;
         row.dataset.id_producto = servicio.id_producto;
+        row.dataset.id_acompanate = servicio.id_acompanate;
 
         row.dataset.nombre_cliente = servicio.nombre_cliente;
         row.dataset.servicio = servicio.servicio;
@@ -366,8 +370,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
   // #endregion
 
-  function mostrarModalTerapista(event) {
+  async function mostrarModalTerapista(event) {
     const row = event.target.closest("tr");
+
+    console.log(row.dataset.id_acompanate);
 
     const modalEl = document.getElementById("modal-cambiar-estado");
     modalEl.dataset.id = row.dataset.id;
@@ -379,14 +385,16 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     const profesionalAsignado = document.getElementById("profesional-asignado");
     const fecha = document.getElementById("fecha-servicio");
     const hora = document.getElementById("hora");
+    const aplicado = document.getElementById("aplicado");
+    
+    await cargarAcompanantes(row.dataset.nro_registro_maestro);
 
-    cliente.value = row.dataset.nombre_cliente;
+    aplicado.value = row.dataset.id_acompanate;
     servicio.value = row.dataset.servicio + " - " + row.dataset.id_producto;
     profesionalAsignado.value = row.dataset.profesional_asignado;
     fecha.value = document.getElementById("fecha").value;
     hora.value = row.dataset.hora_inicio;
 
-    cargarAcompanantes(row.dataset.nro_registro_maestro);
     llenarOpcionesTerapistas();
 
     modalTerapista.show();
@@ -429,15 +437,12 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
   async function llenarOpcionesTerapistas() {
     const servicioSeleccionado = document.getElementById("servicio").value;
-    console.log(servicioSeleccionado);
 
     const idServicio = servicioSeleccionado.split(" - ")[1];
-    console.log(idServicio);
 
     const servicio = serviciosTerapistas.find((servicio) => {
       return servicio.id_producto == idServicio;
     });
-    console.log(servicio);
 
     const codigoHabilidad = servicio.codigo_habilidad;
     const sexo = document.getElementById("preferencia").value;
@@ -469,8 +474,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     const id = modalEl.dataset.id;
     const estado = document.getElementById("estado").value;
 
-    console.log(id);
-
     const url = `${apiDocumentosDetallesUrl}/${id}/estado`;
 
     const body = {
@@ -497,6 +500,47 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     } catch (error) {
       console.error(error);
       mostrarAlert("error", "No se pudo cambiar el estado", "editar");
+    }
+  }
+
+  async function cambiarServicio() {
+    const id_producto = document.getElementById("servicio").value.split(" - ")[1];
+    const id_acompanate = document.getElementById("aplicado").value;
+    const id_profesional = document.getElementById("terapista").value;
+    const fecha_servicio = document.getElementById("fecha-servicio").value;
+    const hora_servicio = document.getElementById("hora").value;
+    const id = document.getElementById("modal-cambiar-estado").dataset.id;
+
+    const datosServicio = {
+      id_producto,
+      id_acompanate,
+      id_profesional,
+      fecha_servicio,
+      hora_servicio,
+    }
+
+    const url = `${apiDocumentosDetallesUrl}/${id}/servicio`;
+
+    const options = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(datosServicio),
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+
+      mostrarAlert("ok", "Servicio cambiado correctamente", "editar");
+
+      buscarServicios();
+
+      modalTerapista.hide();
+    } catch (error) {
+      console.error(error);
+      mostrarAlert("error", "No se pudo cambiar el servicio", "editar");
     }
   }
 
