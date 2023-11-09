@@ -395,7 +395,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   function mostrarModalCambiarEstado(event) {
     const row = event.target.closest("tr");
 
-    const modalEl = document.getElementById("modal-terapista");
+    const modalEl = document.getElementById("modal-cambiar-estado");
     modalEl.dataset.id = row.dataset.id;
 
     const servicio = document.getElementById("servicio-cambiar-estado");
@@ -469,6 +469,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     const id = modalEl.dataset.id;
     const estado = document.getElementById("estado").value;
 
+    console.log(id);
+
     const url = `${apiDocumentosDetallesUrl}/${id}/estado`;
 
     const body = {
@@ -487,13 +489,14 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       const response = await fetch(url, options);
       const data = await response.json();
 
-      alert(data.mensaje);
+      mostrarAlert("ok", "Estado cambiado correctamente", "editar");
+
       buscarServicios();
 
       modal.hide();
     } catch (error) {
       console.error(error);
-      mostrarAlert("error", "No se pudo anular el comprobante", "borrar");
+      mostrarAlert("error", "No se pudo cambiar el estado", "editar");
     }
   }
 

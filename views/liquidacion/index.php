@@ -12,7 +12,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   <div id="alert-place"></div>
   <div class="card">
     <div class="card-header py-3">
-      <h2 class="text-center">PROGRAMACIÓN DE SERVICIOS DE SPA</h2>
+      <h2 class="text-center">LIQUIDACIÓN DE SERVICIOS DE SPA</h2>
     </div>
     <div class="card-body">
       <div class="row mb-3">
