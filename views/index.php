@@ -18,11 +18,12 @@ $logueado); ?>
 
       <div class="row">
         <div class="col-6 col-lg-5">
-          
           <div class="col">
-            <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">HOTEL</h5>
+            <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">
+              HOTEL
+            </h5>
             <div class="row">
-              <div class="col-7"> 
+              <div class="col-7">
                 <div class="row">
                   <div class="col-9 p-0">
                     <a href="./listado-reserva" class="text-decoration-none">
@@ -52,7 +53,10 @@ $logueado); ?>
                     />
                   </div>
                   <div class="col-9 p-0">
-                    <a href="./gestionar-checkin-hotel/" class="text-decoration-none">
+                    <a
+                      href="./gestionar-checkin-hotel/"
+                      class="text-decoration-none"
+                    >
                       <div class="card mb-2">
                         <div class="card-body">
                           <div>
@@ -105,12 +109,17 @@ $logueado); ?>
           </div>
 
           <div class="col">
-            <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">SPA</h5>
+            <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">
+              SPA
+            </h5>
             <div class="row">
               <div class="col">
                 <div class="row">
                   <div class="col-5 p-0">
-                    <a href="./registrar-cliente-spa/" class="text-decoration-none">
+                    <a
+                      href="./registrar-cliente-spa/"
+                      class="text-decoration-none"
+                    >
                       <div class="card mb-2">
                         <div class="card-body">
                           <div>
@@ -127,6 +136,13 @@ $logueado); ?>
                         </div>
                       </div>
                     </a>
+                    <button
+                      id="crear-cliente"
+                      class="btn btn-outline-secondary link-info mb-2 w-100"
+                      onclick="mostrarModalCrearCliente()"
+                    >
+                      Crear cliente
+                    </button>
                   </div>
                   <div class="col-2 p-0">
                     <img
@@ -137,7 +153,10 @@ $logueado); ?>
                     />
                   </div>
                   <div class="col-5 p-0">
-                    <a href="./programacion-servicios" class="text-decoration-none">
+                    <a
+                      href="./programacion-servicios"
+                      class="text-decoration-none"
+                    >
                       <div class="card mb-2">
                         <div class="card-body">
                           <div>
@@ -161,7 +180,9 @@ $logueado); ?>
           </div>
 
           <div class="col">
-            <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">CAFETERÍA</h5>
+            <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">
+              CAFETERÍA
+            </h5>
             <div class="row">
               <div class="col">
                 <div class="row">
@@ -190,7 +211,9 @@ $logueado); ?>
           </div>
 
           <div class="col">
-            <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">ALERTAS</h5>
+            <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">
+              ALERTAS
+            </h5>
             <div class="row">
               <div class="col-12 text-start">
                 <!-- TODO: faltan agregar los links -->
@@ -216,17 +239,17 @@ $logueado); ?>
             class="float-start position-relative"
             style="top: 26.5%; left: 0"
           >
-            <img
-              src="../img/menu-principal/flecha4.png"
-              id="flecha4"
-            />
+            <img src="../img/menu-principal/flecha4.png" id="flecha4" />
           </div>
 
           <div
             class="col-6 p-0 float-start position-relative"
             style="top: 30%; left: 0"
           >
-            <a href="./relacion-clientes-hotel-spa/" class="text-decoration-none">
+            <a
+              href="./relacion-clientes-hotel-spa/"
+              class="text-decoration-none"
+            >
               <div class="card mb-2">
                 <div class="card-body">
                   <div>
@@ -247,7 +270,9 @@ $logueado); ?>
         </div>
 
         <div class="col-6 col-lg-5">
-          <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">CAJA</h5>
+          <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">
+            CAJA
+          </h5>
           <div class="row">
             <div class="col-12 text-start">
               <a
@@ -278,7 +303,9 @@ $logueado); ?>
               >
             </div>
           </div>
-          <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">CATÁLOGO</h5>
+          <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">
+            CATÁLOGO
+          </h5>
           <div class="row">
             <div class="col-12 text-start">
               <a
@@ -295,7 +322,9 @@ $logueado); ?>
               >
             </div>
           </div>
-          <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">LOGÍSTICA</h5>
+          <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">
+            LOGÍSTICA
+          </h5>
           <div class="row">
             <div class="col-12 text-start">
               <a
@@ -333,7 +362,9 @@ $logueado); ?>
               >
             </div>
           </div>
-          <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">UTLIDADES</h5>
+          <h5 class="text-start px-3 py-1 text-light bg-info rounded-3">
+            UTLIDADES
+          </h5>
           <div class="row">
             <div class="col-12 text-start">
               <a
@@ -365,6 +396,135 @@ $logueado); ?>
     </div>
   </div>
 </div>
+
+<div
+  class="modal fade"
+  id="modal-crear"
+  tabindex="-1"
+  aria-labelledby="modal-crear-label"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-crear-label">Crear nuevo cliente</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="persona" class="form-label">Persona</label>
+          <input
+            class="form-control"
+            list="persona-list"
+            id="persona"
+            placeholder="Buscar persona..."
+          />
+          <datalist id="persona-list"> </datalist>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-primary w-100"
+          id="btn-aceptar-servicio"
+          data-bs-dismiss="modal"
+          onclick="crearCliente()"
+        >
+          Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const apiCheckingsUrl = "<?php echo URL_API_NUEVA ?>/checkings";
+  const apiPersonasUrl = "<?php echo URL_API_NUEVA ?>/personas";
+
+  let modal = null;
+  let personas = [];
+
+  async function wrapper() {
+    modal = new bootstrap.Modal(document.getElementById("modal-crear"));
+  }
+
+  async function mostrarModalCrearCliente() {
+    if (personas.length === 0) {
+      await cargarPersonas();
+    }
+    modal.show();
+  }
+
+  async function cargarPersonas() {
+    try {
+      const response = await fetch(apiPersonasUrl);
+      const data = await response.json();
+      console.log(data);
+
+      personas = data;
+      llenarDatalistPersonas();
+    } catch (error) {
+      console.error(error);
+      mostrarAlert("error", "Error al cargar las personas", "cargar");
+    }
+  }
+
+  function llenarDatalistPersonas() {
+    const datalist = document.getElementById("persona-list");
+    datalist.innerHTML = "";
+
+    personas.forEach((persona) => {
+      const option = document.createElement("option");
+      option.value = `${persona.nombres ?? ""} ${persona.apellidos ?? ""} - ${
+        persona.nro_documento
+      }`;
+      datalist.appendChild(option);
+    });
+  }
+
+  async function crearCliente() {
+    const nro_documento = document
+      .getElementById("persona")
+      .value.split(" - ")[1];
+
+    const checking = {
+      titular: {
+        nro_documento,
+        es_nuevo: false,
+      },
+      acompanantes: [],
+    };
+    const url = `${apiCheckingsUrl}/spa`;
+
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(checking),
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+      console.log(data);
+
+      const nroRegistroMaestro = data.resultado.nro_registro_maestro;
+      open(`./estado-cuenta-cliente?nro_registro_maestro=${nroRegistroMaestro}`)
+
+    } catch (error) {
+      console.error(error);
+      mostrarAlert("error", "Error al registrar el checking", "crear");
+    }
+  }
+
+  window.addEventListener("load", wrapper);
+</script>
+
 <?php
 require "../inc/footer.php";
 ?>
