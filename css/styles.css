@@ -33,14 +33,15 @@ body {
 /* variable del color secundario */
 :root {
   --color-secundario: #abebff;
-  --color-terciario: #EFFEFF;
+  --color-terciario: #effeff;
 }
 
 /* darle el color secundario a las cabezeras de las tablas */
 thead {
   background-color: var(--color-secundario) !important;
 }
-tr, th {
+tr,
+th {
   background-color: inherit !important;
 }
 
@@ -52,7 +53,8 @@ tr, th {
 }
 
 /* darle el color secundario a los botones */
-.form-control, .form-select {
+.form-control,
+.form-select {
   background-color: var(--color-terciario) !important;
 }
 
@@ -104,4 +106,15 @@ tr, th {
   border: 1px solid #6c757d !important;
   background-color: transparent !important;
   color: #6c757d !important;
+}
+
+.tabla-petitorio-container {
+  overflow: scroll !important;
+  height: 50vh !important;
+}
+
+#tabla-petitorio thead {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 100 !important;
 }

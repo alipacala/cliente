@@ -17,6 +17,18 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     <div class="card-body">
       <div class="row mb-3">
         <div class="col-md-3">
+          TEMPORADA:
+          <select
+            id="temporada"
+            name="temporada"
+            class="form-select"
+            onchange="actualizarColoresProductos()"
+          >
+            <option value="baja">Temporada Baja</option>
+            <option value="alta">Temporada Alta</option>
+          </select>
+        </div>
+        <div class="col-md-3">
           CENTRAL DE COSTOS:
           <select
             id="central-costos"
@@ -26,18 +38,14 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         </div>
       </div>
 
-      <div class="table-responsive">
-        <table
-          id="tabla-listado-catalogo"
-          class="table table-bordered table-hover"
-        >
+      <div class="table-responsive tabla-petitorio-container">
+        <table id="tabla-petitorio" class="table table-bordered table-hover">
           <thead>
             <tr>
-              <th class="text-center">Central de costos</th>
-              <th class="text-center"></th>
+              <th class="text-center" colspan="2">Central de costos</th>
               <th class="text-center" colspan="2">Temporada Baja</th>
               <th class="text-center" colspan="2">Temporada Alta</th>
-              <th class="text-center"></th>
+              <th class="text-center" colspan="4"></th>
             </tr>
             <tr>
               <th class="text-center">Código</th>
@@ -47,6 +55,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               <th class="text-center">Stock Min</th>
               <th class="text-center">Stock Max</th>
               <th class="text-center">Costo unitario</th>
+              <th class="text-center">Stock actual</th>
+              <th class="text-center">Cant. Pedido</th>
+              <th class="text-center">Costo Total</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -68,8 +79,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   async function wrapper() {
     mostrarAlertaSiHayMensaje();
 
-    tablaProductosBody = document.getElementById("tabla-listado-catalogo")
-      .tBodies[0];
+    tablaProductosBody = document.getElementById("tabla-petitorio").tBodies[0];
 
     await cargarCentralesCostos();
     await cargarProductos();
@@ -156,7 +166,53 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     mostrarProductos(centralCostosFiltrado.productos);
   }
 
+  function actualizarColoresProductos() {
+    const temporadaSelect = document.getElementById("temporada");
+    const temporada = temporadaSelect.value;
+
+    const trs = tablaProductosBody.querySelectorAll("tr");
+
+    trs.forEach((tr) => {
+      const tds = tr.querySelectorAll("td");
+
+      if (tds.length == 1) {
+        return;
+      }
+
+      const tdStock = tds[7];
+      let tdStockMax = null;
+
+      if (temporada == "baja") {
+        tdStockMax = tds[3];
+      } else if (temporada == "alta") {
+        tdStockMax = tds[5];
+      }
+
+      // marcar las columnas usadas según la temporada
+      if (temporada == "baja") {
+        tds[2].style.backgroundColor = "lightgreen";
+        tds[3].style.backgroundColor = "lightgreen";
+        tds[4].style.backgroundColor = "unset";
+        tds[5].style.backgroundColor = "unset";
+      } else if (temporada == "alta") {
+        tds[2].style.backgroundColor = "unset";
+        tds[3].style.backgroundColor = "unset";
+        tds[4].style.backgroundColor = "lightgreen";
+        tds[5].style.backgroundColor = "lightgreen";
+      }
+
+      if (tdStock.textContent < tdStockMax.textContent) {
+        tdStock.classList.add("bg-danger");
+      } else {
+        tdStock.classList.remove("bg-danger");
+      }
+    });
+  }
+
   function mostrarProductos(productos) {
+    const temporadaSelect = document.getElementById("temporada");
+    const temporada = temporadaSelect.value;
+
     productos.forEach((element) => {
       const tr = tablaProductosBody.insertRow();
 
@@ -168,10 +224,12 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       const tdStockMinBaja = tr.insertCell();
       tdStockMinBaja.textContent = element.stock_min_temporada_baja;
+      tdStockMinBaja.style.backgroundColor = "lightgreen";
       tdStockMinBaja.classList.add("text-center");
 
       const tdStockMaxBaja = tr.insertCell();
       tdStockMaxBaja.textContent = element.stock_max_temporada_baja;
+      tdStockMaxBaja.style.backgroundColor = "lightgreen";
       tdStockMaxBaja.classList.add("text-center");
 
       const tdStockMinAlta = tr.insertCell();
@@ -185,7 +243,78 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       const tdCostoUnitario = tr.insertCell();
       tdCostoUnitario.textContent = formatearCantidad(element.costo_unitario);
       tdCostoUnitario.classList.add("text-end");
+
+      const tdStock = tr.insertCell();
+      tdStock.textContent = formatearCantidad(element.stock);
+      tdStock.classList.add("text-center");
+      if (
+        temporada == "baja" &&
+        element.stock < element.stock_max_temporada_baja
+      ) {
+        tdStock.classList.add("bg-danger");
+      }
+      if (
+        temporada == "alta" &&
+        element.stock < element.stock_max_temporada_alta
+      ) {
+        tdStock.classList.add("bg-danger");
+      }
+
+      const tdCantidadPedido = tr.insertCell();
+      tdCantidadPedido.classList.add("text-center");
+
+      const tdCostoTotal = tr.insertCell();
+      tdCostoTotal.textContent = formatearCantidad(
+        element.costo_unitario * element.cantidad_pedido
+      );
+
+      const inputCantidadPedido = document.createElement("input");
+      inputCantidadPedido.type = "number";
+      inputCantidadPedido.classList.add("form-control");
+      inputCantidadPedido.min = 0;
+      inputCantidadPedido.value = element.cantidad_pedido;
+      inputCantidadPedido.addEventListener("change", async (e) => {
+        const cantidad = e.target.value;
+        const costoTotal = cantidad * element.costo_unitario;
+        tdCostoTotal.textContent = formatearCantidad(costoTotal);
+
+        await actualizarCantidadPedido(element.id_producto, cantidad);
+      });
+      tdCantidadPedido.appendChild(inputCantidadPedido);
     });
+  }
+
+  async function actualizarCantidadPedido(id, cantidad) {
+    const url = `${apiProductosUrl}/${id}`;
+    const body = {
+      cantidad_pedido: cantidad,
+    };
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+
+      console.log(data);
+      mostrarAlert(
+        "ok",
+        "Se actualizó la cantidad del producto correctamente",
+        "editar"
+      );
+    } catch (error) {
+      console.error(error);
+      mostrarAlert(
+        "error",
+        "Error al actualizar la cantidad del producto",
+        "editar"
+      );
+    }
   }
 
   window.addEventListener("load", wrapper);

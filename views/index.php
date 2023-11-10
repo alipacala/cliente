@@ -460,8 +460,9 @@ $logueado); ?>
   }
 
   async function cargarPersonas() {
+    const url = `${apiPersonasUrl}?limite=20`
     try {
-      const response = await fetch(apiPersonasUrl);
+      const response = await fetch(url);
       const data = await response.json();
       console.log(data);
 
