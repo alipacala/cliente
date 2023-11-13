@@ -107,12 +107,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         const tdTipoServicio = tr.insertCell();
 
         if (cheking.tipo_de_servicio == "HOTEL") {
-          const url = `${apiRoomingUrl}?id_checkin=${cheking.id_checkin}`;
-          const response = await fetch(url);
-          const data = await response.json();
-
-          tdTipoServicio.innerText = data.nro_habitacion
-            ? `H ${data.nro_habitacion}`
+          tdTipoServicio.innerText = cheking.nro_habitacion
+            ? `H ${cheking.nro_habitacion}`
             : "HOTEL";
         } else {
           tdTipoServicio.innerText = cheking.tipo_de_servicio;
