@@ -341,14 +341,15 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         temporada == "baja" &&
         element.stock < element.stock_max_temporada_baja
       ) {
-        tdStock.classList.add("bg-danger");
+        tdStock.style.backgroundColor = "lightsalmon";
       }
       if (
         temporada == "alta" &&
         element.stock < element.stock_max_temporada_alta
       ) {
-        tdStock.classList.add("bg-danger");
+        tdStock.style.backgroundColor = "lightsalmon";
       }
+      tdStock.classList.add("fw-bold");
 
       const tdTipoUnidad = tr.insertCell();
       tdTipoUnidad.classList.add("text-center");
