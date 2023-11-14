@@ -16,7 +16,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     </div>
     <div class="card-body">
       <div class="row mb-3">
-        <div class="col-md-3">
+        <div class="col-md-2">
           TEMPORADA:
           <select
             id="temporada"
@@ -28,13 +28,47 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             <option value="alta">Temporada Alta</option>
           </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
           CENTRAL DE COSTOS:
           <select
             id="central-costos"
             name="central-costos"
             class="form-select"
+            onchange="alCambiarCentralCostos()"
           ></select>
+        </div>
+        <div class="col-md-2">
+          X CÓDIGO
+          <input
+            type="text"
+            id="codigo"
+            name="codigo"
+            class="form-control"
+            placeholder="Ingrese el código"
+            onchange="alCambiarCodigo()"
+          />
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button
+            class="btn btn-primary"
+            onclick="alBuscar()"
+          >
+            Buscar
+          </button>
+        </div>
+
+        <div class="col-md-auto d-flex align-items-end ms-auto">
+          <div class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="solo-pedidos"
+              onchange="alCambiarSoloPedidos()"
+            />
+            <label class="form-check-label" for="solo-pedidos">
+              SOLO PEDIDO
+            </label>
+          </div>
         </div>
       </div>
 
@@ -45,7 +79,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               <th class="text-center" colspan="2">Central de costos</th>
               <th class="text-center" colspan="2">Temporada Baja</th>
               <th class="text-center" colspan="2">Temporada Alta</th>
-              <th class="text-center" colspan="4"></th>
+              <th class="text-center" colspan="3"></th>
+              <th colspan="3" style="background-color: white !important"></th>
             </tr>
             <tr>
               <th class="text-center">Código</th>
@@ -56,12 +91,43 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               <th class="text-center">Stock Max</th>
               <th class="text-center">Costo unitario</th>
               <th class="text-center">Stock actual</th>
+              <th class="text-center">T. Unidad</th>
+              <th style="width: 40px; background-color: white !important"></th>
               <th class="text-center">Cant. Pedido</th>
               <th class="text-center">Costo Total</th>
             </tr>
           </thead>
           <tbody></tbody>
         </table>
+      </div>
+
+      <!-- sección total -->
+      <div class="row mt-3">
+        <div class="col-auto ms-auto d-flex align-items-center pe-0">
+          TOTAL:
+        </div>
+        <div class="col-auto">
+          <input
+            type="text"
+            id="total"
+            name="total"
+            class="form-control"
+            readonly
+          />
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-md-2">
+          <button class="btn btn-primary" onclick="limpiarPedido()">
+            Limpiar pedido
+          </button>
+        </div>
+        <div class="col-md-2 ms-auto">
+          <button class="btn btn-outline-secondary" onclick="imprimirPedido()">
+            Imprimir pedido
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -70,6 +136,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 <script>
   const apiCentralesCostosUrl = "<?php echo URL_API_NUEVA ?>/centrales-costos";
   const apiProductosUrl = "<?php echo URL_API_NUEVA ?>/productos";
+  const apiReportesUrl = "<?php echo URL_API_NUEVA ?>/reportes";
 
   let tablaProductosBody = null;
 
@@ -82,8 +149,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     tablaProductosBody = document.getElementById("tabla-petitorio").tBodies[0];
 
     await cargarCentralesCostos();
-    await cargarProductos();
-    await cargarCentralesConProductosEnTabla();
   }
 
   async function cargarCentralesCostos() {
@@ -108,62 +173,87 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         select.appendChild(option);
       });
 
-      select.addEventListener("change", cargarCentralesConProductosEnTabla);
+      select.addEventListener("change", alCambiarCentralCostos);
     } catch (error) {
       console.error(error);
       mostrarAlert("error", "Error al cargar los grupos", "consultar");
     }
   }
 
-  async function cargarProductos() {
-    const url = `${apiProductosUrl}?con-centrales-costos`;
+  function alCambiarSoloPedidos() {
+    const soloPedidos = document.getElementById("solo-pedidos").checked;
+
+    if (soloPedidos) {
+      const url = `${apiProductosUrl}?con-centrales-costos&solo-pedido`;
+
+      cargarCentralesConProductosEnTabla(url);
+      return;
+    } else {
+      alBuscar();
+    }
+  }
+
+  function alBuscar() {
+    const centralCostosSelect = document.getElementById("central-costos");
+    const centralCostos = centralCostosSelect.value;
+
+    const codigoInput = document.getElementById("codigo");
+    const codigo = codigoInput.value;
+
+    const soloPedidos = document.getElementById("solo-pedidos");
+    soloPedidos.checked = false;
+
+    if (!centralCostos && !codigo) {
+      mostrarAlert(
+        "error",
+        "Debe ingresar un código o seleccionar una central de costos",
+        "consultar"
+      );
+      return;
+    }
+
+    const url = `${apiProductosUrl}?con-centrales-costos${
+      centralCostos ? `&central-costos=${centralCostos}` : ""
+    }${codigo ? `&codigo=${codigo}` : ""}`;
+
+    cargarCentralesConProductosEnTabla(url);
+  }
+
+  function alCambiarCentralCostos() {
+    const codigoInput = document.getElementById("codigo");
+    codigoInput.value = "";
+  }
+
+  function alCambiarCodigo() {
+    const centralCostosSelect = document.getElementById("central-costos");
+    centralCostosSelect.value = "";
+  }
+
+  async function cargarCentralesConProductosEnTabla(url) {
+    tablaProductosBody.innerHTML = "";
 
     try {
       const response = await fetch(url);
       const data = await response.json();
+
       centralesConProductos = data;
     } catch (error) {
       console.error(error);
       mostrarAlert("error", "Error al cargar los productos", "consultar");
     }
-  }
 
-  async function cargarCentralesConProductosEnTabla() {
-    tablaProductosBody.innerHTML = "";
+    centralesConProductos.forEach((element) => {
+      const tr = tablaProductosBody.insertRow();
 
-    const centralCostosSelect = document.getElementById("central-costos");
-    const centralCostos = centralCostosSelect.value;
+      const tdCosto = tr.insertCell();
+      tdCosto.textContent = element.nombre_del_costo;
+      tdCosto.classList.add("fw-bold");
+      tdCosto.colSpan = 7;
 
-    if (!centralCostos) {
-      centralesConProductos.forEach((element) => {
-        const tr = tablaProductosBody.insertRow();
+      mostrarProductos(element.productos);
+    });
 
-        const tdCosto = tr.insertCell();
-        tdCosto.textContent = element.nombre_del_costo;
-        tdCosto.classList.add("fw-bold");
-        tdCosto.colSpan = 7;
-
-        mostrarProductos(element.productos);
-      });
-      return;
-    }
-
-    const centralCostosFiltrado = centralesConProductos.find(
-      (element) => element.id_central_de_costos == centralCostos
-    );
-
-    if (!centralCostosFiltrado) {
-      return;
-    }
-
-    const tr = tablaProductosBody.insertRow();
-
-    const tdCosto = tr.insertCell();
-    tdCosto.textContent = centralCostosFiltrado.nombre_del_costo;
-    tdCosto.classList.add("fw-bold");
-    tdCosto.colSpan = 7;
-
-    mostrarProductos(centralCostosFiltrado.productos);
+    actualizarTotal();
   }
 
   function actualizarColoresProductos() {
@@ -260,6 +350,13 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         tdStock.classList.add("bg-danger");
       }
 
+      const tdTipoUnidad = tr.insertCell();
+      tdTipoUnidad.classList.add("text-center");
+      tdTipoUnidad.textContent = element.tipo_de_unidad;
+
+      const tdVacio = tr.insertCell();
+      tdVacio.style.width = "40px !important";
+
       const tdCantidadPedido = tr.insertCell();
       tdCantidadPedido.classList.add("text-center");
 
@@ -302,6 +399,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       const data = await response.json();
 
       console.log(data);
+      actualizarTotal();
       mostrarAlert(
         "ok",
         "Se actualizó la cantidad del producto correctamente",
@@ -316,6 +414,50 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       );
     }
   }
+
+  async function limpiarPedido() {
+    const url = `${apiProductosUrl}/0/limpiar-pedido`;
+    const options = {
+      method: "PATCH",
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+
+      console.log(data);
+
+      tablaProductosBody.innerHTML = "";
+      actualizarTotal();
+
+      mostrarAlert("ok", "Se limpió el pedido correctamente", "editar");
+    } catch (error) {
+      console.error(error);
+      mostrarAlert("error", "Error al limpiar el pedido", "editar");
+    }
+  }
+
+  function actualizarTotal() {
+    const trs = tablaProductosBody.querySelectorAll("tr");
+
+    let total = 0;
+
+    trs.forEach((tr) => {
+      const tds = tr.querySelectorAll("td");
+
+      if (tds.length == 1) {
+        return;
+      }
+
+      const tdCostoTotal = tds[11];
+      total += parseFloat(tdCostoTotal.textContent);
+    });
+
+    const inputTotal = document.getElementById("total");
+    inputTotal.value = formatearCantidad(total);
+  }
+
+  async function imprimirPedido() {}
 
   window.addEventListener("load", wrapper);
 </script>

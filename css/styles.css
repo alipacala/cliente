@@ -110,7 +110,7 @@ th {
 
 .tabla-petitorio-container {
   overflow: scroll !important;
-  height: 50vh !important;
+  height: 80vh !important;
 }
 
 #tabla-petitorio thead {
