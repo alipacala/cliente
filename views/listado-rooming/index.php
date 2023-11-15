@@ -47,10 +47,23 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               <th>Fecha Llegada</th>
               <th>Fecha Salida</th>
               <th>Acción</th>
+              <th>Mantenimientos</th>
+              <th>Colaborador</th>
+              <th style="width: 400px">Observaciones</th>
             </tr>
           </thead>
           <tbody id="pendiente-pago"></tbody>
         </table>
+      </div>
+      <div class="row">
+        <div class="col-md-auto">
+          <button class="btn btn-outline-secondary" onclick="imprimirDesayunos()">PROG. DESAYUNOS</button>
+        </div>
+        <div class="col-md-auto">
+          <button class="btn btn-outline-secondary" onclick="imprimirDesayunos()">
+            PROG. MANTENIMIENTOS
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -197,6 +210,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   const apiRoomingUrl = "<?php echo URL_API_NUEVA ?>/rooming";
   const apiCheckingsUrl = "<?php echo URL_API_NUEVA ?>/checkings";
   const apiHabitacionesUrl = "<?php echo URL_API_NUEVA ?>/habitaciones";
+  const apiReportesUrl = "<?php echo URL_API_NUEVA ?>/reportes";
 
   let fechaBusqueda = null;
   let selectHabitaciones = null;
@@ -234,6 +248,12 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     );
 
     buscarPorFecha();
+  }
+
+  function imprimirDesayunos()
+  {
+    const url = `${apiReportesUrl}?tipo=desayunos&fecha=${fechaBusqueda.value}`;
+    window.open(url, '_blank');
   }
 
   async function cambiarHabitacion() {
@@ -313,7 +333,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         row.dataset.nombre_cliente = item.nombre;
         row.dataset.fecha_out = item.fecha_out;
 
-        const estaOculto = item.estado_pago == 3 || item.estado_pago == 5 || item.estado_pago == null;
+        const estaOculto =
+          item.estado_pago == 3 ||
+          item.estado_pago == 5 ||
+          item.estado_pago == null ||
+          item.estado == "OU";
 
         if (!estaOculto) {
           row.classList.add(
@@ -350,6 +374,27 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                 <button id="checkout" class="btn btn-outline-danger" onclick="mostrarModalCheckout(event)">CHECKOUT</button>`
                 : ""
             }
+          </td>
+          <td>
+            <select class="form-select tipo" id="mantenimiento">
+              <option value="1">ASEO HABITACIÓN - 30</option>
+              <option value="2">MANT. PROFUNDA - 40</option>
+              <option value="3">MANT. PROFUNDA - 45</option>
+              <option value="4">REPASO - 10</option>
+              <option value="5">REPARACIÓN</option>
+            </select>
+          </td>
+          <td>
+            <select class="form-select tipo" id="colaborador">
+              <option value="1">JENNIFER</option>
+              <option value="2">TANIA</option>
+              <option value="3">AMELIA</option>
+              <option value="4">ELVIS</option>
+              <option value="5">VICTOR</option>
+            </select>
+          </td>
+          <td style="width: 400px;">
+            <input type="text" class="form-control" id="observaciones" />
           </td>
       `;
       });
