@@ -152,6 +152,47 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   </div>
 </div>
 
+<div
+  class="modal modal-sm fade"
+  id="modal-checkout"
+  tabindex="-1"
+  aria-labelledby="modal-checkout-label"
+  style="display: none"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-body">
+        <h5 class="modal-title mb-3" id="modal-checkout-label">
+          ¿Realmente desea hacer CHECKOUT?
+        </h5>
+        <div class="row">
+          <div class="col-md-6">
+            <button
+              type="button"
+              class="btn btn-danger"
+              id="confirmar-checkout"
+              data-bs-dismiss="modal"
+              onclick="checkout()"
+            >
+              CHECKOUT
+            </button>
+          </div>
+          <div class="col-md-6">
+            <button
+              type="button"
+              class="btn btn-outline-secondary w-100 h-100"
+              data-bs-dismiss="modal"
+            >
+              Salir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   const apiRoomingUrl = "<?php echo URL_API_NUEVA ?>/rooming";
   const apiCheckingsUrl = "<?php echo URL_API_NUEVA ?>/checkings";
@@ -171,6 +212,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
   let datosCheckin = null;
 
+  let modalCheckout = null;
+
   function wrapper() {
     fechaBusqueda = document.getElementById("fecha_busqueda");
     selectHabitaciones = document.getElementById("nro_habitacion");
@@ -184,6 +227,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     tablaRooming = document.getElementById("rooming").tBodies[0];
     modalCambioHabitacion = new bootstrap.Modal(
       document.getElementById("modal-cambio-habitacion")
+    );
+
+    modalCheckout = new bootstrap.Modal(
+      document.getElementById("modal-checkout")
     );
 
     buscarPorFecha();
@@ -257,7 +304,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         const row = tablaRooming.insertRow();
 
         const fechaActual = new Date().toISOString().split("T")[0];
-        const fechaSeleccionadaEsFuturaUHoy = fechaBusqueda.value >= fechaActual;
+        const fechaSeleccionadaEsFuturaUHoy =
+          fechaBusqueda.value >= fechaActual;
 
         row.dataset.id = item.id_checkin;
         row.dataset.nro_habitacion = item.nro_habitacion;
@@ -265,7 +313,15 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         row.dataset.nombre_cliente = item.nombre;
         row.dataset.fecha_out = item.fecha_out;
 
-        row.classList.add(item.de_salida ? "de_salida" : item.ocupado ? "ocupado" : item.reservado ? "reservado" : "libre");
+        row.classList.add(
+          item.de_salida
+            ? "de_salida"
+            : item.ocupado
+            ? "ocupado"
+            : item.reservado
+            ? "reservado"
+            : "libre"
+        );
 
         row.innerHTML = `
           <td>${item.nombre_producto || ""}</td>
@@ -279,12 +335,49 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           <td>
             ${
               fechaSeleccionadaEsFuturaUHoy && item.nro_registro_maestro
-                ? `<a href="../gestionar-checkin-hotel?id_checkin=${item.id_checkin}&nro_habitacion=${item.nro_habitacion}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a><button id="cambiar-habitacion" class="btn btn-secondary" onclick="prepararCambiarHabitacion(event)">CAMBIAR HAB</button>`
+                ? `<a href="../gestionar-checkin-hotel?id_checkin=${item.id_checkin}&nro_habitacion=${item.nro_habitacion}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
+                <button id="cambiar-habitacion" class="btn btn-secondary" onclick="prepararCambiarHabitacion(event)">CAMBIAR HAB</button>
+                <button id="checkout" class="btn btn-outline-danger" onclick="mostrarModalCheckout(event)">CHECKOUT</button>`
                 : ""
             }
           </td>
       `;
       });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function mostrarModalCheckout(event) {
+    const modalCheckoutEl = document.getElementById("modal-checkout");
+    const idCheckin = event.target.closest("tr").dataset.id;
+    const nroHabitacion = event.target.closest("tr").dataset.nro_habitacion;
+
+    modalCheckoutEl.dataset.id = idCheckin;
+    modalCheckoutEl.dataset.nro_habitacion = nroHabitacion;
+
+    modalCheckout.show();
+  }
+
+  async function checkout() {
+    const modalCheckoutEl = document.getElementById("modal-checkout");
+    const idCheckin = modalCheckoutEl.dataset.id;
+    const nroHabitacion = modalCheckoutEl.dataset.nro_habitacion;
+
+    const url = `${apiCheckingsUrl}/${idCheckin}/checkout`;
+    const options = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ nro_habitacion: nroHabitacion }),
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+
+      console.log(data);
     } catch (error) {
       console.error(error);
     }
