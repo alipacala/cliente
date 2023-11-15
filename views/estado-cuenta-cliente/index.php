@@ -1278,10 +1278,10 @@ $_SESSION["usuario"]["id_usuario"]; ?>
            <td>
              ${
                comprobante.por_pagar > 0
-                 ? `<button class="btn btn-outline-success" onclick="mostrarModalRecibo(event)">Cobranza</button>
-                    <button class="btn btn-danger" onclick="mostrarModalResetearPagos(event)">*</button>`
+                 ? `<button class="btn btn-outline-success" onclick="mostrarModalRecibo(event)">Cobranza</button>`
                  : ""
              }
+             <button class="btn btn-danger" onclick="mostrarModalResetearPagos(event)">*</button>
            </td>
          `;
 
