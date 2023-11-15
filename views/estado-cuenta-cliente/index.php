@@ -121,10 +121,10 @@ $_SESSION["usuario"]["id_usuario"]; ?>
               value="Ver Acompañantes"
             />
             <span
-              class="btn-link"
+              class="btn-link text-center"
               style="cursor: pointer"
               onclick="mostrarModalAgregarAcompanante()"
-              >Agregar acompañante</span
+              ><i class="fas fa-plus"></i> Acompañante</span
             >
           </div>
           <input
@@ -1281,7 +1281,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
                  ? `<button class="btn btn-outline-success" onclick="mostrarModalRecibo(event)">Cobranza</button>`
                  : ""
              }
-             <button class="btn btn-danger" onclick="mostrarModalResetearPagos(event)">*</button>
+             <button class="btn btn-danger" onclick="mostrarModalResetearPagos(event)" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Reseteo de pagos">*</button>
            </td>
          `;
 
