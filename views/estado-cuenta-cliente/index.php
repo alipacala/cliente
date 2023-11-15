@@ -113,12 +113,20 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
       <div class="row mb-4">
         <div class="col">
-          <input
-            type="button"
-            class="btn btn-outline-secondary"
-            id="ver-acompanantes"
-            value="Ver Acompañantes"
-          />
+          <div class="d-inline-flex flex-column">
+            <input
+              type="button"
+              class="btn btn-outline-secondary"
+              id="ver-acompanantes"
+              value="Ver Acompañantes"
+            />
+            <span
+              class="btn-link"
+              style="cursor: pointer"
+              onclick="mostrarModalAgregarAcompanante()"
+              >Agregar acompañante</span
+            >
+          </div>
           <input
             type="button"
             class="btn btn-outline-secondary"
@@ -682,6 +690,76 @@ $_SESSION["usuario"]["id_usuario"]; ?>
   </div>
 </div>
 
+<!-- MODAL PARA CREAR ACOMPANANTE CON apellidos, nombres; edad; sexo -->
+<div
+  class="modal fade"
+  id="modal-acompanante"
+  tabindex="-1"
+  aria-labelledby="modal-acompanante-label"
+  style="display: none"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-acompanante-label">
+          Agregar acompañante
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          id="cerrar-modal-acompanante"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <label for="acompanante">Apellidos y Nombres:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="acompanante"
+              name="acompanante"
+            />
+          </div>
+          <div class="col-md-12">
+            <label for="edad">Edad:</label>
+            <input type="number" class="form-control" id="edad" name="edad" />
+          </div>
+          <div class="col-md-12">
+            <label for="sexo">Sexo:</label>
+            <select class="form-select" id="sexo" name="sexo">
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row w-100">
+          <button
+            type="submit"
+            class="btn btn-primary col-md-6"
+            id="crear-acompanante"
+            onclick="crearAcompanante()"
+          >
+            Aceptar
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-secondary col-md-6"
+            data-bs-dismiss="modal"
+          >
+            Salir
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   const configId = 4;
   const apiConfigUrl = `<?php echo URL_API_NUEVA ?>/config/${configId}/codigo`;
@@ -729,6 +807,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
   let modalAcompanantes;
   let modalVerComprobante;
   let modalAnularItems;
+  let modalAgregarAcompanante;
 
   async function wrapper() {
     mostrarAlertaSiHayMensaje();
@@ -778,6 +857,11 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
     modalAnularItems = new bootstrap.Modal(
       document.getElementById("modal-anular-items"),
+      modalOptions
+    );
+
+    modalAgregarAcompanante = new bootstrap.Modal(
+      document.getElementById("modal-acompanante"),
       modalOptions
     );
 
@@ -1148,7 +1232,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
            <td>
              ${
                comprobante.por_pagar > 0
-                 ? `<button class="btn btn-outline-success" onclick="mostrarModalRecibo(event)">Generar Recibo</button>`
+                 ? `<button class="btn btn-outline-success" onclick="mostrarModalRecibo(event)">Cobranza</button>`
                  : ""
              }
            </td>
@@ -1358,7 +1442,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
          <td>${acompanante.edad}</td>
          <td>${
            acompanante.nro_de_orden_unico > 0
-             ? acompanante.parentesco
+             ? acompanante.parentesco ?? ""
              : "<span class='fw-bold'>TITULAR</span>"
          }</td>
        `;
@@ -1940,6 +2024,54 @@ $_SESSION["usuario"]["id_usuario"]; ?>
     } catch (error) {
       console.error(error);
       mostrarAlert("error", "Error al cerrar la cuenta", "editar");
+    }
+  }
+
+  function mostrarModalAgregarAcompanante() {
+    modalAgregarAcompanante.show();
+  }
+
+  async function crearAcompanante() {
+    const apellidosYNombres = document.getElementById("acompanante");
+    const sexo = document.getElementById("sexo");
+    const edad = document.getElementById("edad");
+    const nroOrdenUnico = acompanantes.reduce(
+      (max, acompanante) =>
+        acompanante.nro_de_orden_unico > max
+          ? acompanante.nro_de_orden_unico
+          : max,
+      0
+    ) + 1;
+
+    const acompanante = {
+      apellidos_y_nombres: apellidosYNombres.value,
+      sexo: sexo.value,
+      edad: edad.value,
+      nro_registro_maestro: checking.nro_registro_maestro,
+      nro_de_orden_unico: nroOrdenUnico,
+    };
+
+    const options = {
+      method: "POST",
+      body: JSON.stringify(acompanante),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const response = await fetch(apiAcompanantesUrl, options);
+      const data = await response.json();
+      const acompananteCreado = data;
+
+      if (acompananteCreado) {
+        await cargarDatosAcompanantes();
+        await cargarAcompanantesEnTabla();
+        modalAgregarAcompanante.hide();
+      }
+    } catch (error) {
+      console.error(error);
+      mostrarAlert("error", "Error al crear el acompañante", "crear");
     }
   }
 

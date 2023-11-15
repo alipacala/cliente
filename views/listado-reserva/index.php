@@ -281,12 +281,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             />
           </div>
           <div class="modal-footer">
-            <button
-              type="submit"
-              class="btn btn-primary"
-            >
-              Si
-            </button>
+            <button type="submit" class="btn btn-primary">Si</button>
             <button
               type="button"
               class="btn btn-secondary"
@@ -301,7 +296,87 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   </div>
 </div>
 
+<div
+  class="modal fade"
+  id="modal-cambiar-estado"
+  tabindex="-1"
+  aria-labelledby="modal-cambiar-estado-label"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modal-cambiar-estado-label">
+          Cambiar estado
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <label for="estado-select">Estado:</label>
+        <select id="estado-select" class="form-select">
+          <option value="0">RESERVA</option>
+          <option value="1">INGRESO</option>
+          <option value="2">CONFIRMADA</option>
+          <option value="3">EN ESPERA</option>
+          <option value="4">POSTERGADA</option>
+          <option value="5">ANULADA</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" onclick="cambiarEstado()" data-bs-dismiss="modal">
+          Si
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
+  function mostrarModalCambiarEstado(id_reserva) {
+    const cambiarEstadoModal = document.getElementById("modal-cambiar-estado");
+    cambiarEstadoModal.dataset.id_reserva = id_reserva;
+
+    const modal = new bootstrap.Modal(cambiarEstadoModal);
+    modal.show();
+  }
+
+  async function cambiarEstado() {
+    const cambiarEstadoModal = document.getElementById("modal-cambiar-estado");
+    const modal = new bootstrap.Modal(cambiarEstadoModal);
+
+    const id_reserva = cambiarEstadoModal.dataset.id_reserva;
+
+    const url = "<?php echo URL_API_NUEVA ?>/reservas/" + id_reserva;
+    const estado_pago = document.getElementById("estado-select").value;
+
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ estado_pago }),
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+
+      console.log(data);
+      modal.hide();
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   function setFechaActual() {
     var inputDate = document.getElementById("fecha_busqueda");
     var fechaActual = new Date().toISOString().slice(0, 10);
@@ -451,9 +526,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         tabla.innerHTML = ""; // Limpiar la tabla antes de agregar nuevos datos
 
         data.forEach((item) => {
-
           if (item.fecha_llegada >= fechaBusqueda) {
             const row = tabla.insertRow();
+            row.dataset.id_reserva = item.id_reserva;
             row.innerHTML = `
                     <td>${item.nro_reserva}</td>
                     <td>${item.fecha_llegada}</td>
@@ -463,16 +538,28 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                     <td>${item.nro_personas}</td>
                     <td>${item.cantidad_habitaciones}</td>
                     <td>${item.lugar_procedencia}</td>
-                    <td>
+                    <td onclick="mostrarModalCambiarEstado(${item.id_reserva})">
                       ${
                         item.estado_pago == 0
-                          ? '<span class="badge rounded-pill text-bg-danger">ADELANTO</span>'
+                          ? "<span>RESERVA</span>"
                           : item.estado_pago == 1
-                          ? '<span class="badge rounded-pill text-bg-success">CHEKIN</span>'
-                          : '<span class="badge rounded-pill text-bg-info">Adelanto</span>'
+                          ? "<span>INGRESO</span>"
+                          : item.estado_pago == 2
+                          ? '<span class="badge rounded-pill text-bg-success">CONFIRMADA</span>'
+                          : item.estado_pago == 3
+                          ? '<span class="badge rounded-pill text-bg-warning">EN ESPERA</span>'
+                          : item.estado_pago == 4
+                          ? "<span>POSTERGADA</span>"
+                          : item.estado_pago == 5
+                          ? '<span class="badge rounded-pill text-bg-danger">ANULADA</span>'
+                          : ""
                       }
                     </td>
-                    <td>${item.nro_registro_maestro == null ? "" : item.nro_registro_maestro}</td>
+                    <td>${
+                      item.nro_registro_maestro == null
+                        ? ""
+                        : item.nro_registro_maestro
+                    }</td>
                     ${
                       item.nro_registro_maestro
                         ? "<td></td>"
@@ -529,16 +616,30 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                     <td>${item.nro_personas}</td>
                     <td>${item.cantidad_habitaciones}</td>
                     <td>${item.lugar_procedencia}</td>
-                    <td>
+                    <td onclick="mostrarModalCambiarEstado(${
+                      item.id_reserva
+                    })" style="cursor: pointer;">
                       ${
                         item.estado_pago == 0
-                          ? '<span class="badge rounded-pill text-bg-danger">ADELANTO</span>'
+                          ? "<span>RESERVA</span>"
                           : item.estado_pago == 1
-                          ? '<span class="badge rounded-pill text-bg-success">CHEKIN</span>'
-                          : '<span class="badge rounded-pill text-bg-info">Adelanto</span>'
+                          ? "<span>INGRESO</span>"
+                          : item.estado_pago == 2
+                          ? '<span class="badge rounded-pill text-bg-success">CONFIRMADA</span>'
+                          : item.estado_pago == 3
+                          ? '<span class="badge rounded-pill text-bg-warning">EN ESPERA</span>'
+                          : item.estado_pago == 4
+                          ? "<span>POSTERGADA</span>"
+                          : item.estado_pago == 5
+                          ? '<span class="badge rounded-pill text-bg-danger">ANULADA</span>'
+                          : ""
                       }
                     </td>
-                    <td>${item.nro_registro_maestro == null ? "" : item.nro_registro_maestro}</td>
+                    <td>${
+                      item.nro_registro_maestro == null
+                        ? ""
+                        : item.nro_registro_maestro
+                    }</td>
                     ${
                       item.nro_registro_maestro
                         ? "<td></td>"

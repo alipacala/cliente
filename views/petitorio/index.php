@@ -335,7 +335,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       tdCostoUnitario.classList.add("text-end");
 
       const tdStock = tr.insertCell();
-      tdStock.textContent = formatearCantidad(element.stock);
+      tdStock.textContent = element.stock == null || element.stock == 0 ? "0" : Number.isInteger(+element.stock) ? (+element.stock).toFixed(0) : (+element.stock).toFixed(2);
       tdStock.classList.add("text-center");
       if (
         temporada == "baja" &&
@@ -458,7 +458,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     inputTotal.value = formatearCantidad(total);
   }
 
-  async function imprimirPedido() {}
+  async function imprimirPedido() {
+    const url = `${apiReportesUrl}?tipo=pedido`;
+    open(url, "_blank");
+  }
 
   window.addEventListener("load", wrapper);
 </script>
