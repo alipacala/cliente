@@ -38,7 +38,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           ></select>
         </div>
         <div class="col-md-2">
-          X CÓDIGO
+          X CÓDIGO / NOMBRE
           <input
             type="text"
             id="codigo"

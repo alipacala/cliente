@@ -690,7 +690,6 @@ $_SESSION["usuario"]["id_usuario"]; ?>
   </div>
 </div>
 
-<!-- MODAL PARA CREAR ACOMPANANTE CON apellidos, nombres; edad; sexo -->
 <div
   class="modal fade"
   id="modal-acompanante"
@@ -760,6 +759,47 @@ $_SESSION["usuario"]["id_usuario"]; ?>
   </div>
 </div>
 
+<div
+  class="modal modal-sm fade"
+  id="modal-resetear-pagos"
+  tabindex="-1"
+  aria-labelledby="modal-resetear-pagos-label"
+  style="display: none"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-body">
+        <h5 class="modal-title mb-3" id="modal-resetear-pagos-label">
+          ¿Realmente desea resetear los pagos?
+        </h5>
+        <div class="row">
+          <div class="col-md-6">
+            <button
+              type="button"
+              class="btn btn-danger"
+              id="confirmar-resetear-pagos"
+              data-bs-dismiss="modal"
+              onclick="resetearPagos()"
+            >
+              Resetear los pagos
+            </button>
+          </div>
+          <div class="col-md-6">
+            <button
+              type="button"
+              class="btn btn-outline-secondary w-100 h-100"
+              data-bs-dismiss="modal"
+            >
+              Salir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   const configId = 4;
   const apiConfigUrl = `<?php echo URL_API_NUEVA ?>/config/${configId}/codigo`;
@@ -808,6 +848,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
   let modalVerComprobante;
   let modalAnularItems;
   let modalAgregarAcompanante;
+  let modalResetearPagos;
 
   async function wrapper() {
     mostrarAlertaSiHayMensaje();
@@ -862,6 +903,11 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
     modalAgregarAcompanante = new bootstrap.Modal(
       document.getElementById("modal-acompanante"),
+      modalOptions
+    );
+
+    modalResetearPagos = new bootstrap.Modal(
+      document.getElementById("modal-resetear-pagos"),
       modalOptions
     );
 
@@ -1232,7 +1278,8 @@ $_SESSION["usuario"]["id_usuario"]; ?>
            <td>
              ${
                comprobante.por_pagar > 0
-                 ? `<button class="btn btn-outline-success" onclick="mostrarModalRecibo(event)">Cobranza</button>`
+                 ? `<button class="btn btn-outline-success" onclick="mostrarModalRecibo(event)">Cobranza</button>
+                    <button class="btn btn-danger" onclick="mostrarModalResetearPagos(event)">*</button>`
                  : ""
              }
            </td>
@@ -2035,13 +2082,14 @@ $_SESSION["usuario"]["id_usuario"]; ?>
     const apellidosYNombres = document.getElementById("acompanante");
     const sexo = document.getElementById("sexo");
     const edad = document.getElementById("edad");
-    const nroOrdenUnico = acompanantes.reduce(
-      (max, acompanante) =>
-        acompanante.nro_de_orden_unico > max
-          ? acompanante.nro_de_orden_unico
-          : max,
-      0
-    ) + 1;
+    const nroOrdenUnico =
+      acompanantes.reduce(
+        (max, acompanante) =>
+          acompanante.nro_de_orden_unico > max
+            ? acompanante.nro_de_orden_unico
+            : max,
+        0
+      ) + 1;
 
     const acompanante = {
       apellidos_y_nombres: apellidosYNombres.value,
@@ -2072,6 +2120,43 @@ $_SESSION["usuario"]["id_usuario"]; ?>
     } catch (error) {
       console.error(error);
       mostrarAlert("error", "Error al crear el acompañante", "crear");
+    }
+  }
+
+  function mostrarModalResetearPagos(event) {
+    event.stopPropagation();
+    const row = event.target.closest("tr");
+
+    const resetearPagos = document.getElementById("modal-resetear-pagos");
+    resetearPagos.dataset.id = row.dataset.id;
+
+    modalResetearPagos.show();
+  }
+
+  async function resetearPagos() {
+    const idComprobanteVentas = document.getElementById("modal-resetear-pagos")
+      .dataset.id;
+
+    const url = `${apiRecibosUrl}/0/resetear-pagos`;
+    const options = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id_comprobante_ventas: idComprobanteVentas }),
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+
+      cargarDatosDocumentosDetalles();
+      cargarDatosComprobantes();
+      actualizarBotonCerrarCuenta();
+      modalResetearPagos.hide();
+    } catch (error) {
+      console.error(error);
+      mostrarAlert("error", "Error al resetear los pagos", "borrar");
     }
   }
 
