@@ -313,28 +313,38 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         row.dataset.nombre_cliente = item.nombre;
         row.dataset.fecha_out = item.fecha_out;
 
-        row.classList.add(
-          item.de_salida
-            ? "de_salida"
-            : item.ocupado
-            ? "ocupado"
-            : item.reservado
-            ? "reservado"
-            : "libre"
-        );
+        const estaOculto = item.estado_pago == 3 || item.estado_pago == 5 || item.estado_pago == null;
+
+        if (!estaOculto) {
+          row.classList.add(
+            item.de_salida
+              ? "de_salida"
+              : item.ocupado
+              ? "ocupado"
+              : item.reservado
+              ? "reservado"
+              : "libre"
+          );
+        }
+
+        if (!estaOculto) {
+          console.log(item);
+        }
 
         row.innerHTML = `
           <td>${item.nombre_producto || ""}</td>
           <td>${item.nro_habitacion || ""}</td>
-          <td>${item.nro_registro_maestro || ""}</td>
-          <td>${item.nro_reserva || ""}</td>
-          <td>${item.nombre || ""}</td>
-          <td>${item.nro_personas || ""}</td>
-          <td>${item.fecha_in || ""}</td>
-          <td>${item.fecha_out || ""}</td>
+          <td>${estaOculto ? "" : item.nro_registro_maestro ?? ""}</td>
+          <td>${estaOculto ? "" : item.nro_reserva ?? ""}</td>
+          <td>${estaOculto ? "" : item.nombre ?? ""}</td>
+          <td>${estaOculto ? "" : item.nro_personas ?? ""}</td>
+          <td>${estaOculto ? "" : item.fecha_in ?? ""}</td>
+          <td>${estaOculto ? "" : item.fecha_out ?? ""}</td>
           <td>
             ${
-              fechaSeleccionadaEsFuturaUHoy && item.nro_registro_maestro
+              !estaOculto &&
+              fechaSeleccionadaEsFuturaUHoy &&
+              item.nro_registro_maestro
                 ? `<a href="../gestionar-checkin-hotel?id_checkin=${item.id_checkin}&nro_habitacion=${item.nro_habitacion}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
                 <button id="cambiar-habitacion" class="btn btn-secondary" onclick="prepararCambiarHabitacion(event)">CAMBIAR HAB</button>
                 <button id="checkout" class="btn btn-outline-danger" onclick="mostrarModalCheckout(event)">CHECKOUT</button>`

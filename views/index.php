@@ -311,7 +311,7 @@ $logueado); ?>
               <a
                 href="./listado-catalogo/"
                 class="btn btn-outline-secondary mb-2 w-100 text-start"
-                >CARTAS DE PRODUCTOS</a
+                >CATÁLOGO DE PRODUCTOS</a
               >
             </div>
             <div class="col-12 text-start">
