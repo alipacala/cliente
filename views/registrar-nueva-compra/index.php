@@ -123,12 +123,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           </div>
           <div class="form-group col-md-3">
             <label for="ciudad">Ciudad</label>
-            <input
-              class="form-control"
-              id="ciudad"
-              name="ciudad"
-              required
-            />
+            <input class="form-control" id="ciudad" name="ciudad" required />
           </div>
           <div class="form-group col-md-3">
             <label for="tipo_gasto">Tipo de gasto</label>
@@ -305,13 +300,14 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         <form id="form-crear-insumo">
           <div class="row mb-3">
             <div class="form-group col-md-8">
-              <label for="producto">Producto</label>
-              <select
-                class="form-select"
+              <label for="producto" class="form-label">Producto</label>
+              <input
+                class="form-control"
+                list="producto-list"
                 id="producto"
-                name="producto"
-                required
-              ></select>
+                placeholder="Buscar producto..."
+              />
+              <datalist id="producto-list"> </datalist>
             </div>
             <div class="form-group col-md-4">
               <button
@@ -523,7 +519,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           </div>
           <div class="row mb-3">
             <div class="form-group col-md-4">
-              <label for="cantidad_de_fracciones">Cantidad de Unidades de Fracciones</label>
+              <label for="cantidad_de_fracciones"
+                >Cantidad de Unidades de Fracciones</label
+              >
               <input
                 type="text"
                 class="form-control"
@@ -532,23 +530,23 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               />
             </div>
             <div class="form-group col-md-4">
-            <label for="tipo_de_unidad_de_fracciones"
-              >Tipo de Unidad de Fracciones</label
-            >
-            <select
-              class="form-select"
-              id="tipo_de_unidad_de_fracciones"
-              name="tipo_de_unidad_de_fracciones"
-              required
-            >
-              <option value="UN" selected>UNIDAD</option>
-              <option value="KG">KILO</option>
-              <option value="GR">GRAMO</option>
-              <option value="LT">LITRO</option>
-              <option value="ML">MILILITRO</option>
-              <option value="OZ">ONZA</option>
-            </select>
-          </div>
+              <label for="tipo_de_unidad_de_fracciones"
+                >Tipo de Unidad de Fracciones</label
+              >
+              <select
+                class="form-select"
+                id="tipo_de_unidad_de_fracciones"
+                name="tipo_de_unidad_de_fracciones"
+                required
+              >
+                <option value="UN" selected>UNIDAD</option>
+                <option value="KG">KILO</option>
+                <option value="GR">GRAMO</option>
+                <option value="LT">LITRO</option>
+                <option value="ML">MILILITRO</option>
+                <option value="OZ">ONZA</option>
+              </select>
+            </div>
             <div class="form-group col-md-4">
               <label for="proveedor_asignado">Proveedor Asignado</label>
               <input
@@ -1198,34 +1196,32 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       const response = await fetch(apiProductosUrl);
       let data = await response.json();
 
-      data = data.filter(
-        (producto) => producto.tipo == 'PRD'
-      );
+      data = data.filter((producto) => producto.tipo == "PRD");
 
       const productosSelect = document.getElementById("producto");
-      productosSelect.innerHTML = "";
+
+      const productosDatalist = document.getElementById("producto-list");
+      productosDatalist.innerHTML = "";
 
       const option = document.createElement("option");
-      option.value = "0";
-      option.textContent = "Otro insumo - Ingrese descripción";
-      productosSelect.appendChild(option);
-      
+      option.value = "0 - Otro insumo - Ingrese descripción";
+      productosDatalist.appendChild(option);
+
       data.forEach((insumo) => {
         const option = document.createElement("option");
-        
+
         insumosCargados = [...insumosCargados, insumo];
-        
-        option.value = insumo.id_producto;
-        option.textContent = insumo.nombre_producto;
-        productosSelect.appendChild(option);
+
+        option.value = `${insumo.id_producto} - ${insumo.nombre_producto}`;
+        productosDatalist.appendChild(option);
       });
-      
+
       limpiarFormularioDetalle();
 
       productosSelect.addEventListener("change", alCambiarInsumo);
 
       // seleccionar la opción 0
-      productosSelect.value = "0";
+      productosSelect.value = productosDatalist.options[0].value;
       // lanzar el evento change para que se carguen los datos del producto
       productosSelect.dispatchEvent(new Event("change"));
 
@@ -1253,7 +1249,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     const agregarInsumoButton = document.getElementById("agregar-producto");
     const tipoComprobante = document.getElementById("tipo_comprobante");
 
-    if (productoSelect.value != 0) {
+    const idProducto = productoSelect.value.split(" - ")[0];
+
+    if (idProducto != 0) {
       agregarInsumoButton.disabled = false;
       descripcion.disabled = true;
       descripcion.value = "";
@@ -1264,7 +1262,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     }
 
     const productoSeleccionado = insumosCargados.find(
-      (insumo) => insumo.id_producto == productoSelect.value
+      (insumo) => insumo.id_producto == idProducto
     );
 
     // si el producto no tiene costo unitario, muestra 0
@@ -1505,11 +1503,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     const selectProducto = document.getElementById("producto");
 
     const detalle = {
-      id_insumo: selectProducto.value,
+      id_insumo: selectProducto.value.split(" - ")[0],
       nombre_insumo:
         selectProducto.selectedIndex == 0
           ? descripcion.value
-          : selectProducto.options[selectProducto.selectedIndex].text,
+          : selectProducto.value.split(" - ")[1],
       cantidad: document.getElementById("cantidad").value,
       tipo_de_unidad: document.getElementById("tipo_unidad_detalle").value,
       costo_unitario: document.getElementById("precio_unitario_sin_igv").value,
