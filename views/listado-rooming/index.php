@@ -352,7 +352,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         }
 
         row.innerHTML = `
-          <td>${item.abreviatura || ""}</td>
+          <td>${item.abreviatura_producto || ""}</td>
           <td>${item.nro_habitacion || ""}</td>
           <td>${estaOculto ? "" : item.nro_registro_maestro ?? ""}</td>
           <td>${estaOculto ? "" : item.nro_reserva ?? ""}</td>
