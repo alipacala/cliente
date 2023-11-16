@@ -1642,7 +1642,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
             ? formatearFechaYHora(
                 `${documentoDetalle.fecha_servicio}T${
                   documentoDetalle.hora_servicio
-                    ? documentoDetalle.hora_servicio
+                    ? formatearHora(documentoDetalle.hora_servicio, true)
                     : "00:00"
                 }:00`
               )
