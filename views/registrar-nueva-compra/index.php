@@ -321,17 +321,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           </div>
 
           <div class="form-group mb-3">
-            <label for="descripcion">Descripción</label>
-            <input
-              type="text"
-              class="form-control"
-              id="descripcion"
-              name="descripcion"
-              onchange="alCambiarDescripcion(event)"
-            />
-          </div>
-
-          <div class="form-group mb-3">
             <label for="cantidad">Cantidad</label>
             <input
               type="number"
@@ -405,7 +394,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             type="submit"
             class="btn btn-primary col-md-6"
             id="agregar-producto"
-            disabled
           >
             Agregar Producto
           </button>
@@ -987,13 +975,14 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       // agregar la opción al select de productos como primera opción (después de la opción por defecto)
       const productoSelect = document.getElementById("producto");
+      const productosDatalist = document.getElementById("producto-list");
+
       const option = document.createElement("option");
-      option.value = data.resultado.id_producto;
-      option.textContent = data.resultado.nombre_producto;
-      productoSelect.insertBefore(option, productoSelect.options[1]);
+      option.value = `${data.resultado.id_producto} - ${data.resultado.nombre_producto}`;
+      productosDatalist.insertBefore(option, productosDatalist.options[1]);
 
       // seleccionar la opción recién creada
-      productoSelect.value = data.resultado.id_producto;
+      productoSelect.value = option.value;
       // lanzar el evento change para que se carguen los datos del producto
       productoSelect.dispatchEvent(new Event("change"));
 
@@ -1203,10 +1192,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       const productosDatalist = document.getElementById("producto-list");
       productosDatalist.innerHTML = "";
 
-      const option = document.createElement("option");
-      option.value = "0 - Otro insumo - Ingrese descripción";
-      productosDatalist.appendChild(option);
-
       data.forEach((insumo) => {
         const option = document.createElement("option");
 
@@ -1220,8 +1205,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       productosSelect.addEventListener("change", alCambiarInsumo);
 
-      // seleccionar la opción 0
-      productosSelect.value = productosDatalist.options[0].value;
       // lanzar el evento change para que se carguen los datos del producto
       productosSelect.dispatchEvent(new Event("change"));
 
@@ -1233,31 +1216,22 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     }
   }
 
-  function alCambiarDescripcion(event) {
-    const agregarInsumoButton = document.getElementById("agregar-producto");
-    const descripcion = event.target.value;
-
-    if (descripcion) {
-      agregarInsumoButton.disabled = false;
-    } else {
-      agregarInsumoButton.disabled = true;
-    }
-  }
-
   function alCambiarInsumo() {
     const productoSelect = document.getElementById("producto");
     const agregarInsumoButton = document.getElementById("agregar-producto");
     const tipoComprobante = document.getElementById("tipo_comprobante");
 
-    const idProducto = productoSelect.value.split(" - ")[0];
+    const productosDatalist = document.getElementById("producto-list");
 
-    if (idProducto != 0) {
-      agregarInsumoButton.disabled = false;
-      descripcion.disabled = true;
-      descripcion.value = "";
-    } else {
-      agregarInsumoButton.disabled = true;
-      descripcion.disabled = false;
+    const existeProducto = !!productosDatalist.querySelector(
+      `option[value="${productoSelect.value}"]`
+    );
+
+    const idProducto = existeProducto
+      ? productoSelect.value.split(" - ")[0]
+      : 0;
+
+    if (idProducto == 0) {
       return;
     }
 
@@ -1501,13 +1475,17 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
   function alAgregarInsumo() {
     const selectProducto = document.getElementById("producto");
+    const productosDatalist = document.getElementById("producto-list");
+
+    const existeProducto = !!productosDatalist.querySelector(
+      `option[value="${selectProducto.value}"]`
+    );
 
     const detalle = {
-      id_insumo: selectProducto.value.split(" - ")[0],
-      nombre_insumo:
-        selectProducto.selectedIndex == 0
-          ? descripcion.value
-          : selectProducto.value.split(" - ")[1],
+      id_insumo: existeProducto ? selectProducto.value.split(" - ")[0] : 0,
+      nombre_insumo: existeProducto
+        ? selectProducto.value.split(" - ")[1]
+        : selectProducto.value,
       cantidad: document.getElementById("cantidad").value,
       tipo_de_unidad: document.getElementById("tipo_unidad_detalle").value,
       costo_unitario: document.getElementById("precio_unitario_sin_igv").value,
@@ -1650,8 +1628,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     document.getElementById("precio_unitario_sin_igv").value = "0";
     document.getElementById("precio_unitario_con_igv").value = "0";
     document.getElementById("subtotal").value = "0";
-
-    document.getElementById("agregar-producto").disabled = true;
   }
 
   // función que comprueba que no sea solo varios guiones como por ejemplo "----"
