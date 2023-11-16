@@ -20,7 +20,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           GRUPO:
           <select id="grupo" name="grupo" class="form-select"></select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 d-flex align-items-end">
           <button
             class="btn btn-outline-secondary w-100 mt-auto"
             id="btn-ver-reporte"

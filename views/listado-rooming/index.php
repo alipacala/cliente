@@ -351,10 +351,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           );
         }
 
-        if (!estaOculto) {
-          console.log(item);
-        }
-
         row.innerHTML = `
           <td>${item.nombre_producto || ""}</td>
           <td>${item.nro_habitacion || ""}</td>
@@ -362,8 +358,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           <td>${estaOculto ? "" : item.nro_reserva ?? ""}</td>
           <td>${estaOculto ? "" : item.nombre ?? ""}</td>
           <td>${estaOculto ? "" : item.nro_personas ?? ""}</td>
-          <td>${estaOculto ? "" : item.fecha_in ?? ""}</td>
-          <td>${estaOculto ? "" : item.fecha_out ?? ""}</td>
+          <td>${estaOculto ? "" : formatearFecha(item.fecha_in, true) ?? ""}</td>
+          <td>${estaOculto ? "" : formatearFecha(item.fecha_out, true) ?? ""}</td>
           <td>
             ${
               !estaOculto &&
@@ -433,6 +429,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       const data = await response.json();
 
       console.log(data);
+
+      modalCheckout.hide();
+      buscarPorFecha();
     } catch (error) {
       console.error(error);
     }

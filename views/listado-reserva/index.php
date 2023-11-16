@@ -531,8 +531,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             row.dataset.id_reserva = item.id_reserva;
             row.innerHTML = `
                     <td>${item.nro_reserva}</td>
-                    <td>${item.fecha_llegada}</td>
-                    <td>${item.fecha_salida}</td>
+                    <td>${formatearFecha(item.fecha_llegada, true)}</td>
+                    <td>${formatearFecha(item.fecha_salida, true)}</td>
                     <td>${item.nro_noches}</td>
                     <td>${item.nombre}</td>
                     <td>${item.nro_personas}</td>
@@ -609,8 +609,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           const row = tabla.insertRow();
           row.innerHTML = `
                     <td>${item.nro_reserva}</td>
-                    <td>${item.fecha_llegada}</td>
-                    <td>${item.fecha_salida}</td>
+                    <td>${formatearFecha(item.fecha_llegada, true)}</td>
+                    <td>${formatearFecha(item.fecha_salida, true)}</td>
                     <td>${item.nro_noches}</td>
                     <td>${item.nombre}</td>
                     <td>${item.nro_personas}</td>

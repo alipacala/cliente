@@ -640,7 +640,7 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
       detalles.push({
         id_producto: productoSeleccionado.id_producto,
         producto: servicio,
-        cantidad: cantidadSeleccionada,
+        cantidad: 1,
         precio_unitario: productoSeleccionado.precio_venta_01,
 
         id_acompanate: aplicado,
