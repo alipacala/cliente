@@ -85,7 +85,7 @@ function formatearHora(fechaString, esSoloHora = false) {
   }
   console.log(fechaString);
   const hora = new Date(fechaString);
-  const horaLocal = new Date(esSoloHora ? hora : hora.getTime() + hora.getTimezoneOffset() * 60000);
+  const horaLocal = new Date(esSoloHora ? hora : /* hora.getTime() + hora.getTimezoneOffset() * 60000 */ hora);
 
   return `${horaLocal.getHours().toString().padStart(2, "0")}:${horaLocal
     .getMinutes()
