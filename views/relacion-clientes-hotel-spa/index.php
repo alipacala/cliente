@@ -126,7 +126,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         const tdHoraIn = tr.insertCell();
         tdHoraIn.innerText = formatearHora(cheking.hora_in, true);
         const tdFechaOut = tr.insertCell();
-        tdFechaOut.innerText = formatearHora(cheking.fecha_out, true);
+        tdFechaOut.innerText = formatearFecha(cheking.fecha_out, true);
         const tdEstado = tr.insertCell();
         tdEstado.innerText = ""; // TODO: pendiente de implementar
 
