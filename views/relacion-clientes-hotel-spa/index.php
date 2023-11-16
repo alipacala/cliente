@@ -122,11 +122,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         const tdTiempo = tr.insertCell();
         tdTiempo.innerText = obtenerTiempoTranscurrido(cheking);
         const tdFechaIn = tr.insertCell();
-        tdFechaIn.innerText = cheking.fecha_in;
+        tdFechaIn.innerText = formatearFecha(cheking.fecha_in, true);
         const tdHoraIn = tr.insertCell();
-        tdHoraIn.innerText = cheking.hora_in;
+        tdHoraIn.innerText = formatearHora(cheking.hora_in, true);
         const tdFechaOut = tr.insertCell();
-        tdFechaOut.innerText = cheking.fecha_out;
+        tdFechaOut.innerText = formatearHora(cheking.fecha_out, true);
         const tdEstado = tr.insertCell();
         tdEstado.innerText = ""; // TODO: pendiente de implementar
 
