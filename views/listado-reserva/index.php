@@ -319,12 +319,12 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       <div class="modal-body">
         <label for="estado-select">Estado:</label>
         <select id="estado-select" class="form-select">
-          <option value="0">RESERVA</option>
-          <option value="1">INGRESO</option>
-          <option value="2">CONFIRMADA</option>
+          <option value="0">RESERVADO</option>
+          <option value="1">INGRESÓ</option>
+          <option value="2">CONFIRMADO</option>
           <option value="3">EN ESPERA</option>
-          <option value="4">POSTERGADA</option>
-          <option value="5">ANULADA</option>
+          <option value="4">POSTERGADO</option>
+          <option value="5">ANULADO</option>
         </select>
       </div>
       <div class="modal-footer">
@@ -541,17 +541,17 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                     <td onclick="mostrarModalCambiarEstado(${item.id_reserva})">
                       ${
                         item.estado_pago == 0
-                          ? "<span>RESERVA</span>"
+                          ? "<span>RESERVADO</span>"
                           : item.estado_pago == 1
-                          ? "<span>INGRESO</span>"
+                          ? "<span>INGRESÓ</span>"
                           : item.estado_pago == 2
-                          ? '<span class="badge rounded-pill text-bg-success">CONFIRMADA</span>'
+                          ? '<span class="badge rounded-pill text-bg-success">CONFIRMADO</span>'
                           : item.estado_pago == 3
                           ? '<span class="badge rounded-pill text-bg-warning">EN ESPERA</span>'
                           : item.estado_pago == 4
-                          ? "<span>POSTERGADA</span>"
+                          ? "<span>POSTERGADO</span>"
                           : item.estado_pago == 5
-                          ? '<span class="badge rounded-pill text-bg-danger">ANULADA</span>'
+                          ? '<span class="badge rounded-pill text-bg-danger">ANULADO</span>'
                           : ""
                       }
                     </td>

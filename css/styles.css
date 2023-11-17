@@ -34,6 +34,7 @@ body {
 :root {
   --color-secundario: #abebff;
   --color-terciario: #effeff;
+  --color-terciario-disabled: #cadadb;
 }
 
 /* darle el color secundario a las cabezeras de las tablas */
@@ -56,6 +57,11 @@ th {
 .form-control,
 .form-select {
   background-color: var(--color-terciario) !important;
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  background-color: var(--color-terciario-disabled) !important;
 }
 
 /* color de las filas ocupadas y reservadas */

@@ -319,8 +319,67 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       console.log(data);
 
+      // agrupar por nro_habitacion
+      let habitaciones = data.reduce((acc, item) => {
+        const nroHabitacion = item.nro_habitacion;
+
+        if (!acc[nroHabitacion]) {
+          acc[nroHabitacion] = [];
+        }
+
+        acc[nroHabitacion].push(item);
+
+        return acc;
+      }, {});
+
+      console.log(habitaciones);
+
+      // elegir el checkin (el que tiene nro_registro_maestro) antes que la reserva (el que tiene nro_reserva pero no nro_registro_maestro) y finalmente el que no tiene nro_registro_maestro ni nro_reserva
+      
+      habitaciones = Object.values(habitaciones);
+      habitaciones.forEach((item) => {
+        item.sort((a, b) => {
+
+          if (a.nro_registro_maestro && !b.nro_registro_maestro) {
+            return -1;
+          }
+
+          if (!a.nro_registro_maestro && b.nro_registro_maestro) {
+            return 1;
+          }
+
+          if (a.nro_reserva && !b.nro_reserva) {
+            return -1;
+          }
+
+          if (!a.nro_reserva && b.nro_reserva) {
+            return 1;
+          }
+
+          return 0;
+        });
+      });
+
+      // borrar el elemento que tenga reservado_pero_ocupado
+      habitaciones.forEach((item) => {
+        const index = item.findIndex(
+          (element) => element.reservado_pero_ocupado
+        );
+
+        if (index > -1) {
+          item.splice(index, 1);
+        }
+      });
+
+      // elegir el primer registro de cada habitacion
+      habitaciones = habitaciones.map((item) => item[0]);
+
+      habitaciones = Object.values(habitaciones).flat();
+
+      console.log(habitaciones);
+
       tablaRooming.innerHTML = "";
-      data.forEach((item) => {
+      habitaciones.forEach((item) => {
         const row = tablaRooming.insertRow();
 
         const fechaActual = new Date().toISOString().split("T")[0];
@@ -337,7 +396,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           item.estado_pago == 3 ||
           item.estado_pago == 5 ||
           item.estado_pago == null ||
-          item.estado == "OU";
+          item.estado == "OU" ||
+          item.reservado_pero_ocupado;
 
         if (!estaOculto) {
           row.classList.add(
