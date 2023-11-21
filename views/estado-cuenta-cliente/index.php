@@ -715,12 +715,30 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       <div class="modal-body">
         <div class="row">
           <div class="col-md-12">
-            <label for="acompanante">Apellidos y Nombres:</label>
+            <label for="apellido-paterno-acompanante">Apellidos paterno:</label>
             <input
               type="text"
               class="form-control"
-              id="acompanante"
-              name="acompanante"
+              id="apellido-paterno-acompanante"
+              name="apellido-paterno-acompanante"
+            />
+          </div>
+          <div class="col-md-12">
+            <label for="apellido-materno-acompanante">Apellidos materno:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="apellido-materno-acompanante"
+              name="apellido-materno-acompanante"
+            />
+          </div>
+          <div class="col-md-12">
+            <label for="nombres-acompanante">Nombres:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nombres-acompanante"
+              name="nombres-acompanante"
             />
           </div>
           <div class="col-md-12">
@@ -2079,7 +2097,9 @@ $_SESSION["usuario"]["id_usuario"]; ?>
   }
 
   async function crearAcompanante() {
-    const apellidosYNombres = document.getElementById("acompanante");
+    const apellidoPaterno = document.getElementById("apellido-paterno-acompanante");
+    const apellidoMaterno = document.getElementById("apellido-materno-acompanante");
+    const nombres = document.getElementById("nombres-acompanante");
     const sexo = document.getElementById("sexo");
     const edad = document.getElementById("edad");
     const nroOrdenUnico =
@@ -2092,7 +2112,7 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       ) + 1;
 
     const acompanante = {
-      apellidos_y_nombres: apellidosYNombres.value,
+      apellidos_y_nombres: `${apellidoPaterno.value} ${apellidoMaterno.value}, ${nombres.value}`,
       sexo: sexo.value,
       edad: edad.value,
       nro_registro_maestro: checking.nro_registro_maestro,

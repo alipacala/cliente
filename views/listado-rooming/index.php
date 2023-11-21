@@ -57,10 +57,18 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       </div>
       <div class="row">
         <div class="col-md-auto">
-          <button class="btn btn-outline-secondary" onclick="imprimirDesayunos()">PROG. DESAYUNOS</button>
+          <button
+            class="btn btn-outline-secondary"
+            onclick="imprimirDesayunos()"
+          >
+            PROG. DESAYUNOS
+          </button>
         </div>
         <div class="col-md-auto">
-          <button class="btn btn-outline-secondary" onclick="imprimirDesayunos()">
+          <button
+            class="btn btn-outline-secondary"
+            onclick="imprimirDesayunos()"
+          >
             PROG. MANTENIMIENTOS
           </button>
         </div>
@@ -250,10 +258,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     buscarPorFecha();
   }
 
-  function imprimirDesayunos()
-  {
+  function imprimirDesayunos() {
     const url = `${apiReportesUrl}?tipo=desayunos&fecha=${fechaBusqueda.value}`;
-    window.open(url, '_blank');
+    window.open(url, "_blank");
   }
 
   async function cambiarHabitacion() {
@@ -332,18 +339,13 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         return acc;
       }, {});
 
-      console.log(habitaciones);
-
       // elegir el checkin (el que tiene nro_registro_maestro) antes que la reserva (el que tiene nro_reserva pero no nro_registro_maestro) y finalmente el que no tiene nro_registro_maestro ni nro_reserva
-      
       habitaciones = Object.values(habitaciones);
       habitaciones.forEach((item) => {
         item.sort((a, b) => {
-
           if (a.nro_registro_maestro && !b.nro_registro_maestro) {
             return -1;
           }
-
           if (!a.nro_registro_maestro && b.nro_registro_maestro) {
             return 1;
           }
@@ -351,12 +353,26 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           if (a.nro_reserva && !b.nro_reserva) {
             return -1;
           }
-
           if (!a.nro_reserva && b.nro_reserva) {
             return 1;
           }
 
           return 0;
+        });
+      });
+
+      habitaciones = Object.values(habitaciones);
+
+      // ordenar de modo que si el registro está de salida y hay otro registro que es reserva o está ocupado, el registro de salida quede al final
+      habitaciones.forEach((item) => {
+        item.sort((a, b) => {
+          if (a.de_salida && !b.reservado && !b.ocupado) {
+            return -1; // Muestra a como prioritario si es de salida y b no está reservada ni ocupada
+          } else if (b.de_salida && !a.reservado && !a.ocupado) {
+            return 1; // Muestra b como prioritario si es de salida y a no está reservada ni ocupada
+          } else {
+            return 0; // No hay preferencia, deja el orden como está
+          }
         });
       });
 
@@ -376,8 +392,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       habitaciones = Object.values(habitaciones).flat();
 
-      console.log(habitaciones);
-
       tablaRooming.innerHTML = "";
       habitaciones.forEach((item) => {
         const row = tablaRooming.insertRow();
@@ -395,9 +409,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         const estaOculto =
           item.estado_pago == 3 ||
           item.estado_pago == 5 ||
-          item.estado_pago == null ||
-          item.estado == "OU" ||
-          item.reservado_pero_ocupado;
+          item.estado_pago == null;
 
         if (!estaOculto) {
           row.classList.add(
@@ -418,13 +430,17 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           <td>${estaOculto ? "" : item.nro_reserva ?? ""}</td>
           <td>${estaOculto ? "" : item.nombre ?? ""}</td>
           <td>${estaOculto ? "" : item.nro_personas ?? ""}</td>
-          <td>${estaOculto ? "" : formatearFecha(item.fecha_in, true) ?? ""}</td>
-          <td>${estaOculto ? "" : formatearFecha(item.fecha_out, true) ?? ""}</td>
+          <td>${
+            estaOculto ? "" : formatearFecha(item.fecha_in, true) ?? ""
+          }</td>
+          <td>${
+            estaOculto ? "" : formatearFecha(item.fecha_out, true) ?? ""
+          }</td>
           <td>
             ${
               !estaOculto &&
               fechaSeleccionadaEsFuturaUHoy &&
-              item.nro_registro_maestro
+              item.nro_registro_maestro && item.estado != 'OU'
                 ? `<a href="../gestionar-checkin-hotel?id_checkin=${item.id_checkin}&nro_habitacion=${item.nro_habitacion}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
                 <button id="cambiar-habitacion" class="btn btn-secondary" onclick="prepararCambiarHabitacion(event)">CAMBIAR HAB</button>
                 <button id="checkout" class="btn btn-outline-danger" onclick="mostrarModalCheckout(event)">CHECKOUT</button>`
@@ -474,6 +490,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     const modalCheckoutEl = document.getElementById("modal-checkout");
     const idCheckin = modalCheckoutEl.dataset.id;
     const nroHabitacion = modalCheckoutEl.dataset.nro_habitacion;
+    const fecha = fechaBusqueda.value;
 
     const url = `${apiCheckingsUrl}/${idCheckin}/checkout`;
     const options = {
@@ -481,7 +498,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ nro_habitacion: nroHabitacion }),
+      body: JSON.stringify({ nro_habitacion: nroHabitacion, fecha_checkout: fecha }),
     };
 
     try {

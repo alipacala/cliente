@@ -167,7 +167,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         </div>
         <div class="col-auto">
           <div class="input-group mb-3">
-            <input type="date" class="form-control" id="fecha_busqueda" />
+            <input type="date" class="form-control" id="fecha_busqueda" value="<?php echo date('Y-m-d'); ?>" />
             <button
               class="btn btn-success"
               type="button"
@@ -328,7 +328,12 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         </select>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" onclick="cambiarEstado()" data-bs-dismiss="modal">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          onclick="cambiarEstado()"
+          data-bs-dismiss="modal"
+        >
           Si
         </button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -340,6 +345,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 </div>
 
 <script>
+  const apiReservasUrl = "<?php echo URL_API_NUEVA ?>/reservas";
+
   function mostrarModalCambiarEstado(id_reserva) {
     const cambiarEstadoModal = document.getElementById("modal-cambiar-estado");
     cambiarEstadoModal.dataset.id_reserva = id_reserva;
@@ -377,17 +384,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     }
   }
 
-  function setFechaActual() {
-    var inputDate = document.getElementById("fecha_busqueda");
-    var fechaActual = new Date().toISOString().slice(0, 10);
-    inputDate.value = fechaActual;
-  }
   let habitaciones = []; // Array para almacenar los datos de las habitaciones
   let habitacionesEliminadas = [];
   let id;
-  window.onload = function () {
-    setFechaActual();
-  };
 
   function buscarReservas(codigo) {
     const nro_reserva = document.getElementById("nro_reserva").value;
@@ -489,27 +488,35 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       nro_reserva: document.getElementById("nro_reserva").value,
       fecha_llegada: document.getElementById("fecha_llegada").value,
       fecha_salida: document.getElementById("fecha_salida").value,
+      observaciones_hospedaje: document.getElementById("o_hospedaje").value,
+      observaciones_pago: document.getElementById("o_pago").value,
     };
     agregarReserva(nuevoReservaE);
     eliminarReserva();
   });
 
-  function agregarReserva(Reserva) {
-    // Hacer la petición POST a la API para agregar un nuevo usuario
-    fetch("<?php echo URL_API_CARLITOS ?>/api-reservas.php", {
-      method: "UPDATE",
+  async function agregarReserva(Reserva) {
+    const url = `${apiReservasUrl}/0/fechas-observaciones`;
+    const options = {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(Reserva),
-    })
-      .then((response) => response.text())
-      .then((data) => {
-        //console.log(data); // Mostrar mensaje de éxito o error de la API
-        //obtenerUsuarios(); // Actualizar la lista de usuarios después de agregar uno nuevo
-      })
-      .catch((error) => console.error("Error:", error));
-    window.location.reload();
+    };
+
+    try {
+      const response = await fetch(url, options);
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log(data);
+        window.location.reload();
+      } else {
+        throw new Error("Error al actualizar la reserva");
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
   function buscarPorFecha() {
     const fechaBusqueda = document.getElementById("fecha_busqueda").value;

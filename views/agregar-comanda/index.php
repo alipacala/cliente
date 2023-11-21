@@ -27,6 +27,18 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
               disabled
             />
           </div>
+          <div class="form-group ms-auto col-md-5">
+            <label for="nombre_producto">Buscar por nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              list="producto-list"
+              id="nombre_producto"
+              placeholder="Buscar producto..."
+              onchange="alCambiarProducto()"
+            />
+            <datalist id="producto-list"> </datalist>
+          </div>
         </div>
         <div class="row">
           <div class="table-responsive col-md-7">
@@ -374,6 +386,9 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
 
     mostrarCodigoComanda();
     await cargarDatosGruposYProductos();
+
+    llenarDatalistProductos();
+
     await cargarDatosTerapistas();
 
     const selectCliente = document.getElementById("cliente");
@@ -559,7 +574,9 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
       const data = await response.json();
 
       if (data.resultado) {
-        window.location.href = desdeEstadoCuenta ? `./../estado-cuenta-cliente?nro_registro_maestro=${nroRegistroMaestro}&ok&mensaje=Comanda guardada correctamente&op=crear` : "../";
+        window.location.href = desdeEstadoCuenta
+          ? `./../estado-cuenta-cliente?nro_registro_maestro=${nroRegistroMaestro}&ok&mensaje=Comanda guardada correctamente&op=crear`
+          : "../";
       }
     } catch (error) {
       console.error(error);
@@ -609,6 +626,9 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
         cantidad: cantidadSeleccionada,
         precio_unitario: productoSeleccionado.precio_venta_01,
       });
+      
+      const inputProducto = document.getElementById("nombre_producto");
+      inputProducto.focus();
 
       actualizarTabla();
     });
@@ -648,6 +668,9 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
         fecha_servicio: fecha,
         hora_servicio: hora,
       });
+
+      const inputProducto = document.getElementById("nombre_producto");
+      inputProducto.focus();
 
       actualizarTabla();
     });
@@ -884,6 +907,35 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
     }
   }
 
+  function llenarDatalistProductos() {
+    const datalist = document.getElementById("producto-list");
+    datalist.innerHTML = "";
+
+    console.log(productos);
+
+    productos.forEach((producto) => {
+      const option = document.createElement("option");
+      option.value = `${producto.id_producto} - ${producto.nombre_producto}`;
+      datalist.appendChild(option);
+    });
+  }
+
+  function alCambiarProducto() {
+    const inputProducto = document.getElementById("nombre_producto");
+    const idProducto = inputProducto.value.split(" - ")[0];
+
+    const producto = productos.find(
+      (producto) => producto.id_producto == idProducto
+    );
+
+    inputProducto.value = "";
+
+    if (producto) {
+      agregarProducto(producto);
+    } else {
+      inputProducto.focus();
+    }
+  }
   window.addEventListener("load", wrapper);
 </script>
 

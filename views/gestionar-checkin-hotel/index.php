@@ -65,12 +65,30 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             </button>
           </div>
         </div>
-        <div class="col-md-4">
-          <label for="validationCustom04" class="form-label">Apellidos:</label>
-          <input type="text" class="form-control" id="apellidos" required />
+        <div class="col-md-2">
+          <label for="apellido_paterno" class="form-label"
+            >Apellido paterno:</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="apellido_paterno"
+            required
+          />
+        </div>
+        <div class="col-md-2">
+          <label for="apellido_materno" class="form-label"
+            >Apellido materno:</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="apellido_materno"
+            required
+          />
         </div>
         <div class="col-md-4">
-          <label for="validationCustom03" class="form-label">Nombres:</label>
+          <label for="nombres" class="form-label">Nombres:</label>
           <input type="text" class="form-control" id="nombres" required />
         </div>
         <div class="col-md-4">
@@ -301,7 +319,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                 <table class="table" id="tabla-acompanantes">
                   <thead>
                     <tr>
-                      <th>Apellido y Nombres</th>
+                      <th>Apellido paterno</th>
+                      <th>Apellido materno</th>
+                      <th>Nombres</th>
                       <th>Edad</th>
                       <th>Sexo</th>
                       <th>Parentesco</th>
@@ -425,14 +445,35 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         <br /><br />
         <div class="row g-3">
           <div class="col-md-6">
-            <label for="validationCustom02" class="form-label"
-              >Apellidos:</label
+            <label for="apellido_paterno_acompanante" class="form-label"
+              >Apellido paterno:</label
             >
-            <input type="text" class="form-control" id="apellido" required />
+            <input
+              type="text"
+              class="form-control"
+              id="apellido_paterno_acompanante"
+              required
+            />
           </div>
           <div class="col-md-6">
-            <label for="validationCustom02" class="form-label">Nombres:</label>
-            <input type="text" class="form-control" id="nombre" required />
+            <label for="apellido_materno_acompanante" class="form-label"
+              >Apellido materno:</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="apellido_materno_acompanante"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="nombres_acompanante" class="form-label">Nombres:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nombres_acompanante"
+              required
+            />
           </div>
           <div class="col-md-4">
             <label for="validationCustom04" class="form-label">Edad:</label>
@@ -477,6 +518,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         <button
           type="button"
           class="btn btn-primary"
+          data-bs-dismiss="modal"
           onclick="agregarRegistro()"
         >
           Agregar
@@ -544,18 +586,24 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     const checkinId = params.get("id_checkin");
     const nroHabitacion = params.get("nro_habitacion");
 
-    const idCheckin = document.getElementById("id_checkin");
-    idCheckin.value = checkinId;
-    const habitacion = document.getElementById("habitacion");
-    habitacion.value = nroHabitacion;
+    if (checkinId) {
+      const idCheckin = document.getElementById("id_checkin");
+      idCheckin.value = checkinId;
+    }
+    if (nroHabitacion) {
+      const habitacion = document.getElementById("habitacion");
+      habitacion.value = nroHabitacion;
+    }
 
     // lanzar evento change para cargar los datos
     habitacion.dispatchEvent(new Event("change"));
 
     guardarReferencias();
 
-    await cargarDatos();
-    await cargarAcompanantes();
+    if (checkinId) {
+      await cargarDatos();
+      await cargarAcompanantes();
+    }
   }
 
   function obtenerAcompanantesDeTabla() {
@@ -614,7 +662,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       const response = await fetch(url);
       const data = await response.json();
 
-      console.log(data);
+      console.log('data', data);
 
       var selectElementtipohabitacion = document.getElementById("tipo");
       const selectedOptiontipoproducto =
@@ -629,7 +677,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       document.getElementById("id_persona").value = data[0].id_persona;
       document.getElementById("nro_registro").value =
         data[0].nro_registro_maestro;
-      document.getElementById("apellidos").value = data[0].apellidos;
+      document.getElementById("apellido_paterno").value =
+        data[0].apellidos?.split(" ")[0] ?? "";
+      document.getElementById("apellido_materno").value =
+        data[0].apellidos?.split(" ")[1] ?? "";
       document.getElementById("tipo_documento").value = data[0].tipo_documento;
       document.getElementById("ciudad").value = data[0].lugar_procedencia;
       document.getElementById("celular").value = data[0].celular;
@@ -685,14 +736,24 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       tablaAcompanantes.innerHTML = "";
 
       // eliminar el titular de la lista de acompanantes
+      console.log('data', data)
       data = data.filter((acompanante) => acompanante.nro_de_orden_unico != 0);
 
       data.forEach((acompanante) => {
         const row = tablaAcompanantes.insertRow();
         row.dataset.id = acompanante.id_acompanante;
         row.dataset.nro_de_orden_unico = acompanante.nro_de_orden_unico;
+
+        const nombres = acompanante.apellidos_y_nombres.split(", ")[1];
+        const apellidoPaterno = acompanante.apellidos_y_nombres.split(" ")[0];
+        const apellidoMaterno = acompanante.apellidos_y_nombres
+          .split(", ")[0]
+          .split(" ")[1];
+
         row.innerHTML = `
-          <td>${acompanante.apellidos_y_nombres}</td>
+          <td>${apellidoPaterno}</td>
+          <td>${apellidoMaterno}</td>
+          <td>${nombres}</td>
           <td>${acompanante.edad}</td>
           <td>${acompanante.sexo}</td>
           <td>${
@@ -912,37 +973,14 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   let registros = [];
   let contador = 0;
   function agregarRegistro() {
-    /* if (contador === 0) {
-      // Obtener valores de los campos de entrada fuera de la función
-      var apellidos2 = document.getElementById("apellidos").value;
-      var nombres2 = document.getElementById("nombres").value;
-      var edad2 = document.getElementById("edad").value;
-      var parentesco2 = "";
-      var sexo2 = document.getElementById("sexo").value;
-      var nombre_completo2 = apellidos2 + ", " + nombres2;
-
-      // Crear un objeto para representar el registro de afuera
-      var registroFuera = {
-        nombre: nombre_completo2,
-        edad: edad2,
-        sexo: sexo2,
-        parentesco: parentesco2,
-      };
-
-      // Agregar el registro de afuera al array
-      registros.push(registroFuera);
-
-      // Actualizar la tabla
-      // actualizarTabla();
-    } */
-
     // Obtener valores de los campos de entrada
-    var apellidos2 = document.getElementById("apellido").value;
-    var nombres2 = document.getElementById("nombre").value;
+    var apellidoPaternoAcompanante = document.getElementById("apellido_paterno_acompanante").value;
+    var apellidoMaternoAcompanante = document.getElementById("apellido_materno_acompanante").value;
+    var nombresAcompanante = document.getElementById("nombres_acompanante").value;
     var edad2 = document.getElementById("edad2").value;
     var parentesco2 = document.getElementById("parentesco").value;
     var sexo2 = document.getElementById("sexo2").value;
-    var nombre_completo2 = apellidos2 + ", " + nombres2;
+    var nombre_completo2 = `${apellidoPaternoAcompanante} ${apellidoMaternoAcompanante}, ${nombresAcompanante}`;
 
     // Crear un objeto para representar el registro de afuera
     var registroFuera = {
@@ -971,8 +1009,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     // actualizarTabla();
     contador += 1;
     // Limpiar campos de entrada después de agregar la fila
-    document.getElementById("apellido").value = "";
-    document.getElementById("nombre").value = "";
+    document.getElementById("apellido_paterno_acompanante").value = "";
+    document.getElementById("apellido_materno_acompanante").value = "";
+    document.getElementById("nombres_acompanante").value = "";
     document.getElementById("edad2").value = "";
     document.getElementById("sexo2").value = "";
     document.getElementById("parentesco").value = "0";
@@ -1028,7 +1067,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           habitacionInput.options[habitacionInput.selectedIndex];
         // recibe todos los datos del formulario
         if (registros.length === 0) {
-          var apellidos2 = document.getElementById("apellidos").value;
+          var apellidos2 = `${
+            document.getElementById("apellido_paterno").value
+          } ${document.getElementById("apellido_materno").value}`;
           var nombres2 = document.getElementById("nombres").value;
           var edad2 = document.getElementById("edad").value;
           var parentesco2 = "";
@@ -1048,7 +1089,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           formData = {
             nro_registro: document.getElementById("nro_registro").value,
             nro_reserva: document.getElementById("nro_reserva").value,
-            apellidos: document.getElementById("apellidos").value,
+            apellidos: `${document.getElementById("apellido_paterno").value} ${
+              document.getElementById("apellido_materno").value
+            }`,
             nombres: document.getElementById("nombres").value,
             tipo_documento: document.getElementById("tipo_documento").value,
             nro_documento: document.getElementById("nro_documento").value,
@@ -1092,7 +1135,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           formData = {
             nro_registro: document.getElementById("nro_registro").value,
             nro_reserva: document.getElementById("nro_reserva").value,
-            apellidos: document.getElementById("apellidos").value,
+            apellidos: `${document.getElementById("apellido_paterno").value} ${
+              document.getElementById("apellido_materno").value
+            } `,
             nombres: document.getElementById("nombres").value,
             tipo_documento: document.getElementById("tipo_documento").value,
             nro_documento: document.getElementById("nro_documento").value,
@@ -1228,7 +1273,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     let codigo = document.getElementById("nro_documento").value;
     buscarUsuarios(codigo);
     document.getElementById("nombres").value = "";
-    document.getElementById("apellidos").value = "";
+    document.getElementById("apellido_paterno").value = "";
+    document.getElementById("apellido_materno").value = "";
   }
   function buscarUsuarios(codigo) {
     const apiUrl1 = `<?php echo URL_API_CARLITOS ?>/api-personanaturaljuridica.php?codigo=${codigo}`;
@@ -1247,10 +1293,14 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             const primerUsuarioApi1 = dataApi1[0];
             document.getElementById("nombres").value =
               primerUsuarioApi1.nombres;
-            document.getElementById("apellidos").value =
-              primerUsuarioApi1.apellidos;
+            document.getElementById("apellido_paterno").value =
+              primerUsuarioApi1.apellidos.split(" ")[0];
+            document.getElementById("apellido_materno").value =
+              primerUsuarioApi1.apellidos.split(" ")[1];
             document.getElementById("id_persona").value =
               primerUsuarioApi1.id_persona;
+            document.getElementById("edad").value = primerUsuarioApi1.edad;
+            document.getElementById("sexo").value = primerUsuarioApi1.sexo;
           } else {
             document.getElementById("nombres").value = "";
             document.getElementById("apellidos").value = "";
@@ -1279,6 +1329,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               primerUsuarioApi2.apellidos;
             document.getElementById("id_persona").value =
               primerUsuarioApi2.id_profesional;
+            document.getElementById("edad").value = primerUsuarioApi2.edad;
+            document.getElementById("sexo").value = primerUsuarioApi2.sexo;
           } else {
             document.getElementById("nombres").value = "";
             document.getElementById("apellidos").value = "";

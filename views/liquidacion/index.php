@@ -48,6 +48,14 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           <tbody></tbody>
         </table>
       </div>
+      <div class="row">
+        <!-- boton para imprimir -->
+        <div class="col-md-3">
+          <button class="btn btn-outline-secondary" onclick="imprimirReporte()">
+            <i class="fas fa-print"></i> Imprimir reporte
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -142,6 +150,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   const apiDocumentosDetallesUrl =
     "<?php echo URL_API_NUEVA ?>/documentos-detalles";
   const apiTerapistasUrl = "<?php echo URL_API_NUEVA ?>/terapistas";
+  const apiReportesUrl = "<?php echo URL_API_NUEVA ?>/reportes";
 
   let modal;
 
@@ -245,7 +254,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
         const estado = row.insertCell();
         estado.innerHTML = servicio.estado;
-        
+
         const recibo = row.insertCell();
         recibo.innerHTML = servicio.recibo;
       });
@@ -309,6 +318,19 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       console.error(error);
       mostrarAlert("error", "No se pudo anular el comprobante", "borrar");
     }
+  }
+
+  function imprimirReporte() {
+    const fecha = document.getElementById("fecha").value;
+    const idProfesional = document.getElementById("id_profesional").value;
+
+    if (!fecha || !idProfesional) {
+      return;
+    }
+
+    const url = `${apiReportesUrl}?tipo=liquidacion&fecha=${fecha}&id_profesional=${idProfesional}`;
+
+    window.open(url, "_blank");
   }
 
   function limpiarTabla() {

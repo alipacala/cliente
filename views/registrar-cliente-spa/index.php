@@ -60,7 +60,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             <thead>
               <tr>
                 <th>DNI Titular</th>
-                <th>Apellidos y Nombres</th>
+                <th>Apellido paterno</th>
+                <th>Apellido materno</th>
+                <th>Nombres</th>
                 <th>Sexo</th>
                 <th>Seg. Edad</th>
                 <th>Parentesco</th>
@@ -89,8 +91,27 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                   <input
                     type="text"
                     class="form-control"
-                    id="apellidos_nombres_titular"
-                    name="apellidos_nombres_titular"
+                    id="apellido_paterno_titular"
+                    name="apellido_paterno_titular"
+                    onchange="agregarFilaAcompanante()"
+                    required
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="apellido_materno_titular"
+                    name="apellido_materno_titular"
+                    required
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="nombres_titular"
+                    name="nombres_titular"
                     required
                   />
                 </td>
@@ -143,11 +164,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
     await cargarNroRegistro();
 
-    const apellidosNombresTitular = document.getElementById(
-      "apellidos_nombres_titular"
-    );
-    agregarEventoAlCambiarApellidosNombres(apellidosNombresTitular);
-
     actualizarFechaHora();
     prepararFormulario();
     alCambiarDni();
@@ -187,9 +203,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           titular: {
             es_nuevo: true,
             nro_documento: document.getElementById("dni_titular").value,
-            apellidos_y_nombres: document.getElementById(
-              "apellidos_nombres_titular"
-            ).value,
+            apellidos_y_nombres: `${document.getElementById(
+              "apellido_paterno_titular"
+            ).value} ${document.getElementById(
+              "apellido_materno_titular"
+            ).value}, ${document.getElementById("nombres_titular").value}`,
             sexo: document.getElementById("sexo_titular").value,
             edad: document.getElementById("seg_edad_titular").value,
           },
@@ -203,15 +221,19 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     // borrar los que no tengan nombre
     filasAcompanantes = [...filasAcompanantes].filter(
       (fila) =>
-        fila.querySelector("[name='apellidos_nombres_acompanante_actual']")
+        fila.querySelector("[name='apellido_paterno_acompanante_actual']")
           .value != ""
     );
 
     chekingRegistro.acompanantes = filasAcompanantes.map(
       (acompanante, index) => ({
-        apellidos_y_nombres: acompanante.querySelector(
-          "[name='apellidos_nombres_acompanante_actual']"
-        ).value,
+        apellidos_y_nombres: `${acompanante.querySelector(
+          "[name='apellido_paterno_acompanante_actual']"
+        ).value} ${acompanante.querySelector(
+          "[name='apellido_materno_acompanante_actual']"
+        ).value}, ${acompanante.querySelector(
+          "[name='nombres_acompanante_actual']"
+        ).value}`,
         sexo: acompanante.querySelector("[name='sexo_acompanante_actual']")
           .value,
         edad: acompanante.querySelector("[name='seg_edad_acompanante_actual']")
@@ -277,8 +299,12 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
         personaExiste = true;
 
-        document.getElementById("apellidos_nombres_titular").value =
-          personaEncontrada.apellidos + ", " + personaEncontrada.nombres;
+        document.getElementById("apellido_paterno_titular").value =
+          personaEncontrada.apellidos.split(" ")[0];
+        document.getElementById("apellido_materno_titular").value =
+          personaEncontrada.apellidos.split(" ")[1];
+        document.getElementById("nombres_titular").value =
+          personaEncontrada.nombres;
         document.getElementById("sexo_titular").value = personaEncontrada.sexo;
         document.getElementById("seg_edad_titular").value =
           personaEncontrada.edad;
@@ -332,20 +358,36 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     fila.dataset.rowId = rowId++;
 
     const dniTitular = fila.insertCell();
-    const apellidosNombres = fila.insertCell();
+    const apellidoPaterno = fila.insertCell();
+    const apellidoMaterno = fila.insertCell();
+    const nombres = fila.insertCell();
     const sexo = fila.insertCell();
     const edad = fila.insertCell();
     const parentesco = fila.insertCell();
     const acciones = fila.insertCell();
 
-    const apellidosNombresInput = document.createElement("input");
-    apellidosNombresInput.type = "text";
-    apellidosNombresInput.classList.add("form-control");
-    apellidosNombresInput.id = "apellidos_nombres_acompanante_actual";
-    apellidosNombresInput.name = "apellidos_nombres_acompanante_actual";
+    const apellidoPaternoInput = document.createElement("input");
+    apellidoPaternoInput.type = "text";
+    apellidoPaternoInput.classList.add("form-control");
+    apellidoPaternoInput.id = "apellido_paterno_acompanante_actual";
+    apellidoPaternoInput.name = "apellido_paterno_acompanante_actual";
+    
+    apellidoPaternoInput.addEventListener("change", () => {
+      agregarFilaAcompanante();
+    });
 
-    agregarEventoAlCambiarApellidosNombres(apellidosNombresInput);
+    const apellidoMaternoInput = document.createElement("input");
+    apellidoMaternoInput.type = "text";
+    apellidoMaternoInput.classList.add("form-control");
+    apellidoMaternoInput.id = "apellido_materno_acompanante_actual";
+    apellidoMaternoInput.name = "apellido_materno_acompanante_actual";
 
+    const nombresInput = document.createElement("input");
+    nombresInput.type = "text";
+    nombresInput.classList.add("form-control");
+    nombresInput.id = "nombres_acompanante_actual";
+    nombresInput.name = "nombres_acompanante_actual";
+    
     const sexoInput = document.createElement("select");
     sexoInput.classList.add("form-select");
     sexoInput.id = "sexo_acompanante_actual";
@@ -376,7 +418,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     cargarParentescosEnSelect(parentescoInput);
 
     dniTitular.innerHTML = "";
-    apellidosNombres.appendChild(apellidosNombresInput);
+    apellidoPaterno.appendChild(apellidoPaternoInput);
+    apellidoMaterno.appendChild(apellidoMaternoInput);
+    nombres.appendChild(nombresInput);
     sexo.appendChild(sexoInput);
     edad.appendChild(edadInput);
     parentesco.appendChild(parentescoInput);
@@ -388,26 +432,25 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   }
 
   function bloquearInputs() {
-    document.getElementById("apellidos_nombres_titular").disabled = true;
+    document.getElementById("apellido_paterno_titular").disabled = true;
+    document.getElementById("apellido_materno_titular").disabled = true;
+    document.getElementById("nombres_titular").disabled = true;
     document.getElementById("sexo_titular").disabled = true;
   }
 
   function desbloquearInputs() {
-    document.getElementById("apellidos_nombres_titular").disabled = false;
+    document.getElementById("apellido_paterno_titular").disabled = false;
+    document.getElementById("apellido_materno_titular").disabled = false;
+    document.getElementById("nombres_titular").disabled = false;
     document.getElementById("sexo_titular").disabled = false;
   }
 
   function limpiarInputs() {
-    document.getElementById("apellidos_nombres_titular").value = "";
+    document.getElementById("apellido_paterno_titular").value = "";
+    document.getElementById("apellido_materno_titular").value = "";
+    document.getElementById("nombres_titular").value = "";
     document.getElementById("sexo_titular").value = "M";
     document.getElementById("seg_edad_titular").value = "";
-  }
-
-  // función para agregar evento al cambiar apellidos y nombres y mostrar una nueva fila de acompañante
-  function agregarEventoAlCambiarApellidosNombres(input) {
-    input.addEventListener("change", () => {
-      agregarFilaAcompanante();
-    });
   }
 
   // Función para actualizar la fecha y hora
