@@ -473,7 +473,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
   async function cargarHabitaciones() {
     const url = `${apiHabitacionesUrl}?con-disponibilidad&fecha_ingreso=${fechaIngresoEl.value}&fecha_salida=${fechaSalidaEl.value}`;
-
+    
     try {
       const response = await fetch(url);
       const data = await response.json();

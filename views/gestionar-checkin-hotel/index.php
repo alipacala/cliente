@@ -367,8 +367,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                     <label for="activo">Tipo Documento Comprobante:</label>
                     <select class="form-select" id="tipo_documento_comprobante">
                       <option value="0">--Seleccione--</option>
-                      <option value="1">DNI</option>
-                      <option value="2">RUC</option>
+                      <option value="DNI">DNI</option>
+                      <option value="RUC">RUC</option>
                     </select>
                   </div>
                   <div class="col-md-4">
@@ -531,52 +531,23 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 <script>
   const apiAcompanantesUrl = "<?php echo URL_API_NUEVA ?>/acompanantes";
   const apiCheckingsUrl = "<?php echo URL_API_NUEVA ?>/checkings";
+  const apiHabitacionesUrl = "<?php echo URL_API_NUEVA ?>/habitaciones";
+  const apiSunatUrl = "<?php echo URL_API_NUEVA ?>/sunat";
 
   let fechas = [];
   let objfechas = [];
 
-  function generar_objetofechas() {
-    let fechas = [];
-    let fechaIn = document.getElementById("fecha_in").value;
-    let fechaOut = document.getElementById("fecha_out").value;
-    let currentDate = new Date(fechaIn);
-    // Convierte las fechas en objetos Date
-    var dateIn = new Date(fechaIn);
-    var dateOut = new Date(fechaOut);
-
-    // Obtiene la fecha actual
-    var fechaActual = new Date();
-    // Verifica si fecha_out es mayor que la fecha actual antes de continuar
-    if (dateOut <= fechaActual) {
-      alert("La fecha de salida debe ser mayor que la fecha actual.");
-      return null; // Retorna null para indicar que no se pudo generar el objeto
-    }
-    while (currentDate < new Date(fechaOut)) {
-      fechas.push({ fecha: currentDate.toISOString().split("T")[0] });
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-    var codigo = document.getElementById("id_checkin").value;
-    // Enviar las fechas al servidor
-    fetch("<?php echo URL_API_CARLITOS ?>/api-rooming.php", {
-      method: "FECHA",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        codigo: codigo, // Reemplaza 'tu_codigo' con el valor correcto
-        fechasJson: fechas,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => console.error("Error:", error));
-  }
-</script>
-<script>
   // #region referencias a elementos del DOM
   let formChecking = null;
+  let idCheckinEl = null;
+  let habitacionEl = null;
+  let tablaAcompanantes = null;
+
+  let tipoDocumentoEl = null;
+  let nroDocumentoEl = null;
+  let direccionComprobanteEl = null;
+  let razonSocialEl = null;
+
   // #endregion
 
   async function wrapper() {
@@ -586,19 +557,26 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     const checkinId = params.get("id_checkin");
     const nroHabitacion = params.get("nro_habitacion");
 
+    formChecking = document.getElementById("form-checking");
+    idCheckinEl = document.getElementById("id_checkin");
+    habitacionEl = document.getElementById("habitacion");
+    tablaAcompanantes =
+      document.getElementById("tabla-acompanantes").tBodies[0];
+
+    tipoDocumentoEl = document.getElementById("tipo_documento_comprobante");
+    nroDocumentoEl = document.getElementById("nro_documento_comprobante");
+    direccionComprobanteEl = document.getElementById("direccion_comprobante");
+    razonSocialEl = document.getElementById("razon_social");
+
     if (checkinId) {
-      const idCheckin = document.getElementById("id_checkin");
-      idCheckin.value = checkinId;
+      idCheckinEl.value = checkinId;
     }
     if (nroHabitacion) {
-      const habitacion = document.getElementById("habitacion");
-      habitacion.value = nroHabitacion;
+      habitacionEl.value = nroHabitacion;
     }
 
     // lanzar evento change para cargar los datos
-    habitacion.dispatchEvent(new Event("change"));
-
-    guardarReferencias();
+    habitacionEl.dispatchEvent(new Event("change"));
 
     if (checkinId) {
       await cargarDatos();
@@ -607,10 +585,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   }
 
   function obtenerAcompanantesDeTabla() {
-    const tablaAcompanantes =
-      document.getElementById("tabla-acompanantes").tBodies[0];
     const rows = tablaAcompanantes.querySelectorAll("tr");
     const acompanantes = [];
+
     rows.forEach((row) => {
       acompanantes.push({
         id_acompanante: row.dataset.id ?? null,
@@ -621,17 +598,18 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         parentesco: row.cells[3].textContent,
       });
     });
+
     return acompanantes;
   }
 
   async function cargarHabitaciones() {
-    const url = "<?php echo URL_API_CARLITOS ?>/api-reservas.php";
-    const options = {
-      method: "INNER",
-    };
+
+    const fechaInEl = document.getElementById("fecha_in");
+    const fechaOutEl = document.getElementById("fecha_out");
+    const url = `${apiHabitacionesUrl}?con-disponibilidad&fecha_ingreso=${fechaInEl.value}&fecha_salida=${fechaOutEl.value}`;
 
     try {
-      const response = await fetch(url, options);
+      const response = await fetch(url);
       const data = await response.json();
 
       const selectElement = document.getElementById("habitacion");
@@ -647,10 +625,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     }
   }
 
-  function guardarReferencias() {
-    formChecking = document.getElementById("form-checking");
-  }
-
   // Función para cargar los datos de la API y actualizar los inputs
   async function cargarDatos() {
     //obtenemos el numero de registro maestro del forumlario
@@ -662,7 +636,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       const response = await fetch(url);
       const data = await response.json();
 
-      console.log('data', data);
+      console.log("data", data);
 
       var selectElementtipohabitacion = document.getElementById("tipo");
       const selectedOptiontipoproducto =
@@ -729,16 +703,13 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     try {
       const response = await fetch(url);
       let data = await response.json();
-      console.log(data);
-      // actualizar la tabla de acompanantes
-      const tablaAcompanantes =
-        document.getElementById("tabla-acompanantes").tBodies[0];
+
       tablaAcompanantes.innerHTML = "";
 
       // eliminar el titular de la lista de acompanantes
-      console.log('data', data)
       data = data.filter((acompanante) => acompanante.nro_de_orden_unico != 0);
 
+      // actualizar la tabla de acompanantes
       data.forEach((acompanante) => {
         const row = tablaAcompanantes.insertRow();
         row.dataset.id = acompanante.id_acompanante;
@@ -791,41 +762,25 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     }
   }
 
-  // Llamar a la función cargarDatos cuando la página se cargue
   window.addEventListener("load", wrapper);
 </script>
 <script>
   function BuscarReniec() {
-    // Obtén los valores de los campos de entrada
-    var tipoDocumento = document.getElementById(
-      "tipo_documento_comprobante"
-    ).value;
-    var numeroDocumento = document.getElementById(
-      "nro_documento_comprobante"
-    ).value;
-    var direccion_comprobante = document.getElementById(
-      "direccion_comprobante"
-    );
-    var razon_social = document.getElementById("razon_social");
+    razonSocialEl.value = "";
+    direccionComprobanteEl.value = "";
 
-    razon_social.value = "";
-    direccion_comprobante.value = "";
     // Verifica si ambos campos están llenos
-    if (tipoDocumento === "0" || numeroDocumento.trim() === "") {
-      alert(
-        "Por favor, complete los campos de Tipo Documento Comprobante y Nro DNI/RUC antes de buscar."
+    if (tipoDocumentoEl.value == "0" || !nroDocumentoEl.value.trim()) {
+      mostrarAlert(
+        "error",
+        "Debe ingresar el tipo y número de documento",
+        "consultar"
       );
       return; // No continúes con la búsqueda si falta información.
     }
 
-    // Construye la URL con los valores
-    var url =
-      "<?php echo URL_API_CARLITOS ?>/api-reniec.php?tipo=" +
-      tipoDocumento +
-      "&doc=" +
-      numeroDocumento;
-
-    // Realiza la solicitud fetch
+    const url = `${apiSunatUrl}?tipo=${tipoDocumentoEl.value}&nro=${nroDocumentoEl.value}`;
+    
     fetch(url)
       .then((response) => {
         if (!response.ok) {
@@ -974,9 +929,15 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   let contador = 0;
   function agregarRegistro() {
     // Obtener valores de los campos de entrada
-    var apellidoPaternoAcompanante = document.getElementById("apellido_paterno_acompanante").value;
-    var apellidoMaternoAcompanante = document.getElementById("apellido_materno_acompanante").value;
-    var nombresAcompanante = document.getElementById("nombres_acompanante").value;
+    var apellidoPaternoAcompanante = document.getElementById(
+      "apellido_paterno_acompanante"
+    ).value;
+    var apellidoMaternoAcompanante = document.getElementById(
+      "apellido_materno_acompanante"
+    ).value;
+    var nombresAcompanante = document.getElementById(
+      "nombres_acompanante"
+    ).value;
     var edad2 = document.getElementById("edad2").value;
     var parentesco2 = document.getElementById("parentesco").value;
     var sexo2 = document.getElementById("sexo2").value;

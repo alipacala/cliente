@@ -17,8 +17,14 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     <div class="card-body">
       <div class="row mb-3">
         <div class="col-md-3">
-          Fecha: <input type="date" class="form-control" id="fecha"
-          onchange="buscarServicios()" value="<?php echo date("Y-m-d"); ?>"/>
+          Fecha:
+          <input
+            type="date"
+            class="form-control"
+            id="fecha"
+            onchange="buscarServicios()"
+            value="<?php echo date('Y-m-d'); ?>"
+          />
         </div>
         <div class="col-md-3">
           Especialista:
@@ -49,11 +55,32 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         </table>
       </div>
       <div class="row">
-        <!-- boton para imprimir -->
-        <div class="col-md-3">
-          <button class="btn btn-outline-secondary" onclick="imprimirReporte()">
+        <div class="col-md-2">
+          <button
+            class="btn btn-outline-secondary w-100"
+            onclick="imprimirReporte()"
+          >
             <i class="fas fa-print"></i> Imprimir reporte
           </button>
+        </div>
+        <div class="col-md-2">
+          <button
+            class="btn btn-outline-primary w-100"
+            onclick="mostrarModalTotalizar()"
+          >
+            Totalizar
+          </button>
+        </div>
+        <div class="col-md-auto d-flex align-items-center ms-auto">
+          <label for="total">TOTAL:</label>
+        </div>
+        <div class="col-md-auto">
+          <input
+            type="text"
+            class="form-control text-end"
+            id="total"
+            disabled
+          />
         </div>
       </div>
     </div>
@@ -61,19 +88,17 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 </div>
 
 <div
-  class="modal fade"
-  id="modal-cambiar-estado"
+  class="modal modal-sm fade"
+  id="modal-totalizar"
   tabindex="-1"
   role="dialog"
-  aria-labelledby="modal-cambiar-estado-label"
+  aria-labelledby="modal-totalizar-label"
   aria-hidden="true"
 >
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modal-cambiar-estado-label">
-          Cambiar estado
-        </h5>
+        <h5 class="modal-title" id="modal-totalizar-label">Totalizar</h5>
         <button
           type="button"
           class="btn-close"
@@ -83,64 +108,53 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         ></button>
       </div>
       <div class="modal-body">
-        <div class="row w-75 mx-auto">
+        <div class="row w-100 mx-auto">
           <div class="col-md-12">
-            <label for="nro-voucher">Cliente:</label>
-            <input type="text" class="form-control" id="cliente" disabled />
-          </div>
-          <div class="col-md-12">
-            <label for="nro-voucher">Nro Comprobante:</label>
+            <label for="terapista-totalizar">Terapista:</label>
             <input
               type="text"
               class="form-control"
-              id="nro-comprobante"
+              id="terapista-totalizar"
               disabled
             />
           </div>
           <div class="col-md-12">
-            <label for="nro-voucher">Fecha:</label>
+            <label for="fecha-totalizar">Fecha:</label>
             <input
               type="text"
               class="form-control"
-              id="fecha-confirmar"
+              id="fecha-totalizar"
               disabled
             />
           </div>
           <div class="col-md-12">
-            <label for="nro-voucher">Monto TOTAL:</label>
-            <input type="text" class="form-control" id="monto-total" disabled />
-          </div>
-        </div>
-
-        <form id="form-cambiar-estado">
-          <div class="row w-75 mx-auto p-3 border border-1 rounded-2 mt-3">
-            <div class="col-md-12 mb-3">
-              <label for="nro-voucher">Ingrese Usuario:</label>
-              <input type="text" class="form-control" id="usuario" required />
-            </div>
-            <div class="col-md-12 mb-3">
-              <label for="nro-voucher">Ingrese contraseña:</label>
-              <input
-                type="password"
-                class="form-control"
-                id="contraseña"
-                required
-              />
-            </div>
+            <label for="monto-total-totalizar">Monto TOTAL:</label>
             <input
-              type="submit"
-              class="btn btn-danger me-auto mb-3"
-              id="anular-comprobante"
-              value="ANULAR"
+              type="text"
+              class="form-control"
+              id="monto-total-totalizar"
+              disabled
             />
+          </div>
+          <div class="col-md-6">
             <button
-              class="btn btn-outline-secondary mb-3"
-              data-bs-dismiss="modal"
+              type="button"
+              class="btn btn-primary w-100 mt-3"
+              onclick="totalizar()"
             >
-              SALIR
+              Totalizar
             </button>
           </div>
-        </form>
+          <div class="col-md-6">
+            <button
+              type="button"
+              class="btn btn-secondary w-100 mt-3"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -151,30 +165,19 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     "<?php echo URL_API_NUEVA ?>/documentos-detalles";
   const apiTerapistasUrl = "<?php echo URL_API_NUEVA ?>/terapistas";
   const apiReportesUrl = "<?php echo URL_API_NUEVA ?>/reportes";
+  const apiComrpobantesUrl = "<?php echo URL_API_NUEVA ?>/comprobantes-ventas";
 
-  let modal;
+  let modalTotalizar;
 
   async function wrapper() {
     mostrarAlertaSiHayMensaje();
 
-    modal = new bootstrap.Modal(
-      document.getElementById("modal-cambiar-estado")
+    modalTotalizar = new bootstrap.Modal(
+      document.getElementById("modal-totalizar")
     );
 
     await cargarTerapistas();
     buscarServicios();
-    prepararFormulario();
-  }
-
-  function prepararFormulario() {
-    const formAnularComprobante = document.getElementById(
-      "form-cambiar-estado"
-    );
-
-    formAnularComprobante.addEventListener("submit", (event) => {
-      event.preventDefault();
-      anularComprobante();
-    });
   }
 
   async function cargarTerapistas() {
@@ -222,6 +225,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
       limpiarTabla();
 
+      let totalMontoComision = 0;
+
       const tbody = document.getElementById("tabla-servicios").tBodies[0];
       servicios.forEach((servicio) => {
         const row = tbody.insertRow();
@@ -253,70 +258,19 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         montoComision.innerHTML = formatearCantidad(servicio.monto_comision);
 
         const estado = row.insertCell();
-        estado.innerHTML = servicio.estado;
+        estado.innerHTML = servicio.estado == 10 ? "LIQUIDADO" : "";
 
         const recibo = row.insertCell();
-        recibo.innerHTML = servicio.recibo;
+        recibo.innerHTML = 
+
+        totalMontoComision += +servicio.monto_comision;
       });
+
+      document.getElementById("total").value =
+        formatearCantidad(totalMontoComision);
     } catch (error) {
       console.error(error);
       mostrarAlert("error", "No se pudo cargar los comprobantes", "consultar");
-    }
-  }
-
-  function mostrarModalCambiarEstado(event) {
-    const row = event.target.closest("tr");
-
-    const cliente = document.getElementById("cliente");
-    const nroComprobante = document.getElementById("nro-comprobante");
-    const fecha = document.getElementById("fecha-confirmar");
-    const montoTotal = document.getElementById("monto-total");
-    const form = document.getElementById("form-cambiar-estado");
-
-    cliente.value = row.dataset.nombre;
-    nroComprobante.value = row.dataset.nro_comprobante;
-    fecha.value = row.dataset.fecha;
-    montoTotal.value = row.dataset.monto;
-    form.dataset.id = row.dataset.id;
-
-    modal.show();
-  }
-
-  async function anularComprobante() {
-    const id = document.getElementById("form-cambiar-estado").dataset.id;
-    const usuario = document.getElementById("usuario").value;
-    const clave = document.getElementById("contraseña").value;
-
-    // limpiar formulario
-    document.getElementById("usuario").value = "";
-    document.getElementById("contraseña").value = "";
-
-    const url = `${apiDocumentosDetallesUrl}/${id}/anular`;
-
-    const body = {
-      usuario,
-      clave,
-    };
-
-    const options = {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    };
-
-    try {
-      const response = await fetch(url, options);
-      const data = await response.json();
-
-      alert(data.mensaje);
-      buscarServicios();
-
-      modal.hide();
-    } catch (error) {
-      console.error(error);
-      mostrarAlert("error", "No se pudo anular el comprobante", "borrar");
     }
   }
 
@@ -331,6 +285,60 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     const url = `${apiReportesUrl}?tipo=liquidacion&fecha=${fecha}&id_profesional=${idProfesional}`;
 
     window.open(url, "_blank");
+  }
+
+  function mostrarModalTotalizar() {
+    const terapistaTotalizar = document.getElementById("terapista-totalizar");
+    const fechaTotalizar = document.getElementById("fecha-totalizar");
+    const montoTotalTotalizar = document.getElementById(
+      "monto-total-totalizar"
+    );
+
+    const idProfesional =
+      document.getElementById("id_profesional").selectedOptions[0].text;
+    const fechaSeleccionada = document.getElementById("fecha").value;
+    const total = document.getElementById("total").value;
+
+    if (!idProfesional || !fechaSeleccionada) {
+      return;
+    }
+
+    terapistaTotalizar.value = idProfesional;
+    fechaTotalizar.value = fechaSeleccionada;
+    montoTotalTotalizar.value = total;
+
+    modalTotalizar.show();
+  }
+
+  async function totalizar() {
+    const idUsuario = "<?php echo $_SESSION['usuario']['id_usuario']; ?>";
+    const idProfesional = document.getElementById("id_profesional").value;
+    const fecha = document.getElementById("fecha").value;
+
+    if (!idProfesional || !fecha) {
+      return;
+    }
+
+    const url = `${apiComrpobantesUrl}/liquidacion-servicios`;
+    const options = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id_usuario: idUsuario,
+        id_profesional: idProfesional,
+        fecha: fecha,
+      }),
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+      mostrarAlert("error", "No se pudo totalizar", "crear");
+    }
   }
 
   function limpiarTabla() {

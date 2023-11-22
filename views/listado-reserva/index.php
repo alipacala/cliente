@@ -167,7 +167,12 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         </div>
         <div class="col-auto">
           <div class="input-group mb-3">
-            <input type="date" class="form-control" id="fecha_busqueda" value="<?php echo date('Y-m-d'); ?>" />
+            <input
+              type="date"
+              class="form-control"
+              id="fecha_busqueda"
+              value="<?php echo date('Y-m-d'); ?>"
+            />
             <button
               class="btn btn-success"
               type="button"
@@ -346,6 +351,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
 <script>
   const apiReservasUrl = "<?php echo URL_API_NUEVA ?>/reservas";
+  const apiCheckingsUrl = "<?php echo URL_API_NUEVA ?>/checkings";
 
   function mostrarModalCambiarEstado(id_reserva) {
     const cambiarEstadoModal = document.getElementById("modal-cambiar-estado");
@@ -461,23 +467,27 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     RealizarCheckin(nuevoChekin);
   });
 
-  function RealizarCheckin(checkin) {
-    // Hacer la petición POST a la API para agregar un nuevo usuario
-    fetch("<?php echo URL_API_CARLITOS ?>/api-reservas.php", {
-      method: "CHECKIN",
+  async function RealizarCheckin(checkin) {
+    const url = `${apiCheckingsUrl}/hotel`;
+    const options = {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(checkin),
-    })
-      .then((response) => response.text())
-      .then((data) => {
-        //console.log(data); // Mostrar mensaje de éxito o error de la API
-        //obtenerUsuarios(); // Actualizar la lista de usuarios después de agregar uno nuevo
-      })
-      .catch((error) => console.error("Error:", error));
-    window.location.reload();
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+
+      console.log(data);
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
   }
+
   // Manejar el envío del formulario para agregar un nuevo usuario
   const formularioRE = document.getElementById("formulario-reservaE");
   formularioRE.addEventListener("submit", function (event) {
