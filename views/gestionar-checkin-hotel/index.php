@@ -533,6 +533,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   const apiCheckingsUrl = "<?php echo URL_API_NUEVA ?>/checkings";
   const apiHabitacionesUrl = "<?php echo URL_API_NUEVA ?>/habitaciones";
   const apiSunatUrl = "<?php echo URL_API_NUEVA ?>/sunat";
+  const apiPersonasUrl = "<?php echo URL_API_NUEVA ?>/personas";
 
   let fechas = [];
   let objfechas = [];
@@ -603,7 +604,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   }
 
   async function cargarHabitaciones() {
-
     const fechaInEl = document.getElementById("fecha_in");
     const fechaOutEl = document.getElementById("fecha_out");
     const url = `${apiHabitacionesUrl}?con-disponibilidad&fecha_ingreso=${fechaInEl.value}&fecha_salida=${fechaOutEl.value}`;
@@ -780,7 +780,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     }
 
     const url = `${apiSunatUrl}?tipo=${tipoDocumentoEl.value}&nro=${nroDocumentoEl.value}`;
-    
+
     fetch(url)
       .then((response) => {
         if (!response.ok) {
@@ -1237,73 +1237,33 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     document.getElementById("apellido_paterno").value = "";
     document.getElementById("apellido_materno").value = "";
   }
-  function buscarUsuarios(codigo) {
-    const apiUrl1 = `<?php echo URL_API_CARLITOS ?>/api-personanaturaljuridica.php?codigo=${codigo}`;
-    const apiUrl2 = `<?php echo URL_API_CARLITOS ?>/api-terapistas.php?codigo=${codigo}`;
+  async function buscarUsuarios(codigo) {
+    const url = `${apiPersonasUrl}?dni=${codigo}`;
 
-    // Solicitud a la primera API
-    fetch(apiUrl1)
-      .then((response) => response.json())
-      .then((dataApi1) => {
-        // Procesar los datos de la primera API
-        if (dataApi1.length > 0) {
-          console.log("Datos de API 2:");
-          console.log(dataApi1);
-          // Procesar los datos de la segunda API
-          if (dataApi1.length > 0) {
-            const primerUsuarioApi1 = dataApi1[0];
-            document.getElementById("nombres").value =
-              primerUsuarioApi1.nombres;
-            document.getElementById("apellido_paterno").value =
-              primerUsuarioApi1.apellidos.split(" ")[0];
-            document.getElementById("apellido_materno").value =
-              primerUsuarioApi1.apellidos.split(" ")[1];
-            document.getElementById("id_persona").value =
-              primerUsuarioApi1.id_persona;
-            document.getElementById("edad").value = primerUsuarioApi1.edad;
-            document.getElementById("sexo").value = primerUsuarioApi1.sexo;
-          } else {
-            document.getElementById("nombres").value = "";
-            document.getElementById("apellidos").value = "";
-            document.getElementById("id_persona").value = "";
-          }
-        } else {
-          console.log("No se encontraron datos en API 2.");
-        }
-      })
-      .catch((error) => {});
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
 
-    // Solicitud a la segunda API
-    fetch(apiUrl2)
-      .then((response) => response.json())
-      .then((dataApi2) => {
-        // Procesar los datos de la segunda API
-        if (dataApi2.length > 0) {
-          console.log("Datos de API 5:");
-          console.log(dataApi2);
-          // Procesar los datos de la segunda API
-          if (dataApi2.length > 0) {
-            const primerUsuarioApi2 = dataApi2[0];
-            document.getElementById("nombres").value =
-              primerUsuarioApi2.nombres;
-            document.getElementById("apellidos").value =
-              primerUsuarioApi2.apellidos;
-            document.getElementById("id_persona").value =
-              primerUsuarioApi2.id_profesional;
-            document.getElementById("edad").value = primerUsuarioApi2.edad;
-            document.getElementById("sexo").value = primerUsuarioApi2.sexo;
-          } else {
-            document.getElementById("nombres").value = "";
-            document.getElementById("apellidos").value = "";
-            document.getElementById("id_persona").value = "";
-          }
-        } else {
-          console.log("No se encontraron datos en API 2.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error al obtener datos de la segunda API:", error);
-      });
+      document.getElementById("nombres").value = data.nombres;
+      document.getElementById("apellido_paterno").value =
+        data.apellidos.split(" ")[0];
+      document.getElementById("apellido_materno").value =
+        data.apellidos.split(" ")[1];
+      document.getElementById("id_persona").value = data.id_persona;
+      document.getElementById("edad").value = data.edad;
+      document.getElementById("sexo").value = data.sexo;
+      document.getElementById("lugar_de_nacimiento").value =
+        data.lugar_de_nacimiento;
+      document.getElementById("fecha_nacimiento").value = data.fecha;
+      document.getElementById("ocupacion").value = data.ocupacion;
+      document.getElementById("direccion").value = data.direccion;
+      document.getElementById("ciudad").value = data.ciudad;
+      document.getElementById("celular").value = data.celular;
+      document.getElementById("email").value = data.email;
+      
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
 </script>
 
