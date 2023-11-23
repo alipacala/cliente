@@ -482,6 +482,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       const data = await response.json();
 
       console.log(data);
+      return;
       window.location.reload();
     } catch (error) {
       console.error(error);
