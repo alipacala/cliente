@@ -1552,6 +1552,13 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
       // ordenar los documentos detalles por nro_habitacion y luego por fecha_hora_registro
       documentosDetallesD1.sort((a, b) => {
+        if (a.nro_habitacion?.startsWith("ADI")) {
+          return 1;
+        }
+        if (b.nro_habitacion?.startsWith("ADI")) {
+          return -1;
+        }
+
         if (a.nro_habitacion < b.nro_habitacion) {
           return -1;
         } else if (a.nro_habitacion > b.nro_habitacion) {
