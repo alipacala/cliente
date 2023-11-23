@@ -48,8 +48,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           <label for="id_modalidad" class="form-label"
             >Modalidad del Cliente:</label
           >
-          <select class="form-select" name="id_modalidad" id="id_modalidad">
-            <option value="0">--Seleccione--</option>
+          <select class="form-select" name="id_modalidad" id="id_modalidad" required>
+            <option value="">--Seleccione--</option>
           </select>
         </div>
         <div class="col-md-4">
