@@ -28,21 +28,15 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           readonly
         />
         <div class="col-md-6">
-          <label for="validationCustom02" class="form-label"
-            >Nro. Registro:</label
-          >
+          <label for="nro_registro" class="form-label">Nro. Registro:</label>
           <input type="text" class="form-control" id="nro_registro" readonly />
         </div>
         <div class="col-md-6">
-          <label for="validationCustom02" class="form-label"
-            >Nro. Reserva:</label
-          >
+          <label for="nro_reserva" class="form-label">Nro. Reserva:</label>
           <input type="text" class="form-control" id="nro_reserva" readonly />
         </div>
         <div class="col-md-4">
-          <label for="validationCustom04" class="form-label"
-            >Tipo Documento:</label
-          >
+          <label for="tipo_documento" class="form-label">Tipo Documento:</label>
           <select class="form-select" id="tipo_documento">
             <option value="0">--Seleccione--</option>
             <option value="1">DNI</option>
@@ -51,7 +45,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           </select>
         </div>
         <div class="col-md-4">
-          <label for="validationCustom02" class="form-label">Buscar DNI</label>
+          <label for="nro_documento" class="form-label">Buscar DNI</label>
           <div class="input-group">
             <span class="input-group-text">Nro DNI</span>
             <input
@@ -92,7 +86,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           <input type="text" class="form-control" id="nombres" required />
         </div>
         <div class="col-md-4">
-          <label for="validationCustom01" class="form-label"
+          <label for="lugar_de_nacimiento" class="form-label"
             >Lugar de Nacimiento:</label
           >
           <input
@@ -103,7 +97,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           />
         </div>
         <div class="col-md-4">
-          <label for="validationCustom02" class="form-label"
+          <label for="fecha_nacimiento" class="form-label"
             >Fecha_Nacimiento:</label
           >
           <input
@@ -114,11 +108,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           />
         </div>
         <div class="col-md-4">
-          <label for="validationCustom02" class="form-label">Edad:</label>
+          <label for="edad" class="form-label">Edad:</label>
           <input type="number" class="form-control" id="edad" required />
         </div>
         <div class="col-md-4">
-          <label for="validationCustom03" class="form-label">Sexo:</label>
+          <label for="sexo" class="form-label">Sexo:</label>
           <select class="form-select" id="sexo">
             <option value="0">--Seleccione--</option>
             <option value="M">Masculino</option>
@@ -127,7 +121,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           </select>
         </div>
         <div class="col-md-12">
-          <label for="hora_de_ingreso">Ocupacion:</label>
+          <label for="ocupacion">Ocupacion:</label>
           <textarea
             name="ocupacion"
             id="ocupacion"
@@ -135,7 +129,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           ></textarea>
         </div>
         <div class="col-md-6">
-          <label for="hora_de_salida">Direccion:</label>
+          <label for="direccion">Direccion:</label>
           <input
             type="text"
             class="form-control"
@@ -145,7 +139,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           />
         </div>
         <div class="col-md-6">
-          <label for="activo">Ciudad:</label>
+          <label for="ciudad">Ciudad:</label>
           <input
             type="text"
             class="form-control"
@@ -155,7 +149,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           />
         </div>
         <div class="col-md-6">
-          <label for="hora_de_salida">Celular:</label>
+          <label for="celular">Celular:</label>
           <input
             type="text"
             class="form-control"
@@ -165,11 +159,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           />
         </div>
         <div class="col-md-6">
-          <label for="activo">Email:</label>
+          <label for="email">Email:</label>
           <input type="text" class="form-control" id="email" name="email" />
         </div>
         <div class="col-md-12">
-          <label for="validationCustom04" class="form-label"
+          <label for="estacionamiento" class="form-label"
             >Requiere Estacionamiento No/Si</label
           >
           <select class="form-select" id="estacionamiento">
@@ -178,7 +172,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           </select>
         </div>
         <div class="col-md-12">
-          <label for="hora_de_salida">Nro. Placa:</label>
+          <label for="nro_placa">Nro. Placa:</label>
           <input
             type="text"
             class="form-control"
@@ -224,7 +218,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           />
         </div>
         <div class="col-md-6">
-          <label for="activo">Fecha IN:</label>
+          <label for="fecha_in">Fecha IN:</label>
           <input
             type="date"
             class="form-control"
@@ -234,7 +228,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           />
         </div>
         <div class="col-md-6">
-          <label for="activo">Hora IN</label>
+          <label for="hora_in">Hora IN</label>
           <input
             type="time"
             class="form-control"
@@ -244,7 +238,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           />
         </div>
         <div class="col-md-6">
-          <label for="activo">Fecha OUT:</label>
+          <label for="fecha_out">Fecha OUT:</label>
           <input
             type="date"
             class="form-control"
@@ -254,7 +248,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           />
         </div>
         <div class="col-md-6">
-          <label for="activo">Hora OUT</label>
+          <label for="hora_out">Hora OUT</label>
           <input
             type="time"
             class="form-control"
@@ -267,7 +261,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         <hr />
         <br />
         <div class="col-md-3">
-          <label for="activo">Nro Adultos:</label>
+          <label for="nro_adultos">Nro Adultos:</label>
           <input
             type="number"
             class="form-control"
@@ -278,7 +272,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           />
         </div>
         <div class="col-md-3">
-          <label for="activo">Nro Niños</label>
+          <label for="nro_nino">Nro Niños</label>
           <input
             type="number"
             class="form-control"
@@ -288,7 +282,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           />
         </div>
         <div class="col-md-3">
-          <label for="activo">Nro Infantes</label>
+          <label for="nro_infantes">Nro Infantes</label>
           <input
             type="number"
             class="form-control"
@@ -343,7 +337,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                 <h5 class="card-title">FORMAS DE PAGO</h5>
                 <div class="row g-3">
                   <div class="col-md-4">
-                    <label for="activo">Forma de Pago:</label>
+                    <label for="forma_pago">Forma de Pago:</label>
                     <select class="form-select" id="forma_pago">
                       <option value="Ninguno">--Seleccione--</option>
                       <option value="Transaccion">Transaccion</option>
@@ -356,7 +350,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                     </select>
                   </div>
                   <div class="col-md-4">
-                    <label for="activo">Tipo de Comprobante:</label>
+                    <label for="tipo_comprobante">Tipo de Comprobante:</label>
                     <select class="form-select" id="tipo_comprobante">
                       <option value="Ninguno">--Seleccione--</option>
                       <option value="Boleta">Boleta</option>
@@ -364,7 +358,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                     </select>
                   </div>
                   <div class="col-md-4">
-                    <label for="activo">Tipo Documento Comprobante:</label>
+                    <label for="tipo_documento_comprobante"
+                      >Tipo Documento Comprobante:</label
+                    >
                     <select class="form-select" id="tipo_documento_comprobante">
                       <option value="0">--Seleccione--</option>
                       <option value="DNI">DNI</option>
@@ -372,7 +368,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                     </select>
                   </div>
                   <div class="col-md-4">
-                    <label for="validationCustom02" class="form-label"
+                    <label for="nro_documento_comprobante" class="form-label"
                       >Buscar DNI</label
                     >
                     <div class="input-group">
@@ -392,7 +388,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                     </div>
                   </div>
                   <div class="col-md-4">
-                    <label for="activo">Razon Social:</label>
+                    <label for="razon_social">Razon Social:</label>
                     <input
                       type="text"
                       class="form-control"
@@ -401,7 +397,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                     />
                   </div>
                   <div class="col-md-4">
-                    <label for="activo">Direccion:</label>
+                    <label for="direccion_comprobante">Direccion:</label>
                     <input
                       type="text"
                       class="form-control"
@@ -476,13 +472,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             />
           </div>
           <div class="col-md-4">
-            <label for="validationCustom04" class="form-label">Edad:</label>
+            <label for="edad2" class="form-label">Edad:</label>
             <input type="text" class="form-control" id="edad2" required />
           </div>
           <div class="col-md-4">
-            <label for="validationCustom03" class="form-label"
-              >Parentesco:</label
-            >
+            <label for="parentesco" class="form-label">Parentesco:</label>
             <select class="form-select" id="parentesco">
               <option value="0">--Seleccione--</option>
               <option value="Padre/Madre">Padre/Madre</option>
@@ -501,7 +495,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             </select>
           </div>
           <div class="col-md-4">
-            <label for="validationCustom03" class="form-label">Sexo:</label>
+            <label for="sexo2" class="form-label">Sexo:</label>
             <select class="form-select" id="sexo2">
               <option value="0">--Seleccione--</option>
               <option value="M">Masculino</option>
@@ -762,10 +756,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     }
   }
 
-  window.addEventListener("load", wrapper);
-</script>
-<script>
-  function BuscarReniec() {
+  async function BuscarReniec() {
     razonSocialEl.value = "";
     direccionComprobanteEl.value = "";
 
@@ -781,25 +772,16 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
     const url = `${apiSunatUrl}?tipo=${tipoDocumentoEl.value}&nro=${nroDocumentoEl.value}`;
 
-    fetch(url)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error al buscar en Reniec");
-        }
-        return response.json();
-      })
-      .then((data2) => {
-        // Muestra la respuesta en el console.log
-        //console.log(data2);
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      console.log(data);
 
-        direccion_comprobante.value = data2.direccion || "";
-        razon_social.value = data2.nombre || "";
-        // Aquí puedes realizar cualquier otro procesamiento que necesites con los datos.
-      })
-      .catch((error) => {
-        console.error("Error al buscar en Reniec:", error);
-        // Maneja el error si ocurre algún problema durante la solicitud.
-      });
+      direccionComprobanteEl.value = data.direccion || "";
+      razonSocialEl.value = data.nombre || "";
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
 </script>
 <script>
@@ -1228,16 +1210,13 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         }
       });
   });
-</script>
-<script>
-  function Buscar() {
+
+  async function buscarPersona() {
     let codigo = document.getElementById("nro_documento").value;
-    buscarUsuarios(codigo);
     document.getElementById("nombres").value = "";
     document.getElementById("apellido_paterno").value = "";
     document.getElementById("apellido_materno").value = "";
-  }
-  async function buscarUsuarios(codigo) {
+
     const url = `${apiPersonasUrl}?dni=${codigo}`;
 
     try {
@@ -1260,11 +1239,12 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       document.getElementById("ciudad").value = data.ciudad;
       document.getElementById("celular").value = data.celular;
       document.getElementById("email").value = data.email;
-      
     } catch (error) {
       console.error("Error:", error);
     }
   }
+
+  window.addEventListener("load", wrapper);
 </script>
 
 <?php
