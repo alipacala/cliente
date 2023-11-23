@@ -49,7 +49,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             >Modalidad del Cliente:</label
           >
           <select class="form-select" name="id_modalidad" id="id_modalidad" required>
-            <option value="">--Seleccione--</option>
           </select>
         </div>
         <div class="col-md-4">
@@ -400,8 +399,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     await cargarHabitaciones();
     await cargarTiposHabitacion();
 
-    prepararModalidades();
-    prepararTiposPrecio();
+    await prepararModalidades();
+    await prepararTiposPrecio();
     prepararPorcentajeAdelanto();
 
     actualizarCarrito();
@@ -537,6 +536,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         option.textContent = item.nombre_modalidad;
         modalidadesEl.appendChild(option);
       });
+
+      modalidadesEl.selectedIndex = 0;
+      modalidadesEl.dispatchEvent(new Event("change"));
     } catch (error) {
       console.error(error);
     }

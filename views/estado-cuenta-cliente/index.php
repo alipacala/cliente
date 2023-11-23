@@ -1503,8 +1503,8 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
       row.innerHTML = `
          <td>${acompanante.apellidos_y_nombres}</td>
-         <td>${acompanante.sexo}</td>
-         <td>${acompanante.edad}</td>
+         <td>${acompanante.sexo ?? ''}</td>
+         <td>${acompanante.edad ?? ''}</td>
          <td>${
            acompanante.nro_de_orden_unico > 0
              ? acompanante.parentesco ?? ""

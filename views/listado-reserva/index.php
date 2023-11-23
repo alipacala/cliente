@@ -591,9 +591,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                           }|${item.observaciones_pago}')">EDITAR</button>
                     <button type="button" id="" class="btn btn-info" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#ModalChekin" onclick="ObtenerID('${
                       item.nro_reserva
-                    },${item.nombre},${item.fecha_llegada},${
+                    }|${item.nombre}|${item.fecha_llegada}|${
                             item.fecha_salida
-                          },${item.nro_personas}')" ${
+                          }|${item.nro_personas}')" ${
                             item.estado_pago == 1 ? "disabled" : ""
                           }>CHEKIN</button></td>`
                     }
@@ -671,9 +671,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
                           }|${item.observaciones_pago}')">EDITAR</button>
                     <button type="button" class="btn btn-info" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" data-bs-toggle="modal" data-bs-target="#ModalChekin" onclick="ObtenerID('${
                       item.nro_reserva
-                    },${item.nombre},${item.fecha_llegada},${
+                    }|${item.nombre}|${item.fecha_llegada}|${
                             item.fecha_salida
-                          },${item.nro_personas}')"${
+                          }|${item.nro_personas}')"${
                             item.estado_pago == 1 ? "disabled" : ""
                           }>CHEKIN</button></td>`
                     }
@@ -704,7 +704,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 </script>
 <script>
   function ObtenerID(Chekin) {
-    var Chekin = Chekin.split(",");
+    var Chekin = Chekin.split("|");
     document.getElementById("nro_reserva2").value = Chekin[0];
     document.getElementById("nombre2").value = Chekin[1];
     document.getElementById("fecha_llegada2").value = Chekin[2];
