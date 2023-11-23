@@ -1503,8 +1503,8 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 
       row.innerHTML = `
          <td>${acompanante.apellidos_y_nombres}</td>
-         <td>${acompanante.sexo ?? ''}</td>
-         <td>${acompanante.edad ?? ''}</td>
+         <td>${acompanante.sexo ?? ""}</td>
+         <td>${acompanante.edad ?? ""}</td>
          <td>${
            acompanante.nro_de_orden_unico > 0
              ? acompanante.parentesco ?? ""
@@ -1554,11 +1554,9 @@ $_SESSION["usuario"]["id_usuario"]; ?>
       documentosDetallesD1.sort((a, b) => {
         if (a.nro_habitacion < b.nro_habitacion) {
           return -1;
-        }
-        if (a.nro_habitacion > b.nro_habitacion) {
+        } else if (a.nro_habitacion > b.nro_habitacion) {
           return 1;
-        }
-        if (a.nro_habitacion == b.nro_habitacion) {
+        } else {
           if (a.fecha_hora_registro < b.fecha_hora_registro) {
             return -1;
           }
@@ -2097,8 +2095,12 @@ $_SESSION["usuario"]["id_usuario"]; ?>
   }
 
   async function crearAcompanante() {
-    const apellidoPaterno = document.getElementById("apellido-paterno-acompanante");
-    const apellidoMaterno = document.getElementById("apellido-materno-acompanante");
+    const apellidoPaterno = document.getElementById(
+      "apellido-paterno-acompanante"
+    );
+    const apellidoMaterno = document.getElementById(
+      "apellido-materno-acompanante"
+    );
     const nombres = document.getElementById("nombres-acompanante");
     const sexo = document.getElementById("sexo");
     const edad = document.getElementById("edad");
