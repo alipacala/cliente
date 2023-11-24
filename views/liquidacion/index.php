@@ -23,7 +23,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             class="form-control"
             id="fecha"
             onchange="buscarServicios()"
-            value="<?php echo date('Y-m-d'); ?>"
           />
         </div>
         <div class="col-md-3">
@@ -176,6 +175,14 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       document.getElementById("modal-totalizar")
     );
 
+    const params = new URLSearchParams(window.location.search);
+    const fecha = params.get("fecha");
+    if (fecha) {
+      document.getElementById("fecha").value = fecha;
+    } else {
+      document.getElementById("fecha").valueAsDate = new Date();
+    }
+
     await cargarTerapistas();
     buscarServicios();
   }
@@ -258,10 +265,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         montoComision.innerHTML = formatearCantidad(servicio.monto_comision);
 
         const estado = row.insertCell();
-        estado.innerHTML = servicio.estado == 10 ? "LIQUIDADO" : "";
+        estado.innerHTML = servicio.estado_servicio == 10 ? "LIQUIDADO" : "";
 
         const recibo = row.insertCell();
-        recibo.innerHTML = 
+        recibo.innerHTML = servicio.recibo_liquidado;
 
         totalMontoComision += +servicio.monto_comision;
       });
@@ -335,6 +342,22 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       const data = await response.json();
 
       console.log(data);
+
+      if (data.error) {
+        mostrarAlert("error", data.error, "crear");
+        return;
+      }
+
+      mostrarAlert("ok", "Se totalizó correctamente", "crear");
+      modalTotalizar.hide();
+      buscarServicios();
+
+      const nroComprobante = data.resultado.comprobante.nro_comprobante;
+
+      const comprobanteUrl = `${apiReportesUrl}?tipo=generar-factura&nro_comprobante=${nroComprobante}`;
+
+      open(comprobanteUrl, "_blank");
+
     } catch (error) {
       console.error(error);
       mostrarAlert("error", "No se pudo totalizar", "crear");

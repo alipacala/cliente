@@ -41,9 +41,13 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         </table>
       </div>
 
-      <a href="./../liquidacion/" class="btn btn-primary ms-auto"
-        >Ver Liquidación</a
+      <button
+        class="btn btn-primary ms-auto"
+        id="btn-ver-liquidacion"
+        onclick="verLiquidacion()"
       >
+        Ver Liquidación
+      </button>
     </div>
   </div>
 </div>
@@ -78,7 +82,12 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           </div>
           <div class="col-md-12">
             <label for="servicio-cambiar-estado">Servicio:</label>
-            <input type="text" class="form-control" id="servicio-cambiar-estado" disabled />
+            <input
+              type="text"
+              class="form-control"
+              id="servicio-cambiar-estado"
+              disabled
+            />
           </div>
           <div class="col-md-12">
             <label for="profesional-asignado">Profesional asignado:</label>
@@ -173,7 +182,12 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         <div class="row">
           <div class="col">
             <label for="fecha-servicio" class="form-label">Fecha</label>
-            <input type="date" class="form-control mb-3" id="fecha-servicio" name="fecha" />
+            <input
+              type="date"
+              class="form-control mb-3"
+              id="fecha-servicio"
+              name="fecha"
+            />
           </div>
           <div class="col">
             <label for="hora" class="form-label">Hora</label>
@@ -219,13 +233,13 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     1: "Realizado",
     2: "Por realizar",
     3: "Rechazado",
+    10: "Liquidado"
   };
 
   async function wrapper() {
     mostrarAlertaSiHayMensaje();
-
+     
     cargarDatosTerapistas();
-
     llenarDatosServiciosTerapistas();
 
     modal = new bootstrap.Modal(
@@ -287,6 +301,20 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       );
     }
   }
+
+  
+  function verLiquidacion() {
+    const fecha = document.getElementById("fecha").value;
+
+    if (!fecha) {
+      return;
+    }
+
+    const url = `../liquidacion?fecha=${fecha}`;
+    // abrir en la misma pestaña
+    window.open(url, "_self");
+  }
+
 
   // #region Funciones de servicios
 
@@ -386,7 +414,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     const fecha = document.getElementById("fecha-servicio");
     const hora = document.getElementById("hora");
     const aplicado = document.getElementById("aplicado");
-    
+
     await cargarAcompanantes(row.dataset.nro_registro_maestro);
 
     aplicado.value = row.dataset.id_acompanate;
@@ -504,7 +532,9 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   }
 
   async function cambiarServicio() {
-    const id_producto = document.getElementById("servicio").value.split(" - ")[1];
+    const id_producto = document
+      .getElementById("servicio")
+      .value.split(" - ")[1];
     const id_acompanate = document.getElementById("aplicado").value;
     const id_profesional = document.getElementById("terapista").value;
     const fecha_servicio = document.getElementById("fecha-servicio").value;
@@ -517,7 +547,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       id_profesional,
       fecha_servicio,
       hora_servicio,
-    }
+    };
 
     const url = `${apiDocumentosDetallesUrl}/${id}/servicio`;
 
