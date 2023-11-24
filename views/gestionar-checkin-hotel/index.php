@@ -522,6 +522,104 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   </div>
 </div>
 
+
+<div
+  class="modal fade"
+  id="myModal2"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <label for="id_grupo_modulo"
+          ><strong>Agregar Acompañantes</strong></label
+        >
+        <br /><br />
+        <div class="row g-3">
+          <div class="col-4">
+            <label for="apellido_paterno_acompanante" class="form-label"
+              >Apellido paterno:</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="apellido_paterno_acompanante"
+              required
+            />
+          </div>
+          <div class="col-4">
+            <label for="apellido_materno_acompanante" class="form-label"
+              >Apellido materno:</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="apellido_materno_acompanante"
+              required
+            />
+          </div>
+          <div class="col-4">
+            <label for="nombres_acompanante" class="form-label">Nombres:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nombres_acompanante"
+              required
+            />
+          </div>
+          <div class="col-md-4">
+            <label for="edad2" class="form-label">Edad:</label>
+            <input type="text" class="form-control" id="edad2" required />
+          </div>
+          <div class="col-md-4">
+            <label for="parentesco" class="form-label">Parentesco:</label>
+            <select class="form-select" id="parentesco">
+              <option value="0">--Seleccione--</option>
+              <option value="Padre/Madre">Padre/Madre</option>
+              <option value="Hijo/a">Hijo/a</option>
+              <option value="Primo/a">Primo/a</option>
+              <option value="Tio/a">Tio/a</option>
+              <option value="Hermano/a">Hermano/a</option>
+              <option value="Sobrino/a">Sobrino/a</option>
+              <option value="Abuelo/a">Abuelo/a</option>
+              <option value="Nieto/a">Nieto/a</option>
+              <option value="Esposo/a">Esposo/a</option>
+              <option value="Amigo/a">Amigo/a</option>
+              <option value="Novio/a">Novio/a</option>
+              <option value="Enamorado/a">Enamorado/a</option>
+              <option value="Otros">Otros</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="sexo2" class="form-label">Sexo:</label>
+            <select class="form-select" id="sexo2">
+              <option value="0">--Seleccione--</option>
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+              <option value="O">Otros</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-dismiss="modal"
+          onclick="agregarRegistro()"
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   const apiAcompanantesUrl = "<?php echo URL_API_NUEVA ?>/acompanantes";
   const apiCheckingsUrl = "<?php echo URL_API_NUEVA ?>/checkings";
@@ -547,6 +645,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
   async function wrapper() {
     await cargarHabitaciones();
+
+    const modal2 = new bootstrap.Modal(document.getElementById("myModal2"), {
+      keyboard: false,
+    });
+    modal2.show();
 
     const params = new URLSearchParams(window.location.search);
     const checkinId = params.get("id_checkin");
