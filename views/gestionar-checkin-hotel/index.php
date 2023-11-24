@@ -35,7 +35,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           <label for="nro_reserva" class="form-label">Nro. Reserva:</label>
           <input type="text" class="form-control" id="nro_reserva" readonly />
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 col-6">
           <label for="tipo_documento" class="form-label">Tipo Documento:</label>
           <select class="form-select" id="tipo_documento">
             <option value="0">--Seleccione--</option>
@@ -44,7 +44,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             <option value="3">CEDULA DE IDENTIFICACION</option>
           </select>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 col-6">
           <label for="nro_documento" class="form-label">Buscar DNI</label>
           <div class="input-group">
             <span class="input-group-text">Nro DNI</span>
@@ -59,7 +59,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             </button>
           </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-2 col-4">
           <label for="apellido_paterno" class="form-label"
             >Apellido paterno:</label
           >
@@ -70,7 +70,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             required
           />
         </div>
-        <div class="col-md-2">
+        <div class="col-md-2 col-4">
           <label for="apellido_materno" class="form-label"
             >Apellido materno:</label
           >
@@ -81,11 +81,11 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             required
           />
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3 col-4">
           <label for="nombres" class="form-label">Nombres:</label>
           <input type="text" class="form-control" id="nombres" required />
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <label for="lugar_de_nacimiento" class="form-label"
             >Lugar de Nacimiento:</label
           >
@@ -96,7 +96,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             required
           />
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <label for="fecha_nacimiento" class="form-label"
             >Fecha_Nacimiento:</label
           >
@@ -106,6 +106,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             id="fecha_nacimiento"
             required
           />
+        </div>
+        <div class="col-md-3">
+          <label for="nacionalidad" class="form-label">Nacionalidad:</label>
+          <select class="form-select" id="nacionalidad" name="nacionalidad" required></select>
         </div>
         <div class="col-md-4">
           <label for="edad" class="form-label">Edad:</label>
@@ -138,7 +142,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             required
           />
         </div>
-        <div class="col-md-6">
+        <div class="col-md-3">
           <label for="ciudad">Ciudad:</label>
           <input
             type="text"
@@ -147,6 +151,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             name="ciudad"
             required
           />
+        </div>
+        <div class="col-md-3">
+          <label for="pais">País:</label>
+          <select class="form-select" id="pais" name="pais" required></select>
         </div>
         <div class="col-md-6">
           <label for="celular">Celular:</label>
@@ -522,110 +530,13 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   </div>
 </div>
 
-
-<div
-  class="modal fade"
-  id="myModal2"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <label for="id_grupo_modulo"
-          ><strong>Agregar Acompañantes</strong></label
-        >
-        <br /><br />
-        <div class="row g-3">
-          <div class="col-4">
-            <label for="apellido_paterno_acompanante" class="form-label"
-              >Apellido paterno:</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="apellido_paterno_acompanante"
-              required
-            />
-          </div>
-          <div class="col-4">
-            <label for="apellido_materno_acompanante" class="form-label"
-              >Apellido materno:</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="apellido_materno_acompanante"
-              required
-            />
-          </div>
-          <div class="col-4">
-            <label for="nombres_acompanante" class="form-label">Nombres:</label>
-            <input
-              type="text"
-              class="form-control"
-              id="nombres_acompanante"
-              required
-            />
-          </div>
-          <div class="col-md-4">
-            <label for="edad2" class="form-label">Edad:</label>
-            <input type="text" class="form-control" id="edad2" required />
-          </div>
-          <div class="col-md-4">
-            <label for="parentesco" class="form-label">Parentesco:</label>
-            <select class="form-select" id="parentesco">
-              <option value="0">--Seleccione--</option>
-              <option value="Padre/Madre">Padre/Madre</option>
-              <option value="Hijo/a">Hijo/a</option>
-              <option value="Primo/a">Primo/a</option>
-              <option value="Tio/a">Tio/a</option>
-              <option value="Hermano/a">Hermano/a</option>
-              <option value="Sobrino/a">Sobrino/a</option>
-              <option value="Abuelo/a">Abuelo/a</option>
-              <option value="Nieto/a">Nieto/a</option>
-              <option value="Esposo/a">Esposo/a</option>
-              <option value="Amigo/a">Amigo/a</option>
-              <option value="Novio/a">Novio/a</option>
-              <option value="Enamorado/a">Enamorado/a</option>
-              <option value="Otros">Otros</option>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label for="sexo2" class="form-label">Sexo:</label>
-            <select class="form-select" id="sexo2">
-              <option value="0">--Seleccione--</option>
-              <option value="M">Masculino</option>
-              <option value="F">Femenino</option>
-              <option value="O">Otros</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Cerrar
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-dismiss="modal"
-          onclick="agregarRegistro()"
-        >
-          Agregar
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script>
   const apiAcompanantesUrl = "<?php echo URL_API_NUEVA ?>/acompanantes";
   const apiCheckingsUrl = "<?php echo URL_API_NUEVA ?>/checkings";
   const apiHabitacionesUrl = "<?php echo URL_API_NUEVA ?>/habitaciones";
   const apiSunatUrl = "<?php echo URL_API_NUEVA ?>/sunat";
   const apiPersonasUrl = "<?php echo URL_API_NUEVA ?>/personas";
+  const apiPaisesUrl = "<?php echo URL_API_NUEVA ?>/paises";
 
   let fechas = [];
   let objfechas = [];
@@ -645,11 +556,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
   async function wrapper() {
     await cargarHabitaciones();
-
-    const modal2 = new bootstrap.Modal(document.getElementById("myModal2"), {
-      keyboard: false,
-    });
-    modal2.show();
+    await cargarPaises();
 
     const params = new URLSearchParams(window.location.search);
     const checkinId = params.get("id_checkin");
@@ -679,6 +586,39 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     if (checkinId) {
       await cargarDatos();
       await cargarAcompanantes();
+    }
+  }
+
+  async function cargarPaises() {
+    try {
+      const response = await fetch(apiPaisesUrl);
+      const data = await response.json();
+
+      const selectPais = document.getElementById("pais");
+      const selectNacionalidad = document.getElementById("nacionalidad");
+
+      selectPais.innerHTML = "";
+      selectNacionalidad.innerHTML = "";
+
+      data.forEach((pais) => {
+        const optionPais = document.createElement("option");
+        optionPais.value = pais.id_pais;
+        optionPais.textContent = pais.pais;
+        selectPais.appendChild(optionPais);
+
+        const optionNacionalidad = document.createElement("option");
+        optionNacionalidad.value = pais.id_pais;
+        optionNacionalidad.textContent = pais.pais;
+        selectNacionalidad.appendChild(optionNacionalidad);
+      });
+
+      // seleccionar el pais por defecto Chile
+      selectPais.value = 549;
+      selectNacionalidad.value = 549;
+
+    } catch (error) {
+      console.error(error);
+      mostrarAlert("error", "Error al cargar los paises", "consultar");
     }
   }
 
