@@ -23,7 +23,7 @@ class firstCest
         $I->wait(.5);
 
         // debo estar en la pagina de inicio y ver las opciones del menu
-        $I->seeCurrentUrlEquals("/cliente/views/");
+        $I->seeCurrentUrlEquals("/");
         $I->see("Spa");
         $I->see("Hotel");
         $I->see("Productos");

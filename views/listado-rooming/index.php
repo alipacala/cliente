@@ -35,25 +35,27 @@ mostrarHeader("pagina-funcion", $logueado); ?>
             </button>
           </div>
         </div>
-        <table id="rooming" class="table">
-          <thead>
-            <tr>
-              <th>Producto</th>
-              <th>Nro Habitacion</th>
-              <th>Nro. Reg. Maestro</th>
-              <th>Nro Reserva</th>
-              <th>Cliente</th>
-              <th>Nro Personas</th>
-              <th>Fecha Llegada</th>
-              <th>Fecha Salida</th>
-              <th>Acción</th>
-              <th>Mantenimientos</th>
-              <th>Colaborador</th>
-              <th style="width: 400px">Observaciones</th>
-            </tr>
-          </thead>
-          <tbody id="pendiente-pago"></tbody>
-        </table>
+        <div class="table-responsive">
+          <table id="rooming" class="table">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Nro Habitacion</th>
+                <th style="min-width: 300px">Cliente</th>
+                <th>Nro Personas</th>
+                <th>Fecha Llegada</th>
+                <th>Fecha Salida</th>
+                <th>F. Huesped</th>
+                <th>Mantenimientos</th>
+                <th>Colaborador</th>
+                <th style="min-width: 300px">Observaciones</th>
+                <th>Nro. Reg. Maestro</th>
+                <th>Nro Reserva</th>
+              </tr>
+            </thead>
+            <tbody id="pendiente-pago"></tbody>
+          </table>
+        </div>
       </div>
       <div class="row">
         <div class="col-md-auto">
@@ -423,27 +425,36 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           );
         }
 
+        const estadosCheckingColores = {
+          "S/DATOS": "success",
+          ESCANEO: "primary",
+          "EN PROCESO": "warning",
+          GUARDADO: "secondary",
+          "VISTO BUENO TERMINADO": "info",
+        };
+
         row.innerHTML = `
-          <td>${item.abreviatura_producto || ""}</td>
-          <td>${item.nro_habitacion || ""}</td>
-          <td>${estaOculto ? "" : item.nro_registro_maestro ?? ""}</td>
-          <td>${estaOculto ? "" : item.nro_reserva ?? ""}</td>
+          <td class="text-center">${item.abreviatura_producto || ""}</td>
+          <td class="text-center">${item.nro_habitacion || ""}</td>
           <td>${estaOculto ? "" : item.nombre ?? ""}</td>
-          <td>${estaOculto ? "" : item.nro_personas ?? ""}</td>
-          <td>${
-            estaOculto ? "" : formatearFecha(item.fecha_in, true) ?? ""
+          <td class="text-center">${
+            estaOculto ? "" : item.nro_personas ?? ""
           }</td>
-          <td>${
-            estaOculto ? "" : formatearFecha(item.fecha_out, true) ?? ""
-          }</td>
+          <td>${estaOculto ? "" : formatearFecha(item.fecha_in) ?? ""}</td>
+          <td>${estaOculto ? "" : formatearFecha(item.fecha_out) ?? ""}</td>
           <td>
             ${
               !estaOculto &&
               fechaSeleccionadaEsFuturaUHoy &&
-              item.nro_registro_maestro && item.estado != 'OU'
-                ? `<a href="../gestionar-checkin-hotel?id_checkin=${item.id_checkin}&nro_habitacion=${item.nro_habitacion}" class="btn btn-warning" style="--bs-btn-padding-y: .25rem;">EDITAR</a>
-                <button id="cambiar-habitacion" class="btn btn-secondary" onclick="prepararCambiarHabitacion(event)">CAMBIAR HAB</button>
-                <button id="checkout" class="btn btn-outline-danger" onclick="mostrarModalCheckout(event)">CHECKOUT</button>`
+              item.nro_registro_maestro &&
+              item.estado != "OU"
+                ? `<span class="badge rounded-pill text-bg-${
+                    estadosCheckingColores[item.estado_cheking]
+                  }">${
+                    item.estado_cheking == "VISTO BUENO TERMINADO"
+                      ? '<i class="fa-solid fa-check"></i>'
+                      : item.estado_cheking
+                  }</span>`
                 : ""
             }
           </td>
@@ -468,8 +479,103 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           <td style="width: 400px;">
             <input type="text" class="form-control" id="observaciones" />
           </td>
+          <td>${estaOculto ? "" : item.nro_registro_maestro ?? ""}</td>
+          <td>${estaOculto ? "" : item.nro_reserva ?? ""}</td>
       `;
+
+        if (
+          !estaOculto &&
+          fechaSeleccionadaEsFuturaUHoy &&
+          item.nro_registro_maestro &&
+          item.estado != "OU"
+        ) {
+          row.dataset.bsToggle = "popover";
+          row.dataset.bsTitle = "Opciones - Habitación " + item.nro_habitacion;
+          row.dataset.bsContent = `
+          <p class="mb-2">Funciones:</p>
+
+          <a href="../gestionar-checkin-hotel?id_checkin=${item.id_checkin}&nro_habitacion=${item.nro_habitacion}" class="btn btn-sm text-start opciones-rooming" style="width: 90%; margin-left: 10%;">EDITAR</a>
+
+          <button id="cambiar-habitacion" class="btn btn-sm text-start opciones-rooming" style="width: 90%; margin-left: 10%;" onclick="prepararCambiarHabitacion()">CAMBIAR HAB</button>
+          
+          <button id="checkout" class="btn btn-sm text-start opciones-rooming" style="width: 90%; margin-left: 10%;" onclick="mostrarModalCheckout()">CHECKOUT</button>
+
+          <p class="mb-2 mt-3">Cambiar estado checking:</p>
+          
+          <button id="creado" class="btn btn-sm text-start opciones-rooming" style="width: 90%; margin-left: 10%;" onclick="cambiarEstado(event)">S/DATOS</button>
+          <button id="scaneado" class="btn btn-sm text-start opciones-rooming" style="width: 90%; margin-left: 10%;" onclick="cambiarEstado(event)">ESCANEO</button>
+          <button id="en-proceso" class="btn btn-sm text-start opciones-rooming" style="width: 90%; margin-left: 10%;" onclick="cambiarEstado(event)">EN PROCESO</button>
+          <button id="guardado" class="btn btn-sm text-start opciones-rooming" style="width: 90%; margin-left: 10%;" onclick="cambiarEstado(event)">GUARDADO</button>
+          <button id="visto-bueno-terminado" class="btn btn-sm text-start opciones-rooming" style="width: 90%; margin-left: 10%;" onclick="cambiarEstado(event)">VISTO BUENO TERMINADO</button>`;
+
+          row.addEventListener("click", (event) => {
+            datosCheckin = row.dataset;
+          });
+        }
       });
+
+      habilitarPopover();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function habilitarPopover() {
+    const popoverTriggerList = document.querySelectorAll(
+      '[data-bs-toggle="popover"]'
+    );
+    const popoverList = [...popoverTriggerList].map(
+      (popoverTriggerEl) =>
+        new bootstrap.Popover(popoverTriggerEl, {
+          html: true,
+          sanitize: false,
+          placement: "bottom",
+          trigger: "click focus",
+          container: "body",
+        })
+    );
+
+    // al hacer click afuera del popover, cerrarlo
+    document.addEventListener("click", (event) => {
+      const isClickInside = popoverList.some((popover) =>
+        popover._element.contains(event.target)
+      );
+
+      const otrosPopovers = popoverList.filter(
+        (popover) => popover._element != event.target
+      );
+
+      if (otrosPopovers) otrosPopovers.forEach((popover) => popover.hide());
+    });
+  }
+
+  async function cambiarEstado(event) {
+    const idCheckin = datosCheckin.id;
+    const accion = event.target.id;
+
+    const accionesMetodos = {
+      creado: "estado-por-defecto",
+      scaneado: "activar-escaneo",
+      "en-proceso": "en-progreso",
+      guardado: "guardar",
+      "visto-bueno-terminado": "visto-bueno-terminado",
+    };
+
+    const url = `${apiCheckingsUrl}/${idCheckin}/${accionesMetodos[accion]}`;
+    const options = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+
+      console.log(data);
+
+      buscarPorFecha();
     } catch (error) {
       console.error(error);
     }
@@ -477,8 +583,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
   function mostrarModalCheckout(event) {
     const modalCheckoutEl = document.getElementById("modal-checkout");
-    const idCheckin = event.target.closest("tr").dataset.id;
-    const nroHabitacion = event.target.closest("tr").dataset.nro_habitacion;
+    const idCheckin = datosCheckin.id;
+    const nroHabitacion = datosCheckin.nro_habitacion;
 
     modalCheckoutEl.dataset.id = idCheckin;
     modalCheckoutEl.dataset.nro_habitacion = nroHabitacion;
@@ -498,7 +604,10 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ nro_habitacion: nroHabitacion, fecha_checkout: fecha }),
+      body: JSON.stringify({
+        nro_habitacion: nroHabitacion,
+        fecha_checkout: fecha,
+      }),
     };
 
     try {
@@ -514,9 +623,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     }
   }
 
-  function prepararCambiarHabitacion(event) {
-    datosCheckin = event.target.closest("tr").dataset;
-
+  function prepararCambiarHabitacion() {
     nroHabitacionEl.value = datosCheckin.nro_habitacion;
     nroRegistroMaestroEl.value = datosCheckin.nro_registro_maestro;
     nombreClienteEl.value = datosCheckin.nombre_cliente;

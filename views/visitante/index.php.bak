@@ -1,0 +1,233 @@
+<?php
+require "../../inc/header.php";
+
+session_start();
+
+$logueado = isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
+mostrarHeader("pagina-funcion", $logueado);
+?>
+<!-- Modal structure -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+              <div class="modal-body">
+                  <label for="id_grupo_modulo"><strong>Agregar Acompañantes</strong></label>
+                  <br><br>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label for="validationCustom02" class="form-label">Apellidos:</label>
+                      <input type="text" class="form-control" id="apellidos" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="validationCustom02" class="form-label">Nombres:</label>
+                      <input type="text" class="form-control" id="nombre" required>
+                    </div>
+                    <div class="col-md-2">
+                      <label for="validationCustom04" class="form-label">Edad:</label>
+                      <input type="text" class="form-control" id="edad" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="validationCustom03" class="form-label">Parentesco:</label>
+                      <select class="form-select" id="parentesco">
+                          <option value="0">--Seleccione--</option>
+                          <option value="PADRE(S)">PADRE(S)</option>
+                          <option value="HIJO(S)">HIJOS(S)</option>
+                          <option value="PRIMO(S)">PRIMO(S)</option>
+                          <option value="TIO(S)">TIO(S)</option>
+                          <option value="HERMANO(S)">HERMANO(S)</option>
+                          <option value="SOBRINO(S)">SOBRINO(S)</option>
+                          <option value="ABUELO(S)">ABUELO(S)</option>
+                          <option value="NIETO(S)">NIETO(S)</option>
+                      </select>
+                    </div>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                  <button type="button" class="btn btn-primary" onclick="agregarRegistro()">Agregar</button>
+              </div>
+        </div>
+    </div>
+</div>
+
+    <br>
+    
+    <br>
+<div class="container">
+<div class="card w-100 mb-3">
+  <div class="card-body">
+  <h1>Formulario Huespedes y Acompañantes</h1>
+    <form class="row g-3 needs-validation" id="formulario-usuarios">
+  <div class="col-md-6">
+    <label for="validationCustom02" class="form-label">Nro. Registro:</label>
+    <input type="text" class="form-control" id="nro_registro" required>
+  </div>
+  <div class="col-md-6">
+    <label for="validationCustom02" class="form-label">Nro. Reserva:</label>
+    <input type="text" class="form-control" id="nro_reserva" required>
+  </div>
+  <div class="col-md-4">
+    <label for="validationCustom04" class="form-label">Apellidos:</label>
+    <input type="text" class="form-control" id="apellidos" required>
+  </div>
+  <div class="col-md-4">
+    <label for="validationCustom03" class="form-label">Nombres:</label>
+    <input type="text" class="form-control" id="nombres" required>
+  </div>
+  <div class="col-md-4">
+    <label for="validationCustom04" class="form-label">Tipo Documento:</label>
+    <select class="form-select" id="tipo_documento">
+        <option value="0">--Seleccione--</option>
+        <option value="1">DNI</option>
+        <option value="2">PASAPORTE</option>
+        <option value="3">CEDULA DE IDENTIFICACION</option>
+    </select>
+  </div>
+  <div class="col-md-4">
+    <label for="validationCustom01" class="form-label">Lugar de Nacimiento:</label>
+    <input type="text" class="form-control" id="lugar_de_nacimiento" required>
+  </div>
+  <div class="col-md-4">
+    <label for="validationCustom02" class="form-label">Fecha_Nacimiento:</label>
+    <input type="date" class="form-control" id="fecha_nacimiento" required>
+  </div>
+  <div class="col-md-4">
+    <label for="validationCustom02" class="form-label">Edad:</label>
+    <input type="number" class="form-control" id="edad" required>
+  </div>
+  <div class="col-md-12">
+    <label for="hora_de_ingreso">Ocupacion:</label>
+    <textarea name="ocupacion" id="ocupacion" class="form-control" required></textarea>
+  </div>
+  <div class="col-md-8">
+    <label for="hora_de_salida">Direccion:</label>
+    <input type="text" class="form-control" id="direccion" name="direccion" required>
+  </div>
+  <div class="col-md-4">
+    <label for="activo">Ciudad:</label>
+    <input type="text" class="form-control" id="ciudad" name="ciudad" required>
+  </div>
+  <div class="col-md-8">
+    <label for="hora_de_salida">Celular:</label>
+    <input type="text" class="form-control" id="celular" name="celular" required>
+  </div>
+  <div class="col-md-4">
+    <label for="activo">Email:</label>
+    <input type="text" class="form-control" id="email" name="email" required>
+  </div>
+  <div class="col-md-12">
+    <label for="validationCustom04" class="form-label">Requiere Estacionamiento No/Si</label>
+    <select class="form-select" id="estacionamiento">
+        <option value="0">No</option>
+        <option value="1">Sí</option>
+    </select>
+  </div>
+  <div class="col-md-12">
+    <label for="hora_de_salida">Nro. Placa:</label>
+    <input type="text" class="form-control" id="nro_placa" name="nro_placa" required>
+  </div>
+  <div class="col-md-6">
+    <label for="activo">Nro. Habitacion:</label>
+    <input type="text" class="form-control" id="nro_habitacion" name="nro_habitacion" required>
+  </div>
+  <div class="col-md-6">
+    <label for="activo">Valor:</label>
+    <input type="text" class="form-control" id="valor" name="valor" required>
+  </div>
+  <div class="col-md-6">
+    <label for="activo">Fecha IN:</label>
+    <input type="text" class="form-control" id="fecha_in" name="fecha_in" required>
+  </div>
+  <div class="col-md-6">
+    <label for="activo">Hora IN</label>
+    <input type="text" class="form-control" id="hora_in" name="hora_in" required>
+  </div>
+  <div class="col-md-6">
+    <label for="activo">Fecha OUT:</label>
+    <input type="text" class="form-control" id="fecha_out" name="fecha_out" required>
+  </div>
+  <div class="col-md-6">
+    <label for="activo">Hora OUT</label>
+    <input type="text" class="form-control" id="hora_out" name="hora_out" required>
+  </div>
+  <br>
+  <h1>Formulario Huespedes y Acompañantes</h1>
+  <hr>
+  <br>
+  <div class="col-md-6">
+    <label for="activo">Adultos:</label>
+    <input type="number" class="form-control" id="adultos" name="adultos" required>
+  </div>
+  <div class="col-md-6">
+    <label for="activo">Niños</label>
+    <input type="number" class="form-control" id="nino" name="nino" required>
+  </div>
+  </div>
+</div>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Agregar Acompañante</button><br><br>
+<div class="row">
+  <div class="col-sm-12 mb-3 mb-sm-0">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">LISTA DE ACOMPAÑANTES</h5>
+        <table class="table">
+        <thead>
+            <tr>
+                <th>Apellido y Nombres</th>
+                <th>Edad</th>
+                <th>Parentesco</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+            <!-- Table rows will be added here dynamically -->
+        </tbody>
+    </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+<br>
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+  <button class="btn btn-primary" id="selectAllRowsButton" type="submit">Guardar Huespedes</button>
+</div>
+</div>
+</form>
+<script>
+    function agregarRegistro() {
+        // Obtener valores de los campos de entrada
+        var apellidos = document.getElementById("apellidos").value;
+        var nombres = document.getElementById("nombre").value;
+        var edad = document.getElementById("edad").value;
+        var parentesco = document.getElementById("parentesco").value;
+        var nombre_completo = apellidos + ", " + nombres;
+
+        // Crear una nueva fila en la tabla
+        var newRow = document.createElement("tr");
+        newRow.innerHTML = `
+            <td>${nombre_completo}</td>
+            <td>${edad}</td>
+            <td>${parentesco}</td>
+            <td><button class="btn btn-danger" onclick="eliminarFila(this)">Eliminar</button></td>
+        `;
+
+        // Agregar la nueva fila a la tabla
+        document.getElementById("table-body").appendChild(newRow);
+
+        // Limpiar campos de entrada después de agregar la fila
+        document.getElementById("apellidos").value = "";
+        document.getElementById("nombres").value = "";
+        document.getElementById("edad").value = "";
+        document.getElementById("parentesco").value = "0";
+    }
+
+    function eliminarFila(button) {
+        var row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+</script>
+    
+<?php
+require "../../inc/footer.php";
+?>

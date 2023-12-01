@@ -1,7 +1,11 @@
 <?php
+require_once "../../inc/config.php";
+
 function iniciarSesion($usuario, $clave)
 {
   require_once('config.php');
+  
+  $pre = ENV == 'server' ? '/hotelarenasspa/cliente' : '/cliente';
 
   $sql = "SELECT * FROM usuarios WHERE usuario = '$usuario' AND clave = '$clave'";
   $result = $conn->query($sql);
@@ -15,7 +19,7 @@ function iniciarSesion($usuario, $clave)
     unset($usuarioRespuesta['clave']);
 
     $_SESSION['usuario'] = $usuarioRespuesta;
-    header("Location: ./../");
+    header("Location: /menu");
   }
 }
 
@@ -23,7 +27,7 @@ function cerrarSesion()
 {
   session_start();
   session_destroy();
-  
-  header("Location: ./../");
+
+  header("Location: /login");
 }
 ?>

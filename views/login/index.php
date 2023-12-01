@@ -4,13 +4,15 @@ require "../../db/auth.php";
 
 $metodo = $_SERVER['REQUEST_METHOD'];
 
+$pre = ENV == 'server' ? '/hotelarenasspa/cliente' : './cliente';
+
 if ($metodo == 'POST') {
   $usuario = $_POST['usuario'];
   $clave = $_POST['clave'];
   iniciarSesion($usuario, $clave);
 }
 
-session_start();
+//session_start();
 
 $logueado = isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
 mostrarHeader("", $logueado);
@@ -22,9 +24,9 @@ mostrarHeader("", $logueado);
     </div>
     <div class="card-body">
       <main class="form-signin w-100 m-auto">
-        <form id="form-login" method="POST" action="./">
+        <form id="form-login" method="POST" action="#">
           <div class="row">
-            <img src="../../img/logo.webp" alt="logo" class="d-inline-block align-text-top img-fluid w-25 mb-3 mx-auto">
+            <img src="<?php echo $pre ?>/img/logo.webp" alt="logo" class="d-inline-block align-text-top img-fluid w-25 mb-3 mx-auto">
           </div>
           <div class="form-group mb-3">
             <label for="usuario">Nombre de usuario</label>

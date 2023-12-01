@@ -44,7 +44,7 @@ class deRegistroClienteSpaHastaFacturaCest
         // esperar a que carguen los datos de las apis
         $I->wait(1 * $waitMult);
 
-        $I->seeInCurrentUrl("/cliente/views/relacion-clientes-hotel-spa/");
+        $I->seeInCurrentUrl("/relacion-clientes-hotel-spa/");
         $I->seeInCurrentUrl("ok");
 
         $I->see("Checking creado correctamente");
@@ -56,7 +56,7 @@ class deRegistroClienteSpaHastaFacturaCest
         // esperar a que carguen los datos de las apis
         $I->wait(.5 * $waitMult);
 
-        $I->seeInCurrentUrl("/cliente/views/estado-cuenta-cliente/");
+        $I->seeInCurrentUrl("/estado-cuenta-cliente/");
         $I->seeInCurrentUrl("?nro_registro_maestro");
         $I->see("Estado de cuenta del Cliente");
 
@@ -71,7 +71,7 @@ class deRegistroClienteSpaHastaFacturaCest
         // esperar a que carguen los datos de las apis
         $I->wait(.5 * $waitMult);
 
-        $I->seeInCurrentUrl("/cliente/views/agregar-comanda/");
+        $I->seeInCurrentUrl("/agregar-comanda/");
         $I->seeInCurrentUrl("?nro_registro_maestro=" . $nroRegistroMaestro);
 
         $I->see("Agregar comanda");
@@ -170,7 +170,7 @@ class deRegistroClienteSpaHastaFacturaCest
         $I->wait(1 * $waitMult);
         $I->makeScreenshot("test");
 
-        $I->seeInCurrentUrl("/cliente/views/estado-cuenta-cliente/");
+        $I->seeInCurrentUrl("/estado-cuenta-cliente/");
         $I->seeInCurrentUrl("?nro_registro_maestro=" . $nroRegistroMaestro);
         $I->seeInCurrentUrl("ok");
         $I->see("Comanda guardada correctamente");

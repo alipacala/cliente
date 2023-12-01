@@ -1,5 +1,7 @@
 <?php
-require "../inc/header.php";
+require "../../inc/header.php";
+
+$pre = ENV == 'server' ? '/hotelarenasspa/cliente' : '/cliente';
 
 session_start();
 $tiempoTranscurrido = isset($_SESSION['ultima_actividad']) ? time() - $_SESSION['ultima_actividad'] : null;
@@ -26,12 +28,12 @@ $logueado); ?>
               <div class="col-7">
                 <div class="row">
                   <div class="col-9 p-0">
-                    <a href="./listado-reserva" class="text-decoration-none">
+                    <a href="/listado-reserva" class="text-decoration-none">
                       <div class="card mb-2">
                         <div class="card-body">
                           <div>
                             <img
-                              src="../img/menu-principal/icono1.png"
+                              src="<?php echo $pre ?>/img/menu-principal/icono1.png"
                               width="80px"
                               height="80px"
                               alt="gestionar reservas"
@@ -46,7 +48,7 @@ $logueado); ?>
                   </div>
                   <div class="col-3 p-0">
                     <img
-                      src="../img/menu-principal/flecha1.png"
+                      src="<?php echo $pre ?>/img/menu-principal/flecha1.png"
                       width="100%"
                       height="180px"
                       alt="reservas"
@@ -54,14 +56,14 @@ $logueado); ?>
                   </div>
                   <div class="col-9 p-0">
                     <a
-                      href="./gestionar-checkin-hotel/"
+                      href="/gestionar-checkin-hotel/"
                       class="text-decoration-none"
                     >
                       <div class="card mb-2">
                         <div class="card-body">
                           <div>
                             <img
-                              src="../img/menu-principal/icono2.png"
+                              src="<?php echo $pre ?>/img/menu-principal/icono2.png"
                               width="80px"
                               height="80px"
                               alt="gestionar check-in hotel"
@@ -76,7 +78,7 @@ $logueado); ?>
                   </div>
                   <div class="col-3 p-0">
                     <img
-                      src="../img/menu-principal/flecha2.png"
+                      src="<?php echo $pre ?>/img/menu-principal/flecha2.png"
                       width="100%"
                       height="180px"
                       alt="reservas"
@@ -86,12 +88,12 @@ $logueado); ?>
               </div>
               <div class="col-5 d-flex align-items-center p-0">
                 <div class="col">
-                  <a href="./listado-rooming/" class="text-decoration-none">
+                  <a href="/listado-rooming/" class="text-decoration-none">
                     <div class="card mb-2">
                       <div class="card-body">
                         <div>
                           <img
-                            src="../img/menu-principal/icono3.png"
+                            src="<?php echo $pre ?>/img/menu-principal/icono3.png"
                             width="80px"
                             height="80px"
                             alt="listado rooming"
@@ -117,14 +119,14 @@ $logueado); ?>
                 <div class="row">
                   <div class="col-5 p-0">
                     <a
-                      href="./registrar-cliente-spa/"
+                      href="/registrar-cliente-spa/"
                       class="text-decoration-none"
                     >
                       <div class="card mb-2">
                         <div class="card-body">
                           <div>
                             <img
-                              src="../img/menu-principal/icono4.png"
+                              src="<?php echo $pre ?>/img/menu-principal/icono4.png"
                               width="80px"
                               height="80px"
                               alt="habitaciones"
@@ -146,7 +148,7 @@ $logueado); ?>
                   </div>
                   <div class="col-2 p-0">
                     <img
-                      src="../img/menu-principal/flecha3.png"
+                      src="<?php echo $pre ?>/img/menu-principal/flecha3.png"
                       width="100%"
                       height="180px"
                       alt="reservas"
@@ -154,14 +156,14 @@ $logueado); ?>
                   </div>
                   <div class="col-5 p-0">
                     <a
-                      href="./programacion-servicios"
+                      href="/programacion-servicios"
                       class="text-decoration-none"
                     >
                       <div class="card mb-2">
                         <div class="card-body">
                           <div>
                             <img
-                              src="../img/menu-principal/icono5.png"
+                              src="<?php echo $pre ?>/img/menu-principal/icono5.png"
                               width="80px"
                               height="80px"
                               alt="programación de terapeutas"
@@ -187,12 +189,12 @@ $logueado); ?>
               <div class="col">
                 <div class="row">
                   <div class="col-4 p-0">
-                    <a href="./agregar-comanda/" class="text-decoration-none">
+                    <a href="/agregar-comanda/" class="text-decoration-none">
                       <div class="card mb-2">
                         <div class="card-body">
                           <div>
                             <img
-                              src="../img/menu-principal/icono6.png"
+                              src="<?php echo $pre ?>/img/menu-principal/icono6.png"
                               width="80px"
                               height="80px"
                               alt="registro de comandas"
@@ -239,7 +241,7 @@ $logueado); ?>
             class="float-start position-relative"
             style="top: 26.5%; left: 0"
           >
-            <img src="../img/menu-principal/flecha4.png" id="flecha4" />
+            <img src="<?php echo $pre ?>/img/menu-principal/flecha4.png" id="flecha4" />
           </div>
 
           <div
@@ -247,14 +249,14 @@ $logueado); ?>
             style="top: 30%; left: 0"
           >
             <a
-              href="./relacion-clientes-hotel-spa/"
+              href="/relacion-clientes-hotel-spa/"
               class="text-decoration-none"
             >
               <div class="card mb-2">
                 <div class="card-body">
                   <div>
                     <img
-                      src="../img/menu-principal/icono7.png"
+                      src="<?php echo $pre ?>/img/menu-principal/icono7.png"
                       width="80px"
                       height="80px"
                       alt="estado de cuenta de cliente"
@@ -276,28 +278,28 @@ $logueado); ?>
           <div class="row">
             <div class="col-12 text-start">
               <a
-                href="./registro-ventas/"
+                href="/registro-ventas/"
                 class="btn btn-outline-secondary mb-2 w-100 text-start"
                 >REG. VENTAS</a
               >
             </div>
             <div class="col-12 text-start">
               <a
-                href="./relacion-cuentas-por-pagar"
+                href="/relacion-cuentas-por-pagar"
                 class="btn btn-outline-secondary mb-2 w-100 text-start"
                 >REG. COMPRAS</a
               >
             </div>
             <div class="col-12 text-start">
               <a
-                href="./reporte-caja-diario/"
+                href="/reporte-caja-diario/"
                 class="btn btn-outline-secondary mb-2 w-100 text-start"
                 >REPORTE DIARIO CAJA</a
               >
             </div>
             <div class="col-12 text-start">
               <a
-                href="./reporte-productos-diario/"
+                href="/reporte-productos-diario/"
                 class="btn btn-outline-secondary mb-2 w-100 text-start"
                 >REPORTE DIARIO AL DETALLE</a
               >
@@ -309,14 +311,14 @@ $logueado); ?>
           <div class="row">
             <div class="col-12 text-start">
               <a
-                href="./listado-catalogo/"
+                href="/listado-catalogo/"
                 class="btn btn-outline-secondary mb-2 w-100 text-start"
                 >CATÁLOGO DE PRODUCTOS</a
               >
             </div>
             <div class="col-12 text-start">
               <a
-                href="./cambiar-precio-catalogo/"
+                href="/cambiar-precio-catalogo/"
                 class="btn btn-outline-secondary mb-2 w-100 text-start"
                 >CAMBIOS DE PRECIO</a
               >
@@ -328,35 +330,35 @@ $logueado); ?>
           <div class="row">
             <div class="col-12 text-start">
               <a
-                href="./consultar-productos/"
+                href="/consultar-productos/"
                 class="btn btn-outline-secondary mb-2 w-100 text-start"
                 >PRODUCTOS E INSUMOS / KARDEX</a
               >
             </div>
             <div class="col-12 text-start">
               <a
-                href="./registro-ingreso-egreso/"
+                href="/registro-ingreso-egreso/"
                 class="btn btn-outline-secondary mb-2 w-100 text-start"
                 >REGISTRO DE INGRESO / EGRESO</a
               >
             </div>
             <div class="col-12 text-start">
               <a
-                href="./inventario-simple/"
+                href="/inventario-simple/"
                 class="btn btn-outline-secondary mb-2 w-100 text-start"
                 >INVENTARIO SIMPLE</a
               >
             </div>
             <div class="col-12 text-start">
               <a
-                href="./inventario-valorado/"
+                href="/inventario-valorado/"
                 class="btn btn-outline-secondary mb-2 w-100 text-start"
                 >INVENTARIO VALORADO</a
               >
             </div>
             <div class="col-12 text-start">
               <a
-                href="./petitorio/"
+                href="/petitorio/"
                 class="btn btn-outline-secondary mb-2 w-100 text-start"
                 >PETITORIO</a
               >
@@ -388,7 +390,7 @@ $logueado); ?>
         Bienvenido al sistema de Hotel Arenas y Spa<br />Para acceder a las
         funciones del sistema, inicia sesión
       </p>
-      <a class="btn btn-primary btn-lg" href="./login"
+      <a class="btn btn-primary btn-lg" href="/login"
         >Iniciar sesión
         <nav></nav
       ></a>
@@ -527,5 +529,5 @@ $logueado); ?>
 </script>
 
 <?php
-require "../inc/footer.php";
+require "../../inc/footer.php";
 ?>

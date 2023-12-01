@@ -1,9 +1,0 @@
-Options -Indexes
-RewriteEngine On
-
-# Ignorar solicitudes para archivos y directorios existentes
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-
-# Redirigir a index.php en el controlador correspondiente
-# RewriteRule ^([^/]+)$ views/$1/index.php [L]

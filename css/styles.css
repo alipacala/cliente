@@ -124,3 +124,14 @@ th {
   top: 0 !important;
   z-index: 100 !important;
 }
+
+/* botones de opciones de listado de rooming */
+
+.opciones-rooming {
+  border: 1px solid transparent !important;
+}
+.opciones-rooming:hover {
+  border: 1px solid #6c757d !important;
+  background-color: transparent !important;
+  color: #6c757d !important;
+}

@@ -43,7 +43,7 @@ class crearHospedajeCest
 
         $I->wait(.5);
 
-        $I->seeInCurrentUrl("/cliente/views/listado-catalogo/");
+        $I->seeInCurrentUrl("/listado-catalogo/");
         $I->seeInCurrentUrl("ok");
 
         $I->see("Hospedaje creado correctamente");
