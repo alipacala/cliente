@@ -500,6 +500,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           
           <button id="checkout" class="btn btn-sm text-start opciones-rooming" style="width: 90%; margin-left: 10%;" onclick="mostrarModalCheckout()">CHECKOUT</button>
 
+          <button id="imprimir-ficha" class="btn btn-sm text-start opciones-rooming" style="width: 90%; margin-left: 10%;" onclick="imprimirFicha()">IMPRIMIR FICHA</button>
+
           <p class="mb-2 mt-3">Cambiar estado checking:</p>
           
           <button id="creado" class="btn btn-sm text-start opciones-rooming" style="width: 90%; margin-left: 10%;" onclick="cambiarEstado(event)">S/DATOS</button>
@@ -632,6 +634,12 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 
     cargarHabitaciones();
     modalCambioHabitacion.show();
+  }
+
+  function imprimirFicha() {
+    const nroRegistroMaestro = datosCheckin.nro_registro_maestro;
+    const url = `${apiReportesUrl}?tipo=ficha-checkin&nro_registro_maestro=${nroRegistroMaestro}`;
+    window.open(url, "_blank");
   }
 
   window.addEventListener("load", wrapper);

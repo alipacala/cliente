@@ -127,10 +127,10 @@ th {
 
 /* botones de opciones de listado de rooming */
 
-.opciones-rooming {
+.opciones-rooming, .opciones-servicio {
   border: 1px solid transparent !important;
 }
-.opciones-rooming:hover {
+.opciones-rooming:hover, .opciones-servicio:hover {
   border: 1px solid #6c757d !important;
   background-color: transparent !important;
   color: #6c757d !important;

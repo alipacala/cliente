@@ -2,7 +2,7 @@
 require "../../inc/header.php";
 
 session_start();
-mostrarHeader("", false);
+mostrarHeader("visitante", false);
 $idUnidadNegocio = isset($_GET["un"]) ? $_GET ["un"] : null;
 
 if ($idUnidadNegocio == null) {

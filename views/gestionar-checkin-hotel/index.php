@@ -54,7 +54,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
               id="nro_documento"
               required
             />
-            <button type="button" class="btn btn-info" onclick="Buscar()">
+            <button type="button" class="btn btn-info" onclick="buscarPersona()">
               Buscar
             </button>
           </div>

@@ -34,7 +34,7 @@ function mostrarHeader($pagina, $logueado)
   <body>
     <nav class="navbar navbar-expand-lg bg-primary sticky-top">
       <div class="container">
-        <a class="navbar-brand d-flex" href="/menu">
+        <a class="navbar-brand d-flex" href="<?php echo $pagina == 'visitante' || $pagina == 'terapeuta' ? "#" : "/menu" ?>">
           <img src="<?php echo $pre ?>/img/logo.webp" alt="logo"
             class="d-inline-block align-text-top img-fluid w-50"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -44,7 +44,7 @@ function mostrarHeader($pagina, $logueado)
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link active text-white" aria-current="page" href="/menu">Inicio</a>
+              <a class="nav-link active text-white" aria-current="page" href="<?php echo $pagina == 'visitante' || $pagina == 'terapeuta' ? "#" : "/menu" ?>">Inicio</a>
             </li>
             <?php if ($logueado) { ?>
               <li class="nav-item dropdown">
