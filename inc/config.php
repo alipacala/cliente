@@ -23,9 +23,9 @@ switch (ENV) {
     break;
 
   case 'prod':
-    define("URL_API_NUEVA", "http://arenashotelspa.online/apitest");
-    define("URL_API_CARLITOS", "http://arenashotelspa.online/php-api-carlitos");
-    define("URL", "http://arenashotelspa.online");
+    define("URL_API_NUEVA", "https://arenashotelspa.online/apitest");
+    define("URL_API_CARLITOS", "https://arenashotelspa.online/php-api-carlitos");
+    define("URL", "https://arenashotelspa.online");
     break;
 }
 
