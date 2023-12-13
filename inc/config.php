@@ -23,9 +23,9 @@ switch (ENV) {
     break;
 
   case 'prod':
-    define("URL_API_NUEVA", "http://c1952071.ferozo.com/apitest");
-    define("URL_API_CARLITOS", "http://c1952071.ferozo.com/php-api-carlitos");
-    define("URL", "http://c1952071.ferozo.com");
+    define("URL_API_NUEVA", "http://arenashotelspa.online/apitest");
+    define("URL_API_CARLITOS", "http://arenashotelspa.online/php-api-carlitos");
+    define("URL", "http://arenashotelspa.online");
     break;
 }
 
