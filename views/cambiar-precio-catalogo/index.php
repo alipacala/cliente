@@ -3,13 +3,10 @@ require "../../inc/header.php";
 
 session_start();
 $tiempoTranscurrido = isset($_SESSION['ultima_actividad']) ? time() - $_SESSION['ultima_actividad'] : null;
-if ($tiempoTranscurrido && ($tiempoTranscurrido > TIEMPO_INACTIVIDAD)) {
-  session_unset();
-  session_destroy();
-}
-$logueado = isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
-mostrarHeader("pagina-funcion", $logueado);
-?>
+if ($tiempoTranscurrido && ($tiempoTranscurrido >
+TIEMPO_INACTIVIDAD)) { session_unset(); session_destroy(); } $logueado =
+isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
+mostrarHeader("pagina-funcion", $logueado); ?>
 
 <div class="container my-5 main-cont">
   <div id="alert-place"></div>
@@ -19,7 +16,12 @@ mostrarHeader("pagina-funcion", $logueado);
     </div>
     <div class="card-body">
       GRUPO:
-      <select id="grupo" name="grupo" class="form-select mb-3"></select>
+      <select
+        id="grupo"
+        name="grupo"
+        class="form-select mb-3"
+        onchange="cargarProductos()"
+      ></select>
 
       <div class="table-responsive">
         <table id="tabla-listado-catalogo" class="table table-hover">
@@ -89,8 +91,6 @@ mostrarHeader("pagina-funcion", $logueado);
       });
 
       gruposCargados = data;
-
-      select.addEventListener("change", cargarProductos);
     } catch (error) {
       console.error(error);
       mostrarAlert("error", "Error al cargar los grupos", "consultar");
@@ -184,8 +184,12 @@ mostrarHeader("pagina-funcion", $logueado);
       const tbody = document.getElementById("tabla-listado-catalogo")
         .tBodies[0];
       tbody.innerHTML = "";
-      
-      const productos = data.filter((producto) => producto.id_tipo_de_producto == 12 || producto.id_tipo_de_producto == 13);
+
+      const productos = data.filter(
+        (producto) =>
+          producto.id_tipo_de_producto == 12 ||
+          producto.id_tipo_de_producto == 13
+      );
 
       // agrupar los productos por subgrupo
       const productosPorSubgrupo = subgrupos.map((subgrupo) => {
@@ -197,36 +201,40 @@ mostrarHeader("pagina-funcion", $logueado);
         };
       });
 
-      productosPorSubgrupo.forEach((element) => {
+      productosPorSubgrupo.forEach((subgrupo) => {
         // imprime una fila con el grupo y subgrupo
-        const trSubgrupo = document.createElement("tr");
-        trSubgrupo.innerHTML = `
-            <td style="background-color: lightsalmon;">
-              <strong>${grupoSeleccionado.nombre_grupo}</strong>
-            </td>
-            <td style="background-color: lightsalmon;" colspan="8">
-              <strong>${element.subgrupo}</strong>
-            </td>
-            <td colspan="4" style="background-color: lightblue"></td>
-          `;
+        const trSubgrupo = tbody.insertRow();
 
-        tbody.appendChild(trSubgrupo);
+        const tdGrupo = trSubgrupo.insertCell();
+        tdGrupo.classList.add("fw-bold");
+        tdGrupo.style.backgroundColor = "lightsalmon";
+        tdGrupo.innerText = grupoSeleccionado.nombre_grupo;
+
+        const tdSubgrupo = trSubgrupo.insertCell();
+        tdSubgrupo.classList.add("text-start", "fw-bold");
+        tdSubgrupo.style.backgroundColor = "lightsalmon";
+        tdSubgrupo.colSpan = 8;
+        tdSubgrupo.innerText = subgrupo.subgrupo;
+
+        const tdPrecioVenta = trSubgrupo.insertCell();
+        tdPrecioVenta.colSpan = 4;
+        tdPrecioVenta.style.backgroundColor = "lightblue";
 
         // imprime las filas con los productos de cada subgrupo
 
-        element.productos.forEach((producto) => {
-          const tr = document.createElement("tr");
+        subgrupo.productos.forEach((producto) => {
+          const tr = tbody.insertRow();
           tr.dataset.idProducto = producto.id_producto;
 
-          const tdNombreProducto = document.createElement("td");
+          const tdNombreProducto = tr.insertCell();
           tdNombreProducto.classList.add("nombre_producto", "align-middle");
           tdNombreProducto.innerText = producto.nombre_producto;
 
-          const tdPrecioCosto = document.createElement("td");
+          const tdPrecioCosto = tr.insertCell();
           tdPrecioCosto.classList.add("costo_unitario", "align-middle");
           tdPrecioCosto.innerText = producto.costo_unitario ?? 0;
 
-          const tdManoDeObra = document.createElement("td");
+          const tdManoDeObra = tr.insertCell();
           tdManoDeObra.classList.add("align-middle");
           const inputManoDeObra = document.createElement("input");
           inputManoDeObra.classList.add("form-control", "costo_mano_de_obra");
@@ -237,7 +245,7 @@ mostrarHeader("pagina-funcion", $logueado);
             alCambiarUnNumero(e.target.closest("tr"))
           );
 
-          const tdCostosAdicionales = document.createElement("td");
+          const tdCostosAdicionales = tr.insertCell();
           tdCostosAdicionales.classList.add("align-middle");
           const inputCostosAdicionales = document.createElement("input");
           inputCostosAdicionales.classList.add(
@@ -251,10 +259,10 @@ mostrarHeader("pagina-funcion", $logueado);
             alCambiarUnNumero(e.target.closest("tr"))
           );
 
-          const tdCosto = document.createElement("td");
+          const tdCosto = tr.insertCell();
           tdCosto.classList.add("costo", "align-middle");
 
-          const tdMargen = document.createElement("td");
+          const tdMargen = tr.insertCell();
           tdMargen.classList.add("align-middle");
           const inputMargen = document.createElement("input");
           inputMargen.classList.add("form-control", "porcentaje_margen");
@@ -265,19 +273,19 @@ mostrarHeader("pagina-funcion", $logueado);
             alCambiarUnNumero(e.target.closest("tr"))
           );
 
-          const tdPrecioVenta = document.createElement("td");
+          const tdPrecioVenta = tr.insertCell();
           tdPrecioVenta.classList.add("precio_venta", "align-middle");
           tdPrecioVenta.innerText = producto.precio_venta ?? 0;
 
-          const tdIGV = document.createElement("td");
+          const tdIGV = tr.insertCell();
           tdIGV.classList.add("igv", "align-middle");
           tdIGV.innerText = 0;
 
-          const tdPrecioFinal = document.createElement("td");
+          const tdPrecioFinal = tr.insertCell();
           tdPrecioFinal.classList.add("precio_final", "align-middle");
           tdPrecioFinal.innerText = 0;
 
-          const tdPrecioVentaLista = document.createElement("td");
+          const tdPrecioVentaLista = tr.insertCell();
           tdPrecioVentaLista.classList.add("align-middle");
           const inputPrecioVentaLista = document.createElement("input");
           inputPrecioVentaLista.classList.add(
@@ -288,7 +296,7 @@ mostrarHeader("pagina-funcion", $logueado);
           inputPrecioVentaLista.value = producto.precio_venta_01 ?? 0;
           tdPrecioVentaLista.appendChild(inputPrecioVentaLista);
 
-          const tdPrecioCorporativo = document.createElement("td");
+          const tdPrecioCorporativo = tr.insertCell();
           tdPrecioCorporativo.classList.add("align-middle");
           const inputPrecioCorporativo = document.createElement("input");
           inputPrecioCorporativo.classList.add(
@@ -298,7 +306,7 @@ mostrarHeader("pagina-funcion", $logueado);
           inputPrecioCorporativo.value = producto.precio_venta_02 ?? 0;
           tdPrecioCorporativo.appendChild(inputPrecioCorporativo);
 
-          const tdPrecioAPersonal = document.createElement("td");
+          const tdPrecioAPersonal = tr.insertCell();
           tdPrecioAPersonal.classList.add("align-middle");
           const inputPrecioAPersonal = document.createElement("input");
           inputPrecioAPersonal.classList.add(
@@ -308,37 +316,19 @@ mostrarHeader("pagina-funcion", $logueado);
           inputPrecioAPersonal.value = producto.precio_venta_03 ?? 0;
           tdPrecioAPersonal.appendChild(inputPrecioAPersonal);
 
-          const tdGuardar = document.createElement("td");
+          const tdGuardar = tr.insertCell();
           const btnGuardar = document.createElement("button");
           btnGuardar.classList.add("btn", "btn-primary");
           btnGuardar.innerText = "Guardar";
           btnGuardar.addEventListener("click", cambiarPreciosyCostos);
           tdGuardar.appendChild(btnGuardar);
 
-          tr.appendChild(tdNombreProducto);
-          tr.appendChild(tdPrecioCosto);
-          tr.appendChild(tdManoDeObra);
-          tr.appendChild(tdCostosAdicionales);
-          tr.appendChild(tdCosto);
-          tr.appendChild(tdMargen);
-          tr.appendChild(tdPrecioVenta);
-          tr.appendChild(tdIGV);
-          tr.appendChild(tdPrecioFinal);
-
-          tr.appendChild(tdPrecioVentaLista);
-          tr.appendChild(tdPrecioCorporativo);
-          tr.appendChild(tdPrecioAPersonal);
-
-          tr.appendChild(tdGuardar);
-
           alCambiarUnNumero(tr);
-
-          tbody.appendChild(tr);
-
-          alinearCeldasALaDerecha();
-          formatearCeldasNumericas();
         });
       });
+
+      alinearCeldasALaDerecha();
+      formatearCeldasNumericas();
     } catch (error) {
       console.error(error);
       mostrarAlert("error", "Error al cargar los productos", "consultar");
@@ -350,12 +340,12 @@ mostrarHeader("pagina-funcion", $logueado);
   function alinearCeldasALaDerecha() {
     // seleccionar todas las celdas de la tabla excepto las del encabezado y la primera columna
     const celdas = document.querySelectorAll(
-      "#tabla-listado-catalogo tbody td:not(:first-child):not(:nth-child(1)):not(:last-child)"
+      "#tabla-listado-catalogo tbody td:not(:first-child):not(:nth-child(1)):not(:last-child):not(.text-start)"
     );
 
     celdas.forEach((celda) => {
       celda.classList.add("text-end");
-      if (celda.querySelector("input")) 
+      if (celda.querySelector("input"))
         celda.querySelector("input").classList.add("text-end");
     });
   }
@@ -363,12 +353,14 @@ mostrarHeader("pagina-funcion", $logueado);
   function formatearCeldasNumericas() {
     // seleccionar todas las celdas de la tabla excepto las del encabezado y la primera columna
     const celdas = document.querySelectorAll(
-      "#tabla-listado-catalogo tbody tr:not(:first-child) td:not(:first-child):not(:nth-child(1)):not(:last-child)"
+      "#tabla-listado-catalogo tbody tr:not(:first-child) td:not(:first-child):not(:nth-child(1)):not(:last-child):not(.text-start)"
     );
 
     celdas.forEach((celda) => {
       if (celda.querySelector("input")) {
-        celda.querySelector("input").value = formatearCantidad(celda.querySelector("input").value);
+        celda.querySelector("input").value = formatearCantidad(
+          celda.querySelector("input").value
+        );
       } else {
         celda.innerText = formatearCantidad(celda.innerText);
       }
