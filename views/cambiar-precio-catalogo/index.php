@@ -85,7 +85,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       let grupos = data;
       grupos = ordenarGrupos(grupos);
 
-      data.forEach((element) => {
+      grupos.forEach((element) => {
         const option = crearOpcionClasificacionVentas(element);
         select.appendChild(option);
       });
@@ -98,19 +98,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   }
 
   function ordenarGrupos(grupos) {
-    // ordenar los grupos por nro_orden
-    grupos.sort((a, b) => {
-      if (+a.nro_orden > +b.nro_orden) {
-        return 1;
-      } else if (+a.nro_orden < +b.nro_orden) {
-        return -1;
-      } else {
-        return 0;
-      }
-    });
-
     // mapear a un array de grupos con un campo array de subgrupos
-    grupos = grupos
+    gruposAgrupados = grupos
       .filter((grupo) => grupo.codigo_grupo == grupo.codigo_subgrupo)
       .map((grupo) => {
         grupo.subgrupos = grupos.filter(
@@ -121,10 +110,31 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         return grupo;
       });
 
-    // flat array de grupos y subgrupos
-    return grupos.flatMap((grupo) => {
+    const funcionOrden = (a, b) => {
+      if (+a.nro_orden > +b.nro_orden) {
+        return 1;
+      } else if (+a.nro_orden < +b.nro_orden) {
+        return -1;
+      } else {
+        return 0;
+      }
+    };
+
+    // ordenar los subgrupos de cada grupo
+    gruposAgrupados.forEach((grupo) => {
+      grupo.subgrupos.sort(funcionOrden);
+    });
+
+    // ordenar los grupos
+    gruposAgrupados.sort(funcionOrden);
+
+    const flatGrupos = gruposAgrupados.flatMap((grupo) => {
       return [grupo, ...grupo.subgrupos];
     });
+    console.log(flatGrupos);
+
+    // flat array de grupos y subgrupos
+    return flatGrupos;
   }
 
   function crearOpcionClasificacionVentas(clasificacionVentas) {

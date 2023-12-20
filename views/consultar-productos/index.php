@@ -404,7 +404,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     stockProducto.textContent = formatearCantidad(data.stock);
 
     const tipoUnidadProducto = document.getElementById("tipo_unidad_producto");
-    tipoUnidadProducto.textContent = data.tipoUnidad;
+    tipoUnidadProducto.textContent = data.tipoUnidad ?? "";
 
     const fechaInicio = document.getElementById("fecha-inicio");
     const fechaFin = document.getElementById("fecha-fin");
