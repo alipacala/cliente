@@ -365,8 +365,10 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
       const datalist = document.getElementById("cliente-buscar-list");
       const inputBuscar = document.getElementById("cliente-buscar");
 
+      const url = apiAcompanantesUrl + "?cuentas_abiertas";
+      
       try {
-        const response = await fetch(apiAcompanantesUrl);
+        const response = await fetch(url);
         const data = await response.json();
 
         acompanantes = data;
