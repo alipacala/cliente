@@ -920,6 +920,10 @@ $data = json_decode($response, true);
         celular: celularEl.value,
         email: emailEl.value,
         sexo: sexoEl.value,
+
+        nacionalidad: nacionalidadEl.value,
+        pais: paisEl.selectedOptions[0].textContent,
+        id_pais: paisEl.value,
       },
       checking: {
         id_checkin: idChecking,
