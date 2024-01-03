@@ -928,28 +928,17 @@ mostrarHeader("pagina-funcion", $logueado); ?>
     document.getElementById("id_checkin").value = id;
   }
 
-  function funcionSinParametros() {
-    fetch("<?php echo URL_API_CARLITOS ?>/api-config.php", {
-      method: "HOTEL",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Concatenar los valores obtenidos (supongamos que es un array de nombres)
-        var concatenatedData = "";
-        var concatenatedDataArray = [];
-        data.forEach((item) => {
-          // Sumar uno al valor de numero_correlativo antes de la concatenación
-          let numeroCorrelativo = parseInt(item.numero_correlativo) + 1;
-          var concatenatedData =
-            item.codigo + numeroCorrelativo.toString().padStart(6, "0");
-          concatenatedDataArray.push(concatenatedData);
-        });
-        // Actualizar el valor del campo de entrada
-        document.getElementById("nro_registro").value = concatenatedDataArray;
-      })
-      .catch((error) => {
-        console.error("Error en la solicitud a la API:", error);
-      });
+  async function funcionSinParametros() {
+    const url = "<?php echo URL_API_NUEVA ?>/config?codigo=HOTEL";
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+
+      document.getElementById("nro_registro").value =
+        data;
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
 </script>
 <script>
