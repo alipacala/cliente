@@ -680,7 +680,7 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
 
   async function mostrarCodigoComanda() {
     const nroComanda = document.getElementById("nro_comanda");
-    const url = apiConfigCodigoUrl + "/5/codigo";
+    const url = apiConfigCodigoUrl + "?codigo=COMANDA";
 
     try {
       const response = await fetch(url);

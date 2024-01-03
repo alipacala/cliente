@@ -819,8 +819,6 @@ $_SESSION["usuario"]["id_usuario"]; ?>
 </div>
 
 <script>
-  const configId = 4;
-  const apiConfigUrl = `<?php echo URL_API_NUEVA ?>/config/${configId}/codigo`;
   const apiCheckingsUrl = "<?php echo URL_API_NUEVA ?>/checkings";
   const apiAcompanantesUrl = "<?php echo URL_API_NUEVA ?>/acompanantes";
   const apiDocumentosDetallesUrl =

@@ -458,13 +458,13 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   }
 
   async function cargarCodigoReserva() {
-    const url = `${apiConfigUrl}/2/codigo`;
+    const url = `${apiConfigUrl}?codigo=RESERVA`;
 
     try {
       const response = await fetch(url);
       const data = await response.json();
 
-      nroReservaEl.value = data.codigo;
+      nroReservaEl.value = data;
     } catch (error) {
       console.error(error);
     }

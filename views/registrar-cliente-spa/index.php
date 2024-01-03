@@ -150,7 +150,6 @@ mostrarHeader("pagina-funcion", $logueado); ?>
 </div>
 
 <script>
-  const configId = 4;
   const apiConfigUrl = "<?php echo URL_API_NUEVA ?>/config";
   const apiCheckingsUrl = "<?php echo URL_API_NUEVA ?>/checkings";
   const apiPersonasUrl = "<?php echo URL_API_NUEVA ?>/personas";
@@ -173,7 +172,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   }
 
   async function cargarNroRegistro() {
-    const url = `${apiConfigUrl}/${configId}/codigo`;
+    const url = `${apiConfigUrl}?codigo=SPA`;
 
     try {
       const response = await fetch(url);
@@ -182,7 +181,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       const nroRegistroMaestro = document.getElementById(
         "nro_registro_maestro"
       );
-      nroRegistroMaestro.value = data.codigo;
+      nroRegistroMaestro.value = data;
     } catch (error) {
       console.error(error);
       mostrarAlert("error", "Error al cargar el nro. de registro", "consultar");
