@@ -543,6 +543,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
   const apiSunatUrl = "<?php echo URL_API_NUEVA ?>/sunat";
   const apiPersonasUrl = "<?php echo URL_API_NUEVA ?>/personas";
   const apiPaisesUrl = "<?php echo URL_API_NUEVA ?>/paises";
+  const apiConfigUrl = "<?php echo URL_API_NUEVA ?>/config";
 
   let fechas = [];
   let objfechas = [];
@@ -1045,6 +1046,18 @@ mostrarHeader("pagina-funcion", $logueado); ?>
         const habitacionInput = document.getElementById("habitacion");
         const selectedOption =
           habitacionInput.options[habitacionInput.selectedIndex];
+
+          const obtenerNroRegistro = async () => {
+            const url = `${apiConfigUrl}?codigo=HOTEL`;
+            try {
+              const response = await fetch(url);
+              const data = await response.json();
+              return data;
+            } catch (error) {
+              console.error("Error:", error);
+            }
+          };
+
         // recibe todos los datos del formulario
         if (registros.length === 0) {
           var apellidos2 = `${
@@ -1067,7 +1080,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           // Agregar el registro de afuera al array
           registros.push(registroFuera);
           formData = {
-            nro_registro: document.getElementById("nro_registro").value,
+            nro_registro: await obtenerNroRegistro(),
             nro_reserva: document.getElementById("nro_reserva").value,
             apellidos: `${document.getElementById("apellido_paterno").value} ${
               document.getElementById("apellido_materno").value
@@ -1113,7 +1126,7 @@ mostrarHeader("pagina-funcion", $logueado); ?>
           };
         } else {
           formData = {
-            nro_registro: document.getElementById("nro_registro").value,
+            nro_registro: await obtenerNroRegistro(),
             nro_reserva: document.getElementById("nro_reserva").value,
             apellidos: `${document.getElementById("apellido_paterno").value} ${
               document.getElementById("apellido_materno").value
