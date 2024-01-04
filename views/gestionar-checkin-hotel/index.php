@@ -832,8 +832,8 @@ mostrarHeader("pagina-funcion", $logueado); ?>
       console.error("Error:", error);
     }
   }
-</script>
-<script>
+
+  
   const selectTipo = document.getElementById("tipo");
   fetch("<?php echo URL_API_CARLITOS ?>/api-reservas.php", {
     method: "GET3",
