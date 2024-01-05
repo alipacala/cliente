@@ -1,11 +1,11 @@
 <?php
 require_once "config.php";
 
-function mostrarHeader($pagina, $logueado)
+function mostrarHeader($pagina = "", $logueado = false)
 {
   $pre = ENV == 'server' ? '/hotelarenasspa/cliente' : '/cliente';
 
-  if ($logueado) {
+  if ($pagina != "colaborador" && $logueado) {
     if ($pagina == "login") {
       header("Location: ../");
     }

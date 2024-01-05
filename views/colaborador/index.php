@@ -2,13 +2,10 @@
 require "../../inc/header.php";
 
 session_start();
-$tiempoTranscurrido = isset($_SESSION['ultima_actividad']) ? time() - $_SESSION['ultima_actividad'] : null;
-if (
-  $tiempoTranscurrido && ($tiempoTranscurrido >
-TIEMPO_INACTIVIDAD) ) { session_unset(); session_destroy(); } $logueado =
-isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false; $idUsuario =
-$_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
-$prePath = ENV == 'server' ? '/hotelarenasspa/cliente' : '/cliente'; ?>
+mostrarHeader("colaborador");
+
+$prePath = ENV == 'server' ? '/hotelarenasspa/cliente' : '/cliente';
+?>
 <div class="container my-5 main-cont">
   <div id="alert-place"></div>
   <div class="card w-50 mx-auto" id="card-login">
