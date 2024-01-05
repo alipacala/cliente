@@ -128,7 +128,7 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modal-comanda-buscar-label">
-          Asignación de Comanda
+          Asignar al cliente
         </h5>
         <button
           type="button"
@@ -146,21 +146,41 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
               list="cliente-buscar-list"
               id="cliente-buscar"
               placeholder="Buscar cliente..."
+              onchange="alCambiarCliente(event)"
             />
             <datalist id="cliente-buscar-list"> </datalist>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <label for="nombre-asignar" class="form-label">Nombre</label>
+            </div>
+            <div class="col-9 mb-3">
+              <input class="form-control" id="nombre-asignar" disabled />
+            </div>
+            <div class="col-3">
+              <label for="tipo-asignar" class="form-label">Tipo</label>
+            </div>
+            <div class="col-9 mb-3">
+              <input class="form-control" id="tipo-asignar" disabled />
+            </div>
+            <div class="col-3">
+              <label for="habitacion-asignar" class="form-label"
+                >Habitación</label
+              >
+            </div>
+            <div class="col-9 mb-3">
+              <input class="form-control" id="habitacion-asignar" disabled />
+            </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Cerrar
-        </button>
         <button
           type="button"
-          class="btn btn-primary"
+          class="btn btn-primary mx-auto"
           onclick="guardarComanda()"
         >
-          Aceptar
+          REGISTRO DE PEDIDO
         </button>
       </div>
     </div>
@@ -183,43 +203,20 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
   let productoSeleccionado = null;
   let cantidadSeleccionada = null;
 
+  let nroRegistroMaestro = null;
+  let idAcompanante = null;
+
   let iterador = 1;
   let detalles = [];
-
-  let desdeEstadoCuenta = false;
 
   async function wrapper() {
     mostrarAlertaSiHayMensaje();
 
-    const params = new URLSearchParams(window.location.search);
-    const nroRegistroMaestro = params.get("nro_registro_maestro");
-    desdeEstadoCuenta = nroRegistroMaestro != null;
+    const datalist = document.getElementById("cliente-buscar-list");
+    const inputBuscar = document.getElementById("cliente-buscar");
 
-    if (!desdeEstadoCuenta) {
-      const datalist = document.getElementById("cliente-buscar-list");
-      const inputBuscar = document.getElementById("cliente-buscar");
-
-      const url = apiAcompanantesUrl + "?cuentas_abiertas";
-
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
-
-        acompanantes = data;
-
-        acompanantes.forEach((acompanante) => {
-          const option = document.createElement("option");
-          option.value = `${acompanante.apellidos_y_nombres} - ${acompanante.nro_registro_maestro} - ${acompanante.id_acompanante}`;
-          datalist.appendChild(option);
-        });
-      } catch (error) {
-        console.error(error);
-        mostrarAlert("error", "Error al cargar los acompañantes", "consultar");
-      }
-    }
-
+    await cargarAcompanantes();
     await prepararBotonAceptar();
-
     await cargarDatosGruposYProductos();
 
     llenarDatalistProductos();
@@ -229,20 +226,57 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
 
     prepararModalProducto();
     prepararFormularioCrearComanda();
+  }
 
-    const btnGuardarComanda = document.getElementById("guardar-comanda");
-    btnGuardarComanda.addEventListener("click", function (event) {
-      event.preventDefault();
-      guardarComanda();
-    });
+  async function cargarAcompanantes() {
+    const url = apiAcompanantesUrl + "?cuentas_abiertas";
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+
+      acompanantes = data;
+
+      const datalist = document.getElementById("cliente-buscar-list");
+
+      acompanantes.forEach((acompanante) => {
+        const option = document.createElement("option");
+        option.value = `${acompanante.apellidos_y_nombres} - ${acompanante.id_acompanante} - ${acompanante.nro_registro_maestro}`;
+        datalist.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
+      mostrarAlert("error", "Error al cargar los acompañantes", "consultar");
+    }
+  }
+
+  function alCambiarCliente() {
+    const inputBuscar = document.getElementById("cliente-buscar");
+
+    idAcompanante = inputBuscar.value.split(" - ")[1];
+
+    const acompanante = acompanantes.find(
+      (acompanante) => acompanante.id_acompanante == idAcompanante
+    );
+
+    if (acompanante) {
+      const inputNombre = document.getElementById("nombre-asignar");
+      const inputTipo = document.getElementById("tipo-asignar");
+      const inputHabitacion = document.getElementById("habitacion-asignar");
+
+      nroRegistroMaestro = acompanante.nro_registro_maestro;
+
+      inputNombre.value = acompanante.apellidos_y_nombres;
+      inputTipo.value = acompanante.tipo_de_servicio;
+      inputHabitacion.value = acompanante.nro_habitacion;
+
+      inputBuscar.value = "";
+    }
   }
 
   function prepararBotonAceptar() {
     const btnAceptar = document.getElementById("btn-guardar-comanda");
-    btnAceptar.setAttribute(
-      "data-bs-target",
-      desdeEstadoCuenta ? "#modal-comanda" : "#modal-comanda-buscar"
-    );
+    btnAceptar.setAttribute("data-bs-target", "#modal-comanda-buscar");
   }
 
   function actualizarTabla() {
@@ -266,35 +300,20 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
   }
 
   async function guardarComanda() {
-    let nroRegistroMaestro = null;
-    let idAcompanante = null;
     const idUsuario = "<?php echo $idUsuario ?>";
 
-    if (desdeEstadoCuenta) {
-      const params = new URLSearchParams(window.location.search);
-      nroRegistroMaestro = params.get("nro_registro_maestro");
-      idAcompanante = document.getElementById("cliente").value;
-    } else {
-      const clienteBuscarList = document.getElementById("cliente-buscar-list");
-      const inputBuscar = document.getElementById("cliente-buscar");
-
-      nroRegistroMaestro = inputBuscar.value.split(" - ")[1];
-      idAcompanante = inputBuscar.value.split(" - ")[2];
-    }
+    const clienteBuscarList = document.getElementById("cliente-buscar-list");
+    const inputBuscar = document.getElementById("cliente-buscar");
 
     const url = `${apiDocumentosMovimientosUrl}/detalles`;
-
-    // si no tiene acompañante, agregar el id del acompañante
-    for (const detalle of detalles) {
-      if (!("id_acompanate" in detalle)) {
-        detalle["id_acompanate"] = idAcompanante;
-      }
-    }
 
     const data = {
       nro_registro_maestro: nroRegistroMaestro,
       id_usuario: idUsuario,
-      detalles: detalles,
+      detalles: detalles.map((detalle) => ({
+        ...detalle,
+        id_acompanate: idAcompanante,
+      })),
     };
 
     const options = {
@@ -310,9 +329,7 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
       const data = await response.json();
 
       if (data.resultado) {
-        window.location.href = desdeEstadoCuenta
-          ? `./../estado-cuenta-cliente?nro_registro_maestro=${nroRegistroMaestro}&ok&mensaje=Comanda guardada correctamente&op=crear`
-          : "../";
+        window.location.href = `./../colaborador?ok&mensaje=Comanda guardada correctamente&op=crear`;
       }
     } catch (error) {
       console.error(error);
@@ -332,42 +349,44 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
     const btnAceptarCantidad = document.getElementById("btn-aceptar-cantidad");
 
     btnAceptarCantidad.addEventListener("click", function (event) {
-      cantidadSeleccionada = document.getElementById("cantidad").value;
+      cantidadSeleccionada = document.getElementById("cantidad");
+      observaciones = document.getElementById("observaciones");
 
       detalles.push({
         id_producto: productoSeleccionado.id_producto,
         producto: productoSeleccionado.nombre_producto,
-        cantidad: cantidadSeleccionada,
+        cantidad: cantidadSeleccionada.value,
         precio_unitario: productoSeleccionado.precio_venta_01,
+        observaciones: observaciones.value,
       });
 
       const inputProducto = document.getElementById("nombre_producto");
       inputProducto.focus();
+
+      cantidadSeleccionada.value = 1;
+      observaciones.value = "";
 
       actualizarTabla();
     });
   }
 
   async function cargarDatosGruposYProductos() {
-    const params = new URLSearchParams(window.location.search);
+    const url = apiProductosUrl + "?solo-productos";
 
     try {
-      const responseProductos = await fetch(apiProductosUrl);
+      const responseProductos = await fetch(url);
       let dataProductos = await responseProductos.json();
 
       productos = dataProductos;
-
     } catch (error) {
       console.error(error);
       mostrarAlert("error", "Error al cargar los grupos y productos", "crear");
     }
   }
-  
+
   async function agregarProducto(producto) {
     const modalCantidad = document.getElementById("modal-cantidad");
-    const modalTerapista = document.getElementById("modal-terapista");
     const modalC = new bootstrap.Modal(modalCantidad);
-    const modalT = new bootstrap.Modal(modalTerapista);
 
     const btnAceptarCantidad = document.getElementById("btn-aceptar-cantidad");
     const cantidad = document.getElementById("cantidad");
@@ -375,23 +394,12 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
     productoSeleccionado = producto;
     cantidadSeleccionada = cantidad.value;
 
-    if (producto.tipo === "SRV" && producto.requiere_programacion == 1) {
-      const servicio = document.getElementById("servicio");
-      servicio.value = producto.nombre_producto;
-
-      await llenarOpcionesTerapistas(productoSeleccionado.codigo_habilidad);
-
-      modalT.show();
-    } else {
-      modalC.show();
-    }
+    modalC.show();
   }
 
   function llenarDatalistProductos() {
     const datalist = document.getElementById("producto-list");
     datalist.innerHTML = "";
-
-    console.log(productos);
 
     productos.forEach((producto) => {
       const option = document.createElement("option");
