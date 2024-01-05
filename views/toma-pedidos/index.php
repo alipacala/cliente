@@ -6,8 +6,7 @@ $tiempoTranscurrido = isset($_SESSION['ultima_actividad']) ? time() - $_SESSION[
 if ($tiempoTranscurrido && ($tiempoTranscurrido >
 TIEMPO_INACTIVIDAD)) { session_unset(); session_destroy(); } $logueado =
 isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false; $idUsuario =
-$_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
-?>
+$_SESSION["usuario"]["id_usuario"]; mostrarHeader("toma-pedidos"); ?>
 <div class="container my-5 main-cont">
   <div id="alert-place"></div>
 
@@ -24,15 +23,26 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
         </div>
         <div class="form-group">
           <label for="nombre_producto">Buscar por nombre</label>
-          <input
-            type="text"
-            class="form-control"
-            list="producto-list"
-            id="nombre_producto"
-            placeholder="Buscar producto..."
-            onchange="alCambiarProducto()"
-          />
-          <datalist id="producto-list"> </datalist>
+          <div class="d-flex">
+            <input
+              type="text"
+              class="form-control"
+              list="producto-list"
+              id="nombre_producto"
+              placeholder="Buscar producto..."
+              onchange="alCambiarProducto()"
+            />
+
+            <div class="dropdown">
+              <button
+                class="btn btn-secondary dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              ></button>
+              <ul class="dropdown-menu" id="productos-list"></ul>
+            </div>
+          </div>
         </div>
 
         <div class="table-responsive mt-4">
@@ -219,8 +229,6 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
     await prepararBotonAceptar();
     await cargarDatosGruposYProductos();
 
-    llenarDatalistProductos();
-
     const selectCliente = document.getElementById("cliente");
     const selectAplicado = document.getElementById("aplicado");
 
@@ -397,32 +405,33 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("pagina-funcion", $logueado);
     modalC.show();
   }
 
-  function llenarDatalistProductos() {
-    const datalist = document.getElementById("producto-list");
-    datalist.innerHTML = "";
-
-    productos.forEach((producto) => {
-      const option = document.createElement("option");
-      option.value = `${producto.id_producto} - ${producto.nombre_producto}`;
-      datalist.appendChild(option);
-    });
-  }
-
   function alCambiarProducto() {
     const inputProducto = document.getElementById("nombre_producto");
-    const idProducto = inputProducto.value.split(" - ")[0];
 
-    const producto = productos.find(
-      (producto) => producto.id_producto == idProducto
+    const listProductosFiltrados = document.getElementById("productos-list");
+    listProductosFiltrados.innerHTML = "";
+
+    const productosFiltrados = productos.filter((producto) =>
+      producto.nombre_producto
+        .toLowerCase()
+        .includes(inputProducto.value.toLowerCase())
     );
 
-    inputProducto.value = "";
+    productosFiltrados.forEach((producto) => {
+      const listItem = document.createElement("li");
+      const linkItem = document.createElement("a");
+      linkItem.classList.add("dropdown-item");
 
-    if (producto) {
-      agregarProducto(producto);
-    } else {
-      inputProducto.focus();
-    }
+      linkItem.textContent = producto.nombre_producto;
+      linkItem.href = "#";
+      linkItem.addEventListener("click", function (event) {
+        event.preventDefault();
+        agregarProducto(producto);
+      });
+
+      listItem.appendChild(linkItem);
+      listProductosFiltrados.appendChild(listItem);
+    });
   }
   window.addEventListener("load", wrapper);
 </script>

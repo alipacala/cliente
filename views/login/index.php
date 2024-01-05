@@ -12,8 +12,6 @@ if ($metodo == 'POST') {
   iniciarSesion($usuario, $clave);
 }
 
-//session_start();
-
 $logueado = isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
 mostrarHeader("", $logueado);
 ?>

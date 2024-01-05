@@ -1,7 +1,18 @@
 <?php
 require "../../inc/header.php";
+require "../../db/auth.php";
 
+$metodo = $_SERVER['REQUEST_METHOD'];
+
+if ($metodo == 'POST') {
+  $usuario = $_POST['usuario'];
+  $clave = $_POST['clave'];
+  iniciarSesionColaborador($usuario, $clave);
+}
+  
 session_start();
+
+$logueado = isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false;
 mostrarHeader("colaborador");
 
 $prePath = ENV == 'server' ? '/hotelarenasspa/cliente' : '/cliente';
@@ -10,9 +21,7 @@ $prePath = ENV == 'server' ? '/hotelarenasspa/cliente' : '/cliente';
   <div id="alert-place"></div>
   <div class="card w-50 mx-auto" id="card-login">
     <div class="card-header py-3">
-      <h2 class="h3 fw-normal text-center">
-        Inicio de sesión de colaboradores
-      </h2>
+      <h2 class="h3 fw-normal text-center">Inicio de sesión de colaborador</h2>
     </div>
     <div class="card-body">
       <main class="form-signin w-100 m-auto">
@@ -23,36 +32,38 @@ $prePath = ENV == 'server' ? '/hotelarenasspa/cliente' : '/cliente';
             class="d-inline-block align-text-top img-fluid w-25 mb-3 mx-auto"
           />
         </div>
-        <div class="form-group mb-3">
-          <label for="usuario">Nombre de usuario</label>
-          <input
-            type="text"
-            class="form-control"
-            id="usuario"
-            placeholder="Ingrese su nombre de usuario"
-          />
-        </div>
-        <div class="form-group mb-3">
-          <label for="contraseña">Contraseña</label>
-          <input
-            type="password"
-            class="form-control"
-            id="contraseña"
-            placeholder="Ingrese su contraseña"
-          />
-        </div>
-        <button class="btn btn-primary w-100 py-2" onclick="loginColaborador()">
-          Iniciar sesión
-        </button>
+        <form id="form-login" method="POST" action="#">
+          <div class="form-group mb-3">
+            <label for="usuario">Nombre de usuario</label>
+            <input
+              type="text"
+              class="form-control"
+              id="usuario"
+              name="usuario"
+              placeholder="Ingrese su nombre de usuario"
+            />
+          </div>
+          <div class="form-group mb-3">
+            <label for="contraseña">Contraseña</label>
+            <input
+              type="password"
+              class="form-control"
+              id="contraseña"
+              name="clave"
+              placeholder="Ingrese su contraseña"
+            />
+          </div>
+          <button class="btn btn-primary w-100 py-2" type="submit">
+            Iniciar sesión
+          </button>
+        </form>
       </main>
     </div>
   </div>
 
   <div class="card d-none" id="card-menu">
     <div class="card-header py-3">
-      <h2 class="h3 fw-normal text-center">
-        Inicio de sesión de colaboradores
-      </h2>
+      <h2 class="h3 fw-normal text-center">Opciones de colaborador</h2>
     </div>
     <div class="card-body">
       <ul>
@@ -86,63 +97,14 @@ $prePath = ENV == 'server' ? '/hotelarenasspa/cliente' : '/cliente';
 </div>
 
 <script>
-  const apiUsuariosUrl = "<?php echo URL_API_NUEVA ?>/usuarios";
-
-  let usuarioEl = null;
-  let contraseñaEl = null;
-
-  let productos = [];
-  let terapistas = [];
-  let acompanantes = [];
-
-  let productoSeleccionado = null;
-  let cantidadSeleccionada = null;
-
-  let iterador = 1;
-  let detalles = [];
-
   async function wrapper() {
-    usuarioEl = document.getElementById("usuario");
-    contraseñaEl = document.getElementById("contraseña");
-  }
+    mostrarAlertaSiHayMensaje();
+    const logueado = "<?php echo $logueado; ?>";
+    console.log(logueado);
 
-  function pasarDeLoginAlMenu() {
-    document.querySelector("#card-login").classList.add("d-none");
-    document.querySelector("#card-menu").classList.remove("d-none");
-  }
-
-  async function loginColaborador() {
-    const usuario = usuarioEl.value;
-    const contrasena = contraseñaEl.value;
-
-    if (usuario == "" || contrasena == "") {
-      mostrarAlert("error", "Ingrese usuario y contraseña", "login");
-      return;
-    }
-
-    const url = `${apiUsuariosUrl}/login-colaboradores`;
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ usuario, contrasena }),
-    };
-
-    try {
-      const response = await fetch(url, options);
-      const data = await response.json();
-      console.log(data);
-
-      if (data) {
-        idUsuario = data.resultado.id_usuario;
-        pasarDeLoginAlMenu();
-      } else {
-        mostrarAlert("error", "Usuario o contraseña incorrectos", "login");
-      }
-    } catch (error) {
-      console.error(error);
-      mostrarAlert("error", "Error al iniciar sesión", "login");
+    if (logueado) {
+      document.getElementById("card-login").classList.add("d-none");
+      document.getElementById("card-menu").classList.remove("d-none");
     }
   }
 

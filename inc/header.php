@@ -44,7 +44,7 @@ function mostrarHeader($pagina = "", $logueado = false)
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link active text-white" aria-current="page" href="<?php echo $pagina == 'visitante' || $pagina == 'terapeuta' ? "#" : "/menu" ?>">Inicio</a>
+              <a class="nav-link active text-white" aria-current="page" href="<?php echo $pagina == 'visitante' || $pagina == 'colaborador' || $pagina == 'terapeuta' ? "#" : "/menu" ?>">Inicio</a>
             </li>
             <?php if ($logueado) { ?>
               <li class="nav-item dropdown">
