@@ -277,7 +277,9 @@ $_SESSION["usuario"]["id_usuario"]; $pre = ENV == 'server' ?
   }
 
   function prepararLongPress(target) {
-    target.addEventListener("mousedown", () => {
+    target.addEventListener("mousedown", (event) => {
+      event.preventDefault();
+
       tiempoInicio = Date.now();
 
       setTimeout(() => {
