@@ -62,7 +62,7 @@ $_SESSION["usuario"]["id_usuario"]; $pre = ENV == 'server' ?
     </div>
     <div class="card-footer">
       <button
-        class="btn btn-success"
+        class="btn btn-success w-100"
         id="btn-guardar-comanda"
         data-bs-toggle="modal"
       >
