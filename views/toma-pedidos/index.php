@@ -219,6 +219,8 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("toma-pedidos"); ?>
   let iterador = 1;
   let detalles = [];
 
+  let nombreProductoEl = null;
+
   async function wrapper() {
     mostrarAlertaSiHayMensaje();
 
@@ -229,8 +231,12 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("toma-pedidos"); ?>
     await prepararBotonAceptar();
     await cargarDatosGruposYProductos();
 
+    swipe();
+
     const selectCliente = document.getElementById("cliente");
     const selectAplicado = document.getElementById("aplicado");
+
+    nombreProductoEl = document.getElementById("nombre_producto");
 
     prepararModalProducto();
     prepararFormularioCrearComanda();
@@ -374,7 +380,29 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("toma-pedidos"); ?>
       cantidadSeleccionada.value = 1;
       observaciones.value = "";
 
+      // limpiar input
+      nombreProductoEl.value = "";
+
       actualizarTabla();
+    });
+  }
+   
+  function swipe() {
+    let touchstartX = 0;
+    let touchendX = 0;
+
+    function checkDirection() {
+      if (touchendX < touchstartX) alert("swiped left!");
+      if (touchendX > touchstartX) alert("swiped right!");
+    }
+
+    document.addEventListener("touchstart", (e) => {
+      touchstartX = e.changedTouches[0].screenX;
+    });
+
+    document.addEventListener("touchend", (e) => {
+      touchendX = e.changedTouches[0].screenX;
+      checkDirection();
     });
   }
 
@@ -386,6 +414,17 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("toma-pedidos"); ?>
       let dataProductos = await responseProductos.json();
 
       productos = dataProductos;
+
+      // ordenar por nombre
+      productos.sort((a, b) => {
+        if (a.nombre_producto < b.nombre_producto) {
+          return -1;
+        }
+        if (a.nombre_producto > b.nombre_producto) {
+          return 1;
+        }
+        return 0;
+      });
     } catch (error) {
       console.error(error);
       mostrarAlert("error", "Error al cargar los grupos y productos", "crear");
