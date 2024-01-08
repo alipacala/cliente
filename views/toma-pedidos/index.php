@@ -46,7 +46,7 @@ $_SESSION["usuario"]["id_usuario"]; $pre = ENV == 'server' ?
           </div>
         </div>
 
-        <div class="table-responsive mt-4">
+        <div class="table-responsive mt-4" style="margin-bottom: 8rem;">
           <table class="table table-hover" id="tabla-comandas">
             <thead>
               <tr>
