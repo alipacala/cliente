@@ -6,7 +6,8 @@ $tiempoTranscurrido = isset($_SESSION['ultima_actividad']) ? time() - $_SESSION[
 if ($tiempoTranscurrido && ($tiempoTranscurrido >
 TIEMPO_INACTIVIDAD)) { session_unset(); session_destroy(); } $logueado =
 isset($_SESSION["logueado"]) ? $_SESSION["logueado"] : false; $idUsuario =
-$_SESSION["usuario"]["id_usuario"]; mostrarHeader("toma-pedidos"); ?>
+$_SESSION["usuario"]["id_usuario"]; $pre = ENV == 'server' ?
+'/hotelarenasspa/cliente' : '/cliente'; mostrarHeader("toma-pedidos"); ?>
 <div class="container my-5 main-cont">
   <div id="alert-place"></div>
 
@@ -197,6 +198,35 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("toma-pedidos"); ?>
   </div>
 </div>
 
+<div
+  class="modal fade"
+  id="modal-confirmar-borrado"
+  tabindex="-1"
+  aria-labelledby="modal-confirmar-borrado-label"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p>¿Está seguro que desea eliminar este producto?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          onclick="borrarDetalle()"
+          data-bs-dismiss="modal"
+        >
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   const apiGruposUrl = "<?php echo URL_API_NUEVA ?>/grupos-carta";
   const apiProductosUrl = "<?php echo URL_API_NUEVA ?>/productos";
@@ -209,6 +239,7 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("toma-pedidos"); ?>
   let productos = [];
   let terapistas = [];
   let acompanantes = [];
+  let detalles = [];
 
   let productoSeleccionado = null;
   let cantidadSeleccionada = null;
@@ -217,9 +248,14 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("toma-pedidos"); ?>
   let idAcompanante = null;
 
   let iterador = 1;
-  let detalles = [];
 
   let nombreProductoEl = null;
+  let borrarModal = null;
+
+  let tiempoInicio = 0;
+  let tiempoLimite = 500;
+
+  let idProductoBorrar = null;
 
   async function wrapper() {
     mostrarAlertaSiHayMensaje();
@@ -231,8 +267,6 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("toma-pedidos"); ?>
     await prepararBotonAceptar();
     await cargarDatosGruposYProductos();
 
-    swipe();
-
     const selectCliente = document.getElementById("cliente");
     const selectAplicado = document.getElementById("aplicado");
 
@@ -240,6 +274,30 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("toma-pedidos"); ?>
 
     prepararModalProducto();
     prepararFormularioCrearComanda();
+  }
+
+  function prepararLongPress(target) {
+    target.addEventListener("mousedown", () => {
+      tiempoInicio = Date.now();
+
+      setTimeout(() => {
+        const tiempoTranscurrido = Date.now() - tiempoInicio;
+        if (tiempoTranscurrido >= tiempoLimite) {
+          idProductoBorrar = target.dataset.id;
+
+          const modalConfirmarBorrado = document.getElementById(
+            "modal-confirmar-borrado"
+          );
+          const modalCB = new bootstrap.Modal(modalConfirmarBorrado);
+
+          modalCB.show();
+        }
+      }, tiempoLimite);
+    });
+
+    target.addEventListener("mouseup", () => {
+      clearTimeout(tiempoInicio);
+    });
   }
 
   async function cargarAcompanantes() {
@@ -298,8 +356,14 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("toma-pedidos"); ?>
     const tbody = tablaComandas.querySelector("tbody");
     tbody.innerHTML = "";
 
+    iterador = 1;
+
     detalles.forEach((detalle) => {
       const tr = tbody.insertRow();
+      prepararLongPress(tr);
+
+      tr.dataset.id = detalle.id_producto;
+
       const tdProducto = tr.insertCell();
       const tdCantidad = tr.insertCell();
       const tdPrecioVenta = tr.insertCell();
@@ -386,25 +450,6 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("toma-pedidos"); ?>
       actualizarTabla();
     });
   }
-   
-  function swipe() {
-    let touchstartX = 0;
-    let touchendX = 0;
-
-    function checkDirection() {
-      if (touchendX < touchstartX) alert("swiped left!");
-      if (touchendX > touchstartX) alert("swiped right!");
-    }
-
-    document.addEventListener("touchstart", (e) => {
-      touchstartX = e.changedTouches[0].screenX;
-    });
-
-    document.addEventListener("touchend", (e) => {
-      touchendX = e.changedTouches[0].screenX;
-      checkDirection();
-    });
-  }
 
   async function cargarDatosGruposYProductos() {
     const url = apiProductosUrl + "?solo-productos";
@@ -472,6 +517,14 @@ $_SESSION["usuario"]["id_usuario"]; mostrarHeader("toma-pedidos"); ?>
       listProductosFiltrados.appendChild(listItem);
     });
   }
+
+  function borrarDetalle() {
+    detalles = detalles.filter(
+      (detalle) => detalle.id_producto != idProductoBorrar
+    );
+    actualizarTabla();
+  }
+
   window.addEventListener("load", wrapper);
 </script>
 
